@@ -30,9 +30,11 @@ wxw-go // go_project为GOPATH目录
 #### **常用命令**
 
 ```go
-go env // 查看go当前环境
-go get // 从远程下载需要用到的包、执行go install
-go install // 会生成可执行文件直接放到bin目录下
+go env       // 查看go当前环境
+go get       // 从远程下载需要用到的包、执行go install
+go install   // 会生成可执行文件直接放到bin目录下
+go run       // 在编译后直接运行Go语言程序，编译过程中会产生一个临时文件，但不会生成可执行文件
+go build     // 将Go语言程序代码编译成二进制的可执行文件，但是需要我们手动运行该二进制文件；
 ```
   
 #### **学习资源**   
