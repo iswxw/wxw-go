@@ -1,8 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="137e8d95-f7d6-483c-80c3-314884d5e28c" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/com.wxw/BasicGrammar/02_basic_data_type/01_int_type/01_int_type.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/com.wxw/BasicGrammar/02_basic_data_type/02_float_type/02_float_type.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/com.wxw/BasicGrammar/02_basic_data_type/03_bool_type/03_bool_type.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/com.wxw/BasicGrammar/02_basic_data_type/04_fmt_type/04_fmt.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com.wxw/basic/01_var/main_const_02.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/com.wxw/BasicGrammar/01_variables_and_constants/02_const.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com.wxw/basic/01_var/main_var_01.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/com.wxw/BasicGrammar/01_variables_and_constants/01_var.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com.wxw/basic/BasicMain.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/com.wxw/BasicGrammar/BasicMain.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -45,16 +70,37 @@
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="F:\Study_GO\Study_Project\go\wxw-go\src\com.wxw\BasicGrammar\02_basic_data_type\04_fmt" />
+      <recent name="F:\Study_GO\Study_Project\go\wxw-go\src\com.wxw\BasicGrammar\02_basic_data_type\02_float_type" />
+      <recent name="F:\Study_GO\Study_Project\go\wxw-go\src\com.wxw\BasicGrammar\02_basic_data_type\01_int_type" />
       <recent name="F:\Study_GO\Study_Project\go\wxw-go\src\com" />
     </key>
   </component>
-  <component name="RunManager" selected="Go Build.go build main_const_02.go">
-    <configuration name="go build com.wxw/basic" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+  <component name="RunManager" selected="Go Build.go build com.wxw/BasicGrammar/02_basic_data_type/04_fmt_type">
+    <configuration name="go build com.wxw/BasicGrammar/02_basic_data_type" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
       <module name="wxw-go" />
       <working_directory value="$PROJECT_DIR$" />
       <kind value="PACKAGE" />
-      <filePath value="$PROJECT_DIR$/src/com.wxw/basic/BasicMain.go" />
-      <package value="com.wxw/basic" />
+      <filePath value="$PROJECT_DIR$/src/com.wxw/BasicGrammar/02_basic_data_type/01_int_type.go" />
+      <package value="com.wxw/BasicGrammar/02_basic_data_type" />
+      <directory value="$PROJECT_DIR$" />
+      <method v="2" />
+    </configuration>
+    <configuration name="go build com.wxw/BasicGrammar/02_basic_data_type/02_float_type" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+      <module name="wxw-go" />
+      <working_directory value="$PROJECT_DIR$" />
+      <kind value="PACKAGE" />
+      <filePath value="$PROJECT_DIR$/src/com.wxw/BasicGrammar/02_basic_data_type/02_float_type/02_float_type.go" />
+      <package value="com.wxw/BasicGrammar/02_basic_data_type/02_float_type" />
+      <directory value="$PROJECT_DIR$" />
+      <method v="2" />
+    </configuration>
+    <configuration name="go build com.wxw/BasicGrammar/02_basic_data_type/04_fmt_type" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+      <module name="wxw-go" />
+      <working_directory value="$PROJECT_DIR$" />
+      <kind value="PACKAGE" />
+      <filePath value="$PROJECT_DIR$/src/com.wxw/BasicGrammar/02_basic_data_type/04_fmt_type/04_fmt.go" />
+      <package value="com.wxw/BasicGrammar/02_basic_data_type/04_fmt_type" />
       <directory value="$PROJECT_DIR$" />
       <method v="2" />
     </configuration>
@@ -67,14 +113,6 @@
       <directory value="$PROJECT_DIR$" />
       <method v="2" />
     </configuration>
-    <configuration name="go build main_01.go" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
-      <module name="wxw-go" />
-      <working_directory value="$PROJECT_DIR$" />
-      <kind value="FILE" />
-      <filePath value="$PROJECT_DIR$/src/com.wxw/basic/01_var/main_01.go" />
-      <directory value="$PROJECT_DIR$" />
-      <method v="2" />
-    </configuration>
     <configuration name="go build main_const_02.go" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
       <module name="wxw-go" />
       <working_directory value="$PROJECT_DIR$" />
@@ -83,35 +121,38 @@
       <directory value="$PROJECT_DIR$" />
       <method v="2" />
     </configuration>
-    <configuration name="go build wxw-go/" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
-      <module name="wxw-go" />
-      <working_directory value="$PROJECT_DIR$" />
-      <kind value="DIRECTORY" />
-      <filePath value="$PROJECT_DIR$/src/com.wxw/basic/BasicMain.go" />
-      <directory value="$PROJECT_DIR$" />
-      <output_directory value="$PROJECT_DIR$/bin" />
-      <method v="2" />
-    </configuration>
     <list>
-      <item itemvalue="Go Build.go build wxw-go/" />
-      <item itemvalue="Go Build.go build com.wxw/basic" />
-      <item itemvalue="Go Build.go build main_01.go" />
       <item itemvalue="Go Build.go build com.wxw/basic/01_var" />
       <item itemvalue="Go Build.go build main_const_02.go" />
+      <item itemvalue="Go Build.go build com.wxw/BasicGrammar/02_basic_data_type" />
+      <item itemvalue="Go Build.go build com.wxw/BasicGrammar/02_basic_data_type/02_float_type" />
+      <item itemvalue="Go Build.go build com.wxw/BasicGrammar/02_basic_data_type/04_fmt_type" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Go Build.go build com.wxw/BasicGrammar/02_basic_data_type/04_fmt_type" />
+        <item itemvalue="Go Build.go build com.wxw/BasicGrammar/02_basic_data_type/02_float_type" />
+        <item itemvalue="Go Build.go build com.wxw/BasicGrammar/02_basic_data_type" />
         <item itemvalue="Go Build.go build main_const_02.go" />
         <item itemvalue="Go Build.go build com.wxw/basic/01_var" />
-        <item itemvalue="Go Build.go build main_01.go" />
-        <item itemvalue="Go Build.go build com.wxw/basic" />
-        <item itemvalue="Go Build.go build wxw-go/" />
       </list>
     </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <ignored-roots>
@@ -136,42 +177,42 @@
       <screen x="0" y="0" width="1536" height="834" />
     </state>
     <state x="223" y="73" width="1089" height="744" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1536.834@0.0.1536.834" timestamp="1601953563163" />
-    <state x="189" y="0" key="CommitChangelistDialog2" timestamp="1601974860581">
+    <state x="189" y="0" key="CommitChangelistDialog2" timestamp="1601975211079">
       <screen x="0" y="0" width="1536" height="834" />
     </state>
-    <state x="189" y="0" key="CommitChangelistDialog2/0.0.1536.834@0.0.1536.834" timestamp="1601974860581" />
+    <state x="189" y="0" key="CommitChangelistDialog2/0.0.1536.834@0.0.1536.834" timestamp="1601975211079" />
     <state x="549" y="172" key="FileChooserDialogImpl" timestamp="1601974976516">
       <screen x="0" y="0" width="1536" height="834" />
     </state>
     <state x="549" y="172" key="FileChooserDialogImpl/0.0.1536.834@0.0.1536.834" timestamp="1601974976516" />
-    <state width="1493" height="191" key="GridCell.Tab.0.bottom" timestamp="1601974297886">
+    <state width="1493" height="191" key="GridCell.Tab.0.bottom" timestamp="1603641917735">
       <screen x="0" y="0" width="1536" height="834" />
     </state>
-    <state width="1493" height="191" key="GridCell.Tab.0.bottom/0.0.1536.834@0.0.1536.834" timestamp="1601974297886" />
-    <state width="1493" height="191" key="GridCell.Tab.0.center" timestamp="1601974297886">
+    <state width="1493" height="191" key="GridCell.Tab.0.bottom/0.0.1536.834@0.0.1536.834" timestamp="1603641917735" />
+    <state width="1493" height="191" key="GridCell.Tab.0.center" timestamp="1603641917735">
       <screen x="0" y="0" width="1536" height="834" />
     </state>
-    <state width="1493" height="191" key="GridCell.Tab.0.center/0.0.1536.834@0.0.1536.834" timestamp="1601974297886" />
-    <state width="1493" height="191" key="GridCell.Tab.0.left" timestamp="1601974297886">
+    <state width="1493" height="191" key="GridCell.Tab.0.center/0.0.1536.834@0.0.1536.834" timestamp="1603641917735" />
+    <state width="1493" height="191" key="GridCell.Tab.0.left" timestamp="1603641917735">
       <screen x="0" y="0" width="1536" height="834" />
     </state>
-    <state width="1493" height="191" key="GridCell.Tab.0.left/0.0.1536.834@0.0.1536.834" timestamp="1601974297886" />
-    <state width="1493" height="191" key="GridCell.Tab.0.right" timestamp="1601974297886">
+    <state width="1493" height="191" key="GridCell.Tab.0.left/0.0.1536.834@0.0.1536.834" timestamp="1603641917735" />
+    <state width="1493" height="191" key="GridCell.Tab.0.right" timestamp="1603641917735">
       <screen x="0" y="0" width="1536" height="834" />
     </state>
-    <state width="1493" height="191" key="GridCell.Tab.0.right/0.0.1536.834@0.0.1536.834" timestamp="1601974297886" />
+    <state width="1493" height="191" key="GridCell.Tab.0.right/0.0.1536.834@0.0.1536.834" timestamp="1603641917735" />
     <state x="270" y="62" key="SettingsEditor" timestamp="1601975143369">
       <screen x="0" y="0" width="1536" height="834" />
     </state>
     <state x="270" y="62" key="SettingsEditor/0.0.1536.834@0.0.1536.834" timestamp="1601975143369" />
-    <state x="361" y="151" key="Vcs.Push.Dialog.v2" timestamp="1601975032929">
+    <state x="361" y="151" key="Vcs.Push.Dialog.v2" timestamp="1601975226222">
       <screen x="0" y="0" width="1536" height="834" />
     </state>
-    <state x="361" y="151" key="Vcs.Push.Dialog.v2/0.0.1536.834@0.0.1536.834" timestamp="1601975032929" />
-    <state x="573" y="331" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1601955874188">
+    <state x="361" y="151" key="Vcs.Push.Dialog.v2/0.0.1536.834@0.0.1536.834" timestamp="1601975226222" />
+    <state x="573" y="331" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1601975197303">
       <screen x="0" y="0" width="1536" height="834" />
     </state>
-    <state x="573" y="331" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1536.834@0.0.1536.834" timestamp="1601955874188" />
+    <state x="573" y="331" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1536.834@0.0.1536.834" timestamp="1601975197303" />
     <state x="431" y="155" width="672" height="678" key="search.everywhere.popup" timestamp="1601973731420">
       <screen x="0" y="0" width="1536" height="834" />
     </state>
