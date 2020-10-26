@@ -57,4 +57,24 @@ func main() {
 	// 拼接
 	fmt.Println(strings.Join(ret, "_"))
 
+	// 字符串修改 go语言中不可修改字符串
+	s4 := "白萝卜"             // '白' '萝' '卜'
+	s3 := []rune(s4)        // 把字符串强制转换为了rune切片（切片里面保存的就是字符）
+	s3[0] = '红'             // 改切面中的某个字符
+	fmt.Println(string(s3)) // 把rune切片强制转换为了字符串
+
+	c1 := "红" // 字符串
+	c2 := '红' // 字符
+	fmt.Printf("C1:%T c2: %T \n", c1, c2)
+
+	c3 := "H"       // string
+	c4 := byte('H') // byte(uint8)
+	fmt.Printf("C3:%T c4: %T \n", c3, c4)
+	fmt.Printf("%d \n", c4)
+
+	// 类型转换
+	n1 := 10 // int
+	var f float64
+	f = float64(n1)
+	fmt.Printf("int型 转换为 float64的类型 %T \n", f)
 }
