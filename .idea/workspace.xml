@@ -20,10 +20,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="137e8d95-f7d6-483c-80c3-314884d5e28c" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/com.wxw/BasicGrammar/03_process_control/03_skip_loop/01_break.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com.wxw/BasicGrammar/03_process_control/04_switch/04_switch.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/github.com/case01/for_case.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com.wxw/BasicGrammar/03_process_control/03_skip_loop/01_break.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/com.wxw/BasicGrammar/03_process_control/03_skip_loop/01_break.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -163,7 +160,8 @@
     <MESSAGE value="go的数据类型：整型、浮点型、复数（放过自己）、bool型" />
     <MESSAGE value="字符串类型" />
     <MESSAGE value="流程控制 if-else、for循环、字符和rune类型" />
-    <option name="LAST_COMMIT_MESSAGE" value="流程控制 if-else、for循环、字符和rune类型" />
+    <MESSAGE value="跳出for循环和匿名函数case/switch优化if判断" />
+    <option name="LAST_COMMIT_MESSAGE" value="跳出for循环和匿名函数case/switch优化if判断" />
   </component>
   <component name="WindowStateProjectService">
     <state x="561" y="251" key="#Go_Modules" timestamp="1601834187346">
@@ -178,10 +176,10 @@
       <screen x="0" y="0" width="1536" height="834" />
     </state>
     <state x="223" y="73" width="1089" height="744" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1536.834@0.0.1536.834" timestamp="1601953563163" />
-    <state x="189" y="0" key="CommitChangelistDialog2" timestamp="1603722276345">
+    <state x="189" y="0" key="CommitChangelistDialog2" timestamp="1605412229580">
       <screen x="0" y="0" width="1536" height="834" />
     </state>
-    <state x="189" y="0" key="CommitChangelistDialog2/0.0.1536.834@0.0.1536.834" timestamp="1603722276345" />
+    <state x="189" y="0" key="CommitChangelistDialog2/0.0.1536.834@0.0.1536.834" timestamp="1605412229580" />
     <state x="549" y="172" key="FileChooserDialogImpl" timestamp="1601974976516">
       <screen x="0" y="0" width="1536" height="834" />
     </state>
@@ -206,10 +204,10 @@
       <screen x="0" y="0" width="1536" height="834" />
     </state>
     <state x="270" y="62" key="SettingsEditor/0.0.1536.834@0.0.1536.834" timestamp="1601975143369" />
-    <state x="361" y="151" key="Vcs.Push.Dialog.v2" timestamp="1603722373658">
+    <state x="361" y="151" key="Vcs.Push.Dialog.v2" timestamp="1605412236891">
       <screen x="0" y="0" width="1536" height="834" />
     </state>
-    <state x="361" y="151" key="Vcs.Push.Dialog.v2/0.0.1536.834@0.0.1536.834" timestamp="1603722373658" />
+    <state x="361" y="151" key="Vcs.Push.Dialog.v2/0.0.1536.834@0.0.1536.834" timestamp="1605412236891" />
     <state x="573" y="331" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1603722258494">
       <screen x="0" y="0" width="1536" height="834" />
     </state>
