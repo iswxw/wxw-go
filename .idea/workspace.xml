@@ -20,12 +20,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="137e8d95-f7d6-483c-80c3-314884d5e28c" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/com.wxw/BasicGrammar/02_basic_data_type/06_byte_rune_type/06_byte_rune.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com.wxw/BasicGrammar/03_process_control/01_if_else/01_if_else.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com.wxw/BasicGrammar/03_process_control/02_for/01_for.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/com.wxw/BasicGrammar/03_process_control/03_skip_loop/01_break.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/com.wxw/BasicGrammar/03_process_control/04_switch/04_switch.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/github.com/case01/for_case.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com.wxw/BasicGrammar/02_basic_data_type/05_string_type/05_string.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/com.wxw/BasicGrammar/02_basic_data_type/05_string_type/05_string.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com.wxw/BasicGrammar/BasicMain.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/com.wxw/BasicGrammar/BasicMain.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -68,31 +66,14 @@
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="F:\Study_GO\Study_Project\go\wxw-go\src\com.wxw\BasicGrammar\03_process_control" />
+      <recent name="F:\Study_GO\Study_Project\go\wxw-go\src\com.wxw\BasicGrammar\04_switch" />
       <recent name="F:\Study_GO\Study_Project\go\wxw-go\src\com.wxw\BasicGrammar\02_basic_data_type\04_fmt" />
       <recent name="F:\Study_GO\Study_Project\go\wxw-go\src\com.wxw\BasicGrammar\02_basic_data_type\02_float_type" />
       <recent name="F:\Study_GO\Study_Project\go\wxw-go\src\com.wxw\BasicGrammar\02_basic_data_type\01_int_type" />
-      <recent name="F:\Study_GO\Study_Project\go\wxw-go\src\com" />
     </key>
   </component>
-  <component name="RunManager" selected="Go Build.go build com.wxw/BasicGrammar/03_process_control/02_for">
-    <configuration name="go build com.wxw/BasicGrammar/02_basic_data_type/02_float_type" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
-      <module name="wxw-go" />
-      <working_directory value="$PROJECT_DIR$" />
-      <kind value="PACKAGE" />
-      <filePath value="$PROJECT_DIR$/src/com.wxw/BasicGrammar/02_basic_data_type/02_float_type/02_float_type.go" />
-      <package value="com.wxw/BasicGrammar/02_basic_data_type/02_float_type" />
-      <directory value="$PROJECT_DIR$" />
-      <method v="2" />
-    </configuration>
-    <configuration name="go build com.wxw/BasicGrammar/02_basic_data_type/04_fmt_type" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
-      <module name="wxw-go" />
-      <working_directory value="$PROJECT_DIR$" />
-      <kind value="PACKAGE" />
-      <filePath value="$PROJECT_DIR$/src/com.wxw/BasicGrammar/02_basic_data_type/04_fmt_type/04_fmt.go" />
-      <package value="com.wxw/BasicGrammar/02_basic_data_type/04_fmt_type" />
-      <directory value="$PROJECT_DIR$" />
-      <method v="2" />
-    </configuration>
+  <component name="RunManager" selected="Go Build.go build com.wxw/BasicGrammar/03_process_control/03_skip_loop">
     <configuration name="go build com.wxw/BasicGrammar/02_basic_data_type/05_string_type" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
       <module name="wxw-go" />
       <working_directory value="$PROJECT_DIR$" />
@@ -120,20 +101,38 @@
       <directory value="$PROJECT_DIR$" />
       <method v="2" />
     </configuration>
+    <configuration name="go build com.wxw/BasicGrammar/03_process_control/03_skip_loop" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+      <module name="wxw-go" />
+      <working_directory value="$PROJECT_DIR$" />
+      <kind value="PACKAGE" />
+      <filePath value="$PROJECT_DIR$/src/com.wxw/BasicGrammar/03_process_control/03_skip_loop/01_goto.go" />
+      <package value="com.wxw/BasicGrammar/03_process_control/03_skip_loop" />
+      <directory value="$PROJECT_DIR$" />
+      <method v="2" />
+    </configuration>
+    <configuration name="go build github.com/case01" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+      <module name="wxw-go" />
+      <working_directory value="$PROJECT_DIR$" />
+      <kind value="PACKAGE" />
+      <filePath value="$PROJECT_DIR$/src/github.com/case01/for_case.go" />
+      <package value="github.com/case01" />
+      <directory value="$PROJECT_DIR$" />
+      <method v="2" />
+    </configuration>
     <list>
-      <item itemvalue="Go Build.go build com.wxw/BasicGrammar/02_basic_data_type/02_float_type" />
-      <item itemvalue="Go Build.go build com.wxw/BasicGrammar/02_basic_data_type/04_fmt_type" />
       <item itemvalue="Go Build.go build com.wxw/BasicGrammar/02_basic_data_type/05_string_type" />
       <item itemvalue="Go Build.go build com.wxw/BasicGrammar/03_process_control/01_if_else" />
       <item itemvalue="Go Build.go build com.wxw/BasicGrammar/03_process_control/02_for" />
+      <item itemvalue="Go Build.go build com.wxw/BasicGrammar/03_process_control/03_skip_loop" />
+      <item itemvalue="Go Build.go build github.com/case01" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Go Build.go build com.wxw/BasicGrammar/03_process_control/03_skip_loop" />
+        <item itemvalue="Go Build.go build github.com/case01" />
         <item itemvalue="Go Build.go build com.wxw/BasicGrammar/03_process_control/02_for" />
         <item itemvalue="Go Build.go build com.wxw/BasicGrammar/03_process_control/01_if_else" />
         <item itemvalue="Go Build.go build com.wxw/BasicGrammar/02_basic_data_type/05_string_type" />
-        <item itemvalue="Go Build.go build com.wxw/BasicGrammar/02_basic_data_type/04_fmt_type" />
-        <item itemvalue="Go Build.go build com.wxw/BasicGrammar/02_basic_data_type/02_float_type" />
       </list>
     </recent_temporary>
   </component>
@@ -163,7 +162,8 @@
     <MESSAGE value="增加文档" />
     <MESSAGE value="go的数据类型：整型、浮点型、复数（放过自己）、bool型" />
     <MESSAGE value="字符串类型" />
-    <option name="LAST_COMMIT_MESSAGE" value="字符串类型" />
+    <MESSAGE value="流程控制 if-else、for循环、字符和rune类型" />
+    <option name="LAST_COMMIT_MESSAGE" value="流程控制 if-else、for循环、字符和rune类型" />
   </component>
   <component name="WindowStateProjectService">
     <state x="561" y="251" key="#Go_Modules" timestamp="1601834187346">
@@ -178,42 +178,42 @@
       <screen x="0" y="0" width="1536" height="834" />
     </state>
     <state x="223" y="73" width="1089" height="744" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1536.834@0.0.1536.834" timestamp="1601953563163" />
-    <state x="189" y="0" key="CommitChangelistDialog2" timestamp="1603715103299">
+    <state x="189" y="0" key="CommitChangelistDialog2" timestamp="1603722276345">
       <screen x="0" y="0" width="1536" height="834" />
     </state>
-    <state x="189" y="0" key="CommitChangelistDialog2/0.0.1536.834@0.0.1536.834" timestamp="1603715103299" />
+    <state x="189" y="0" key="CommitChangelistDialog2/0.0.1536.834@0.0.1536.834" timestamp="1603722276345" />
     <state x="549" y="172" key="FileChooserDialogImpl" timestamp="1601974976516">
       <screen x="0" y="0" width="1536" height="834" />
     </state>
     <state x="549" y="172" key="FileChooserDialogImpl/0.0.1536.834@0.0.1536.834" timestamp="1601974976516" />
-    <state width="1493" height="191" key="GridCell.Tab.0.bottom" timestamp="1603721605556">
+    <state width="1493" height="191" key="GridCell.Tab.0.bottom" timestamp="1605410204078">
       <screen x="0" y="0" width="1536" height="834" />
     </state>
-    <state width="1493" height="191" key="GridCell.Tab.0.bottom/0.0.1536.834@0.0.1536.834" timestamp="1603721605556" />
-    <state width="1493" height="191" key="GridCell.Tab.0.center" timestamp="1603721605556">
+    <state width="1493" height="191" key="GridCell.Tab.0.bottom/0.0.1536.834@0.0.1536.834" timestamp="1605410204078" />
+    <state width="1493" height="191" key="GridCell.Tab.0.center" timestamp="1605410204078">
       <screen x="0" y="0" width="1536" height="834" />
     </state>
-    <state width="1493" height="191" key="GridCell.Tab.0.center/0.0.1536.834@0.0.1536.834" timestamp="1603721605556" />
-    <state width="1493" height="191" key="GridCell.Tab.0.left" timestamp="1603721605556">
+    <state width="1493" height="191" key="GridCell.Tab.0.center/0.0.1536.834@0.0.1536.834" timestamp="1605410204078" />
+    <state width="1493" height="191" key="GridCell.Tab.0.left" timestamp="1605410204078">
       <screen x="0" y="0" width="1536" height="834" />
     </state>
-    <state width="1493" height="191" key="GridCell.Tab.0.left/0.0.1536.834@0.0.1536.834" timestamp="1603721605556" />
-    <state width="1493" height="191" key="GridCell.Tab.0.right" timestamp="1603721605556">
+    <state width="1493" height="191" key="GridCell.Tab.0.left/0.0.1536.834@0.0.1536.834" timestamp="1605410204078" />
+    <state width="1493" height="191" key="GridCell.Tab.0.right" timestamp="1605410204078">
       <screen x="0" y="0" width="1536" height="834" />
     </state>
-    <state width="1493" height="191" key="GridCell.Tab.0.right/0.0.1536.834@0.0.1536.834" timestamp="1603721605556" />
+    <state width="1493" height="191" key="GridCell.Tab.0.right/0.0.1536.834@0.0.1536.834" timestamp="1605410204078" />
     <state x="270" y="62" key="SettingsEditor" timestamp="1601975143369">
       <screen x="0" y="0" width="1536" height="834" />
     </state>
     <state x="270" y="62" key="SettingsEditor/0.0.1536.834@0.0.1536.834" timestamp="1601975143369" />
-    <state x="361" y="151" key="Vcs.Push.Dialog.v2" timestamp="1603642088627">
+    <state x="361" y="151" key="Vcs.Push.Dialog.v2" timestamp="1603722373658">
       <screen x="0" y="0" width="1536" height="834" />
     </state>
-    <state x="361" y="151" key="Vcs.Push.Dialog.v2/0.0.1536.834@0.0.1536.834" timestamp="1603642088627" />
-    <state x="573" y="331" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1601975197303">
+    <state x="361" y="151" key="Vcs.Push.Dialog.v2/0.0.1536.834@0.0.1536.834" timestamp="1603722373658" />
+    <state x="573" y="331" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1603722258494">
       <screen x="0" y="0" width="1536" height="834" />
     </state>
-    <state x="573" y="331" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1536.834@0.0.1536.834" timestamp="1601975197303" />
+    <state x="573" y="331" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1536.834@0.0.1536.834" timestamp="1603722258494" />
     <state x="467" y="15" width="602" height="804" key="find.popup" timestamp="1603713487768">
       <screen x="0" y="0" width="1536" height="834" />
     </state>
