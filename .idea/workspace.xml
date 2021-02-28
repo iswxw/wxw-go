@@ -19,8 +19,11 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="137e8d95-f7d6-483c-80c3-314884d5e28c" name="Default Changelist" comment="调整逻辑">
-      <change afterPath="$PROJECT_DIR$/doc/today.md" afterDir="false" />
+    <list default="true" id="137e8d95-f7d6-483c-80c3-314884d5e28c" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/com.wxw/AdvanceGrammar/demo_log/demo_log.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/com.wxw/AdvanceGrammar/demo_log/mylogger_main.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/github.com/demo_utils/mylogger/mylogger_console.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/github.com/demo_utils/mylogger/mylogger_file.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -65,51 +68,42 @@
     <property name="go.tried.to.enable.integration.vgo.integrator" value="true" />
     <property name="go.vendoring.notification.had.been.shown" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/bin" />
-    <property name="settings.editor.selected.configurable" value="org.jetbrains.plugins.github.ui.GithubSettingsConfigurable" />
+    <property name="settings.editor.selected.configurable" value="goland.project.structure" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="F:\Study_GO\Study_Project\go\wxw-go\src\com.wxw\AdvanceGrammar\demo_log" />
+      <recent name="F:\Study_GO\Study_Project\go\wxw-go\src\github.com\demo_log\mylogger" />
       <recent name="F:\Study_GO\Study_Project\go\wxw-go\src\com.wxw\BasicGrammar\03_process_control" />
       <recent name="F:\Study_GO\Study_Project\go\wxw-go\src\com.wxw\BasicGrammar\04_switch" />
       <recent name="F:\Study_GO\Study_Project\go\wxw-go\src\com.wxw\BasicGrammar\02_basic_data_type\04_fmt" />
-      <recent name="F:\Study_GO\Study_Project\go\wxw-go\src\com.wxw\BasicGrammar\02_basic_data_type\02_float_type" />
-      <recent name="F:\Study_GO\Study_Project\go\wxw-go\src\com.wxw\BasicGrammar\02_basic_data_type\01_int_type" />
     </key>
   </component>
-  <component name="RunManager" selected="Go Build.go build com.wxw/BasicGrammar/03_process_control/03_skip_loop">
-    <configuration name="go build com.wxw/BasicGrammar/02_basic_data_type/05_string_type" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+  <component name="RunManager" selected="Go Build.go build com.wxw/AdvanceGrammar/demo_log ">
+    <configuration name="go build com.wxw/AdvanceGrammar/demo_log " type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true">
       <module name="wxw-go" />
       <working_directory value="$PROJECT_DIR$" />
-      <kind value="PACKAGE" />
-      <filePath value="$PROJECT_DIR$/src/com.wxw/BasicGrammar/02_basic_data_type/05_string_type/05_string.go" />
-      <package value="com.wxw/BasicGrammar/02_basic_data_type/05_string_type" />
+      <kind value="FILE" />
+      <filePath value="$PROJECT_DIR$/src/com.wxw/AdvanceGrammar/demo_log/mylogger_main.go" />
+      <package value="com.wxw/AdvanceGrammar/demo_log" />
       <directory value="$PROJECT_DIR$" />
       <method v="2" />
     </configuration>
-    <configuration name="go build com.wxw/BasicGrammar/03_process_control/01_if_else" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+    <configuration name="go build com.wxw/AdvanceGrammar/demo_log" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
       <module name="wxw-go" />
       <working_directory value="$PROJECT_DIR$" />
-      <kind value="PACKAGE" />
-      <filePath value="$PROJECT_DIR$/src/com.wxw/BasicGrammar/03_process_control/01_if_else/01_if_else.go" />
-      <package value="com.wxw/BasicGrammar/03_process_control/01_if_else" />
+      <kind value="DIRECTORY" />
+      <filePath value="$PROJECT_DIR$/src/com.wxw/AdvanceGrammar/demo_log/mylogger_main.go" />
+      <package value="com.wxw/AdvanceGrammar/demo_log" />
       <directory value="$PROJECT_DIR$" />
       <method v="2" />
     </configuration>
-    <configuration name="go build com.wxw/BasicGrammar/03_process_control/02_for" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+    <configuration name="go build com.wxw/BasicGrammar" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
       <module name="wxw-go" />
       <working_directory value="$PROJECT_DIR$" />
       <kind value="PACKAGE" />
-      <filePath value="$PROJECT_DIR$/src/com.wxw/BasicGrammar/03_process_control/02_for/01_for.go" />
-      <package value="com.wxw/BasicGrammar/03_process_control/02_for" />
-      <directory value="$PROJECT_DIR$" />
-      <method v="2" />
-    </configuration>
-    <configuration name="go build com.wxw/BasicGrammar/03_process_control/03_skip_loop" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
-      <module name="wxw-go" />
-      <working_directory value="$PROJECT_DIR$" />
-      <kind value="PACKAGE" />
-      <filePath value="$PROJECT_DIR$/src/com.wxw/BasicGrammar/03_process_control/03_skip_loop/01_goto.go" />
-      <package value="com.wxw/BasicGrammar/03_process_control/03_skip_loop" />
+      <filePath value="$PROJECT_DIR$/src/com.wxw/BasicGrammar/BasicMain.go" />
+      <package value="com.wxw/BasicGrammar" />
       <directory value="$PROJECT_DIR$" />
       <method v="2" />
     </configuration>
@@ -122,20 +116,29 @@
       <directory value="$PROJECT_DIR$" />
       <method v="2" />
     </configuration>
+    <configuration name="go build github.com/demo" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+      <module name="wxw-go" />
+      <working_directory value="$PROJECT_DIR$" />
+      <kind value="PACKAGE" />
+      <filePath value="$PROJECT_DIR$/src/github.com/demo/demo_log.go" />
+      <package value="github.com/demo" />
+      <directory value="$PROJECT_DIR$" />
+      <method v="2" />
+    </configuration>
     <list>
-      <item itemvalue="Go Build.go build com.wxw/BasicGrammar/02_basic_data_type/05_string_type" />
-      <item itemvalue="Go Build.go build com.wxw/BasicGrammar/03_process_control/01_if_else" />
-      <item itemvalue="Go Build.go build com.wxw/BasicGrammar/03_process_control/02_for" />
-      <item itemvalue="Go Build.go build com.wxw/BasicGrammar/03_process_control/03_skip_loop" />
       <item itemvalue="Go Build.go build github.com/case01" />
+      <item itemvalue="Go Build.go build com.wxw/BasicGrammar" />
+      <item itemvalue="Go Build.go build github.com/demo" />
+      <item itemvalue="Go Build.go build com.wxw/AdvanceGrammar/demo_log" />
+      <item itemvalue="Go Build.go build com.wxw/AdvanceGrammar/demo_log " />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Go Build.go build com.wxw/AdvanceGrammar/demo_log " />
+        <item itemvalue="Go Build.go build com.wxw/AdvanceGrammar/demo_log" />
+        <item itemvalue="Go Build.go build github.com/demo" />
+        <item itemvalue="Go Build.go build com.wxw/BasicGrammar" />
         <item itemvalue="Go Build.go build github.com/case01" />
-        <item itemvalue="Go Build.go build com.wxw/BasicGrammar/03_process_control/03_skip_loop" />
-        <item itemvalue="Go Build.go build com.wxw/BasicGrammar/03_process_control/02_for" />
-        <item itemvalue="Go Build.go build com.wxw/BasicGrammar/03_process_control/01_if_else" />
-        <item itemvalue="Go Build.go build com.wxw/BasicGrammar/02_basic_data_type/05_string_type" />
       </list>
     </recent_temporary>
   </component>
@@ -168,64 +171,33 @@
     <MESSAGE value="流程控制 if-else、for循环、字符和rune类型" />
     <MESSAGE value="跳出for循环和匿名函数case/switch优化if判断" />
     <MESSAGE value="调整逻辑" />
-    <option name="LAST_COMMIT_MESSAGE" value="调整逻辑" />
+    <MESSAGE value="进度记录" />
+    <option name="LAST_COMMIT_MESSAGE" value="进度记录" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="561" y="251" key="#Go_Modules" timestamp="1601834187346">
+    <state width="1493" height="191" key="GridCell.Tab.0.bottom" timestamp="1614483185543">
       <screen x="0" y="0" width="1536" height="834" />
     </state>
-    <state x="561" y="251" key="#Go_Modules/0.0.1536.834@0.0.1536.834" timestamp="1601834187346" />
-    <state x="557" y="203" key="#Web_Browsers" timestamp="1601974978031">
+    <state width="1493" height="191" key="GridCell.Tab.0.bottom/0.0.1536.834@0.0.1536.834" timestamp="1614483185543" />
+    <state width="1493" height="191" key="GridCell.Tab.0.center" timestamp="1614483185543">
       <screen x="0" y="0" width="1536" height="834" />
     </state>
-    <state x="557" y="203" key="#Web_Browsers/0.0.1536.834@0.0.1536.834" timestamp="1601974978031" />
-    <state x="223" y="73" width="1089" height="744" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1601953563163">
+    <state width="1493" height="191" key="GridCell.Tab.0.center/0.0.1536.834@0.0.1536.834" timestamp="1614483185543" />
+    <state width="1493" height="191" key="GridCell.Tab.0.left" timestamp="1614483185543">
       <screen x="0" y="0" width="1536" height="834" />
     </state>
-    <state x="223" y="73" width="1089" height="744" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1536.834@0.0.1536.834" timestamp="1601953563163" />
-    <state x="189" y="0" key="CommitChangelistDialog2" timestamp="1605443136440">
+    <state width="1493" height="191" key="GridCell.Tab.0.left/0.0.1536.834@0.0.1536.834" timestamp="1614483185543" />
+    <state width="1493" height="191" key="GridCell.Tab.0.right" timestamp="1614483185543">
       <screen x="0" y="0" width="1536" height="834" />
     </state>
-    <state x="189" y="0" key="CommitChangelistDialog2/0.0.1536.834@0.0.1536.834" timestamp="1605443136440" />
-    <state x="549" y="172" key="FileChooserDialogImpl" timestamp="1601974976516">
+    <state width="1493" height="191" key="GridCell.Tab.0.right/0.0.1536.834@0.0.1536.834" timestamp="1614483185543" />
+    <state x="270" y="61" key="SettingsEditor" timestamp="1614480954993">
       <screen x="0" y="0" width="1536" height="834" />
     </state>
-    <state x="549" y="172" key="FileChooserDialogImpl/0.0.1536.834@0.0.1536.834" timestamp="1601974976516" />
-    <state width="1493" height="191" key="GridCell.Tab.0.bottom" timestamp="1605443241984">
+    <state x="270" y="61" key="SettingsEditor/0.0.1536.834@0.0.1536.834" timestamp="1614480954993" />
+    <state x="431" y="155" width="672" height="678" key="search.everywhere.popup" timestamp="1614480655735">
       <screen x="0" y="0" width="1536" height="834" />
     </state>
-    <state width="1493" height="191" key="GridCell.Tab.0.bottom/0.0.1536.834@0.0.1536.834" timestamp="1605443241984" />
-    <state width="1493" height="191" key="GridCell.Tab.0.center" timestamp="1605443241984">
-      <screen x="0" y="0" width="1536" height="834" />
-    </state>
-    <state width="1493" height="191" key="GridCell.Tab.0.center/0.0.1536.834@0.0.1536.834" timestamp="1605443241984" />
-    <state width="1493" height="191" key="GridCell.Tab.0.left" timestamp="1605443241984">
-      <screen x="0" y="0" width="1536" height="834" />
-    </state>
-    <state width="1493" height="191" key="GridCell.Tab.0.left/0.0.1536.834@0.0.1536.834" timestamp="1605443241984" />
-    <state width="1493" height="191" key="GridCell.Tab.0.right" timestamp="1605443241984">
-      <screen x="0" y="0" width="1536" height="834" />
-    </state>
-    <state width="1493" height="191" key="GridCell.Tab.0.right/0.0.1536.834@0.0.1536.834" timestamp="1605443241984" />
-    <state x="270" y="62" key="SettingsEditor" timestamp="1601975143369">
-      <screen x="0" y="0" width="1536" height="834" />
-    </state>
-    <state x="270" y="62" key="SettingsEditor/0.0.1536.834@0.0.1536.834" timestamp="1601975143369" />
-    <state x="361" y="151" key="Vcs.Push.Dialog.v2" timestamp="1605443320614">
-      <screen x="0" y="0" width="1536" height="834" />
-    </state>
-    <state x="361" y="151" key="Vcs.Push.Dialog.v2/0.0.1536.834@0.0.1536.834" timestamp="1605443320614" />
-    <state x="573" y="331" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1605443310736">
-      <screen x="0" y="0" width="1536" height="834" />
-    </state>
-    <state x="573" y="331" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1536.834@0.0.1536.834" timestamp="1605443310736" />
-    <state x="467" y="15" width="602" height="804" key="find.popup" timestamp="1603713487768">
-      <screen x="0" y="0" width="1536" height="834" />
-    </state>
-    <state x="467" y="15" width="602" height="804" key="find.popup/0.0.1536.834@0.0.1536.834" timestamp="1603713487768" />
-    <state x="431" y="155" width="672" height="678" key="search.everywhere.popup" timestamp="1603719399973">
-      <screen x="0" y="0" width="1536" height="834" />
-    </state>
-    <state x="431" y="155" width="672" height="678" key="search.everywhere.popup/0.0.1536.834@0.0.1536.834" timestamp="1603719399973" />
+    <state x="431" y="155" width="672" height="678" key="search.everywhere.popup/0.0.1536.834@0.0.1536.834" timestamp="1614480655735" />
   </component>
 </project>
