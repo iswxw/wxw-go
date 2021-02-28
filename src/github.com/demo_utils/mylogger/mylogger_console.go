@@ -8,104 +8,65 @@
 package mylogger
 
 import (
-	"errors"
 	"fmt"
-	"strings"
 	"time"
 )
 
 // 往终端写日志相关内容
 
-// 定义日志级别
-type LogLevel uint16
-
-// 定义全局常量
-const (
-	UNKNOWN LogLevel = iota // 0
-	TRACE
-	DEBUG
-	INFO
-	WARNING
-	ERROR
-	FATAL
-)
-
-// 解析日志级别
-func parseLogLevel(s string) (LogLevel, error) {
-	s = strings.ToLower(s)
-	switch s {
-	case "debug":
-		return DEBUG, nil
-	case "trace":
-		return TRACE, nil
-	case "info":
-		return INFO, nil
-	case "warning":
-		return WARNING, nil
-	case "error":
-		return ERROR, nil
-	case "fatal":
-		return FATAL, nil
-	default:
-		err := errors.New("无效的日志级别")
-		return UNKNOWN, err
-	}
-}
-
 // Logger 日志结构体
-type Logger struct {
+type ConsoleLogger struct {
 	Level LogLevel
 }
 
 // NewLog 构造函数
-func NewLog(levelStr string) Logger {
+func NewLog(levelStr string) ConsoleLogger {
 	level, err := parseLogLevel(levelStr)
 	if err != nil {
 		panic(err) // 报错，打断程序运行。
 	}
-	return Logger{Level: level}
+	return ConsoleLogger{Level: level}
 }
 
 // 比较日志级别
-func (l Logger) enable(logLevel LogLevel) bool {
-	return logLevel >= l.Level
+func (c ConsoleLogger) enable(logLevel LogLevel) bool {
+	return logLevel >= c.Level
+}
+
+// 统一处理打印
+func (c ConsoleLogger) log(lv LogLevel, format string, args ...interface{}) {
+	if c.enable(lv) {
+		msg := fmt.Sprintf(format, args...)
+		now := time.Now()
+		funcName, fileName, lineNo := getInfo(3)
+		fmt.Printf("[%s] [%s] [%s:%s:%d] %s \n",
+			// Go的诞生时间2006年1月2号15点04分（记忆口诀为2006 1 2 3 4）
+			now.Format("2006-01-02 15:04:05"),
+			getLogString(lv),
+			fileName,
+			funcName,
+			lineNo,
+			msg)
+	}
 }
 
 // Debug 级别日志打印
-func (l Logger) Debug(msg string) {
-	if l.enable(DEBUG) {
-		// 写入指定位置
-		// fmt.Println(msg)
-
-		// 输出时间
-		now := time.Now()
-		fmt.Printf("[%s] [Debug] %s \n", now.Format("2021-02-22 11:00:00"), msg)
-	}
+func (c ConsoleLogger) Debug(format string, args ...interface{}) {
+	c.log(DEBUG, format, args...)
 }
 
-func (l Logger) Info(msg string) {
-	// 写入指定位置
-	if l.enable(INFO) {
-		fmt.Println(msg)
-	}
+func (c ConsoleLogger) Info(format string, args ...interface{}) {
+	c.log(INFO, format, args...)
 }
 
-func (l Logger) Warning(msg string) {
-	// 写入指定位置
-	if l.enable(WARNING) {
-		fmt.Println(msg)
-	}
+func (c ConsoleLogger) Warning(msg string) {
+	c.log(WARNING, msg)
 }
 
-func (l Logger) Error(msg string) {
-	// 写入指定位置
-	if l.enable(ERROR) {
-		fmt.Println(msg)
-	}
+func (c ConsoleLogger) Error(format string, args ...interface{}) {
+	c.log(ERROR, format, args...)
 }
-func (l Logger) Fatal(msg string) {
-	// 写入指定位置
-	if l.enable(FATAL) {
-		fmt.Println(msg)
-	}
+
+func (c ConsoleLogger) Fatal(msg string) {
+	c.log(FATAL, msg)
 }
