@@ -10,21 +10,20 @@ package main
 import (
 	"fmt"
 	"github.com/demo_utils/mylogger"
-	"time"
 )
+
+// 声明一个全局接口变量
+var log mylogger.Logger
 
 // 测试我们自己写的日志库
 func main() {
-
-	// 写到控制台
-	//funcConsoleLog()
-
-	// 写日志到文件
-	funcFileLog()
+	funcLog()
 }
 
-func funcConsoleLog() {
-	log := mylogger.NewLog("INFO")
+func funcLog() {
+	fmt.Println("开始记录日志...")
+	// log := mylogger.NewConsoleLogger("INFO") // 计入控制台
+	log := mylogger.NewFileLogger("INFO", "./doc/log", "wxw_go.log", 1024*1024*10) // 10MB 计入文件
 	for {
 		log.Debug("这是一条Debug日志!!")
 		log.Info("这是一条Info日志!!")
@@ -33,21 +32,7 @@ func funcConsoleLog() {
 		name := "理想"
 		log.Error("这是一条Error日志!!id: %d,name: %s", id, name)
 		log.Fatal("这是一条Fatal日志!!")
-		time.Sleep(2 * time.Second)
+		//time.Sleep(2 * time.Second)
 		fmt.Println("————————————")
-	}
-}
-
-func funcFileLog() {
-	fmt.Println("文件日志开始写入...")
-	// 10MB
-	fileLogger := mylogger.NewFileLogger("INFO", "./doc/log", "wxw_go.log", 1024*1024*10)
-	for {
-		fileLogger.Debug("文件日志DEBUG级别")
-		fileLogger.Info("文件日志INFO级别")
-		fileLogger.Warning("文件日志WARNING级别")
-		fileLogger.Error("文件日志ERROR级别")
-		fileLogger.Fatal("文件日志FATAL级别")
-		time.Sleep(2 * time.Second)
 	}
 }
