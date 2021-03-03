@@ -9,7 +9,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/demo_utils/mylogger"
+	"github.com/demos/mylogger"
 )
 
 // 声明一个全局接口变量

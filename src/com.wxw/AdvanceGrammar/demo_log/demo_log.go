@@ -1,7 +1,7 @@
 /*
 @Time : 2021/2/28 10:00
 @Author : wxw
-@File : demo_utils
+@File : demos
 @Software: GoLand
 @link: https://www.liwenzhou.com/posts/Go/go_log/
 */
@@ -29,7 +29,7 @@ func main() {
 
 // 定义日志输出位置
 func init() {
-	logFile, err := os.OpenFile("/demo_utils.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0644)
+	logFile, err := os.OpenFile("/demos.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0644)
 	if err != nil {
 		fmt.Printf("open log file Field, err:", err)
 		return
