@@ -10,13 +10,13 @@ package main
 
 import (
 	"fmt"
-	"time"
 )
 
 func main() {
 	go hello() // 启动另外一个goroutine去执行hello函数
 	fmt.Println("main goroutine done!")
-	time.Sleep(time.Second)
+	// goroutine 随着main函数的结束而结束，所以我们想要hello 同时执行，需要让main等一等
+	// time.Sleep(time.Second)
 }
 
 func hello() {

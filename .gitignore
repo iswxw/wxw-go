@@ -10,8 +10,7 @@
 *.test
 
 # »º´æÄ¿Â¼
-/src/logs
-
+logs
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
 

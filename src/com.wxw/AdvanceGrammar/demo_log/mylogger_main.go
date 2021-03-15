@@ -8,8 +8,8 @@
 package main
 
 import (
+	"com.wxw/demos/mylogger"
 	"fmt"
-	"github.com/demos/mylogger"
 )
 
 // 声明一个全局接口变量
