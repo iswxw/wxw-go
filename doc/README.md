@@ -16,7 +16,7 @@
 
 **切割效果**：
 
-![61452205069](assets/1614522050699.png) 
+![61452205069](asserts/1614522050699.png) 
 
 > 实现代码：[src/github.com/demo_utils/mylogger](src/github.com/demo_utils/mylogger) 
 
