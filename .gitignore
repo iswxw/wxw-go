@@ -9,7 +9,7 @@
 # Test binary, built with `go test -c`
 *.test
 
-# »º´æÄ¿Â¼
+# ï¿½ï¿½ï¿½ï¿½Ä¿Â¼
 logs/
 cache/
 # Output of the go coverage tool, specifically when used with LiteIDE

@@ -1,0 +1,9 @@
+<h1 style='color:orange'>Hello Golang!</h1>
+<h2>How are you!</h2>
+<button id='b1'>点我</button>
+<img id='i1' src='https://pic.baike.soso.com/ugc/baikepic2/0/ori-20210521171513-247849897_jpg_1240_1860_147856.jpg/800'>
+<script>
+document.getElementById('b1').onclick=function(){
+     document.getElementById('i1').src='https://mz.eastday.com/53492510.jpeg?imageslim'
+}
+</script>
