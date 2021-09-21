@@ -39,9 +39,14 @@ go run       // 在编译后直接运行Go语言程序，编译过程中会产�
 go build     // 将Go语言程序代码编译成二进制的可执行文件，但是需要我们手动运行该二进制文件；
 ```
 
-#### **学习资源**   
-1. Go入门
-   - [学习视频](https://www.bilibili.com/video/BV1h7411x7JB?p=14)        
-  
-2. GO进阶+实战
+
+
+#### 主流框架 
+
+- Web框架
+  - Gin框架
+
+#### **学习资源**      
+
+1. GO进阶+实战
    - [学习视频](https://www.bilibili.com/video/bv1FV411r7m8/?spm_id_from=333.788.b_636f6d6d656e74.26)      
