@@ -14,26 +14,14 @@
 # import sys
 # sys.path.insert(0, os.path.abspath('.'))
 
-# At top on conf.py (with other import statements)
-import recommonmark
-from recommonmark.transform import AutoStructify
-
-# At the bottom of conf.py
-def setup(app):
-    app.add_config_value('recommonmark_config', {
-            'url_resolver': lambda url: github_doc_root + url,
-            'auto_toc_tree_section': 'Contents',
-            }, True)
-    app.add_transform(AutoStructify)
-
 # -- Project information -----------------------------------------------------
 
-project = 'wxw-go'
-copyright = '2021, iswxw'
-author = 'iswxw'
+project = 'Go 深入浅出'
+copyright = '2021, Java半颗糖'
+author = 'wxw'
 
 # The full version, including alpha/beta/rc tags
-release = 'v1.0.0'
+release = '1.0.0'
 
 
 # -- General configuration ---------------------------------------------------
@@ -41,9 +29,7 @@ release = 'v1.0.0'
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = [
-'myst_parser'
-]
+extensions = ['myst_parser']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -66,7 +52,8 @@ exclude_patterns = []
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'alabaster'
+html_theme = 'default'
+
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
