@@ -17,7 +17,7 @@ import (
 // 2. 获取文件对象的详细信息
 
 func main() {
-	fileObj, err := os.Open("./doc/log/wxw_go.log")
+	fileObj, err := os.Open("./docs/log/wxw_go.log")
 	if err != nil {
 		fmt.Printf("open file failed,err:%v\n", err)
 		return

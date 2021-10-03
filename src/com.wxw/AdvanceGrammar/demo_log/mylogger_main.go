@@ -23,7 +23,7 @@ func main() {
 func funcLog() {
 	fmt.Println("开始记录日志...")
 	// log := mylogger.NewConsoleLogger("INFO") // 计入控制台
-	log := mylogger.NewFileLogger("INFO", "./doc/log", "wxw_go.log", 1024*1024*10) // 10MB 计入文件
+	log := mylogger.NewFileLogger("INFO", "./docs/log", "wxw_go.log", 1024*1024*10) // 10MB 计入文件
 	for {
 		log.Debug("这是一条Debug日志!!")
 		log.Info("这是一条Info日志!!")
