@@ -10,17 +10,18 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
-# import os
-# import sys
+import os
+import sys
 # sys.path.insert(0, os.path.abspath('.'))
 
 # -- Project information -----------------------------------------------------
-
 project = 'Go 深入浅出'
-copyright = '2021, Java半颗糖'
+copyright = '2021, 公众号:Java半颗糖'
 author = 'wxw'
 
-# The full version, including alpha/beta/rc tags
+# The short X.Y version.
+version = '1.0'
+# The full version, including alpha/beta/rc tags.
 release = '1.0.0'
 
 
@@ -30,6 +31,7 @@ release = '1.0.0'
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = []
+# extensions = ['chinese_search','sphinx.ext.mathjax', 'sphinx_sitemap', 'sphinx_multiversion']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -46,14 +48,13 @@ language = 'zh_CN'
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = []
 
-
 # -- Options for HTML output -------------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'default'
-
+# html_theme = 'default'
+html_theme = 'sphinx_rtd_theme'
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
@@ -62,7 +63,33 @@ html_static_path = ['_static']
 
 # 支持md
 from recommonmark.parser import CommonMarkParser
+
 source_parsers = {
     '.md': CommonMarkParser,
 }
 source_suffix = ['.rst', '.md']
+
+# -- Options for LaTeX output ---------------------------------------------
+
+# 注：在生成html的时候这句话要注释
+# latex_engine = 'xelatex'
+
+latex_elements={# The paper size ('letterpaper' or 'a4paper').
+'papersize':'a4paper',# The font size ('10pt', '11pt' or '12pt').
+'pointsize':'12pt','classoptions':',oneside','babel':'',#必须
+'inputenc':'',#必须
+'utf8extra':'',#必须
+# Additional stuff for the LaTeX preamble.
+'preamble': r"""
+\usepackage{xeCJK}
+\usepackage{indentfirst}
+\setlength{\parindent}{2em}
+\setCJKmainfont{WenQuanYi Micro Hei}
+\setCJKmonofont[Scale=0.9]{WenQuanYi Micro Hei Mono}
+\setCJKfamilyfont{song}{WenQuanYi Micro Hei}
+\setCJKfamilyfont{sf}{WenQuanYi Micro Hei}
+\XeTeXlinebreaklocale "zh"
+\XeTeXlinebreakskip = 0pt plus 1pt
+"""}
+
+master_doc = 'index'
