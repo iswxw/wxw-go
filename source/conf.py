@@ -110,10 +110,6 @@ if not on_rtd:  # only import and set the theme if we're building docs locally
 _exts = "../exts"
 sys.path.append(os.path.abspath(_exts))
 
-# html_js_files = [
-#     'js/readmore.js',
-#     'js/baidutongji.js',
-# ]
 
 html_baseurl = 'https://wxw-go.readthedocs.io/'
 # html_extra_path = ["robots.txt"]

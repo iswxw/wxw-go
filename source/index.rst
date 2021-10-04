@@ -9,12 +9,15 @@ Go 入门到精通
 ================================================
 
 Contents:
+
 .. toctree::
    :maxdepth: 2
    :glob:
 
    preface
-   chapters/*
+   w01/index
+   w02/index
+   w03/index
    aboutme
 
 --------------------------------------------

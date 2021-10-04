@@ -6,14 +6,12 @@
 
 本章节，会持续更新，敬请关注…
 
--------------------
+---------------------------
 
 .. toctree::
-   :maxdepth: 1
-   :glob:
+    :maxdepth: 2
+    :numbered: 2
 
-   ../c02/*
+    c01_01
 
 --------------------------------------------
-
-.. image:: https://gitee.com/wwxw/image/raw/master/wechat/FDekBM1FXHpH.jpg
