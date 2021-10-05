@@ -13,6 +13,12 @@
 import os
 import sys
 # sys.path.insert(0, os.path.abspath('.'))
+#编辑配置文件source/conf.py在最后一行复制下方配置
+from recommonmark.parser import CommonMarkParser
+source_parsers = {
+    '.md': CommonMarkParser,
+}
+source_suffix = ['.rst', '.md']
 
 # -- Project information -----------------------------------------------------
 project = 'Go 深入浅出'
@@ -30,7 +36,8 @@ release = '1.0.0'
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = []
+# extensions = []
+extensions = ['recommonmark']
 # extensions = ['chinese_search','sphinx.ext.mathjax', 'sphinx_sitemap', 'sphinx_multiversion']
 
 # Add any paths that contain templates here, relative to this directory.
@@ -60,14 +67,6 @@ html_theme = 'sphinx_rtd_theme'
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
-
-# 支持md
-from recommonmark.parser import CommonMarkParser
-
-source_parsers = {
-    '.md': CommonMarkParser,
-}
-source_suffix = ['.rst', '.md']
 
 # -- Options for LaTeX output ---------------------------------------------
 
@@ -109,16 +108,6 @@ if not on_rtd:  # only import and set the theme if we're building docs locally
 
 _exts = "../exts"
 sys.path.append(os.path.abspath(_exts))
-
-
-html_baseurl = 'https://wxw-go.readthedocs.io/'
-# html_extra_path = ["robots.txt"]
-
-html_sidebars = {
-    '**': [
-        'versioning.html',
-    ],
-}
 
 smv_latest_version = 'master'
 sitemap_url_scheme = "{link}"

@@ -18,6 +18,7 @@ Contents:
    w01/index
    w02/index
    w03/index
+   w04/index
    aboutme
 
 --------------------------------------------
