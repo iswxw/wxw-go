@@ -61,7 +61,7 @@ mysql> select database();
 +------------+
 | database() |
 +------------+
-| userinfo   |
+| user_info   |
 +------------+
 1 row in set (0.00 sec)
 
@@ -76,7 +76,7 @@ Database changed
 
 ```bash
 ## 创建 userinfo 表
-CREATE TABLE `userinfo` (
+CREATE TABLE `user_info` (
          `uid` INT(10) NOT NULL AUTO_INCREMENT,
          `username` VARCHAR(64) NULL DEFAULT NULL,
          `company` VARCHAR(64) NULL DEFAULT NULL,
@@ -93,7 +93,7 @@ mysql> show tables;
 +--------------------+
 
 ## 查看建表的表结构
-mysql> desc userinfo;
+mysql> desc use_rinfo;
 +------------+-------------+------+-----+---------+----------------+
 | Field      | Type        | Null | Key | Default | Extra          |
 +------------+-------------+------+-----+---------+----------------+
@@ -104,15 +104,15 @@ mysql> desc userinfo;
 +------------+-------------+------+-----+---------+----------------+
 ```
 
-#### 2.3 增加数据
+#### 增加数据
 
 ```mysql
 ## 增加一条记录
-mysql> insert into userinfo values('1','wxw','jd','2021-09-29');
+mysql> insert into user_info values('1','wxw','jd','2021-09-29');
 Query OK, 1 row affected (0.01 sec)
 
 ## 查看这条记录
-mysql> select * from userinfo;
+mysql> select * from user_info;
 +-----+----------+---------+------------+
 | uid | username | company | createtime |
 +-----+----------+---------+------------+
@@ -153,7 +153,7 @@ func main() {
 	checkErr(err)
 
 	//2. 插入数据
-	stmt, err := db.Prepare("INSERT userinfo SET username=?,company=?,createtime=?")
+	stmt, err := db.Prepare("INSERT user_info SET username=?,company=?,createtime=?")
 	checkErr(err)
 	res, err := stmt.Exec("w02", "WeChat", "2012-12-09")
 	checkErr(err)
@@ -163,7 +163,7 @@ func main() {
 	fmt.Printf("插入的Id = %d\n", id)
 
 	//3. 更新数据
-	stmt, err = db.Prepare("update userinfo set username=? where uid=?")
+	stmt, err = db.Prepare("update user_info set username=? where uid=?")
 	checkErr(err)
 	res, err = stmt.Exec("w02", id)
 	checkErr(err)
@@ -172,7 +172,7 @@ func main() {
 	fmt.Println(affect)
 
 	//1. 查询数据
-	rows, err := db.Query("SELECT * FROM userinfo")
+	rows, err := db.Query("SELECT * FROM user_info")
 	checkErr(err)
 	for rows.Next() {
 		var uid int
@@ -185,7 +185,7 @@ func main() {
 	}
 
 	//删除数据
-	stmt, err = db.Prepare("delete from userinfo where uid=?")
+	stmt, err = db.Prepare("delete from user_info where uid=?")
 	checkErr(err)
 	res, err = stmt.Exec(id)
 	checkErr(err)
@@ -220,9 +220,78 @@ func checkErr(err error) {
 
 ### 基于beego 操作MySQL
 
+ORM 是一种对象关系的映射。接下来体验一下 Beego 中内部支持的 ORM。我们还是先来安装 beego 框架。
 
+- beego 在线文档：
+- beego github地址：https://github.com/astaxie/beego
 
+> 安装beego依赖
 
+```bash
+## 获取远程依赖
+go get github.com/astaxie/beego
+```
+
+> 基于beego的数据操作案例
+
+```go
+package main
+
+import (
+	"fmt"
+	"github.com/astaxie/beego/orm"
+	_ "github.com/go-sql-driver/mysql" // 导入数据库驱动
+)
+
+// UserInfo model struct
+type UserInfo struct {
+	Uid        int64 `orm:"colunm(uid);pk"` // 设置主键
+	Username   string
+	Company    string
+	Createtime string `default:"1994-01-01"` // 设置默认值
+}
+
+func init() {
+	// 设置默认数据库
+	orm.RegisterDataBase("default", "mysql", "root:123456@/wxw_test?charset=utf8", 30)
+	// 注册定义的 model 可以同时注册多个 model
+	orm.RegisterModel(new(UserInfo))
+	//orm.RegisterModel(new(User), new(Profile), new(Post))
+
+	// 如果不存在就创建表
+	orm.RunSyncdb("default", false, true)
+}
+
+func main() {
+	fmt.Println("beego开始操作...")
+	// 基本的赋值
+	user := UserInfo{Username: "slene", Createtime: "2021-08-12"}
+
+	// 打印记录
+	fmt.Println(user.Uid, user.Username, user.Company, user.Createtime)
+
+	// 开启一个连接
+	o := orm.NewOrm()
+
+	// 插入表
+	id, err := o.Insert(&user)
+	fmt.Printf("ID: %d, ERR: %v\n", id, err)
+
+	// 更新表
+	//user.Username = "w4"
+	//num, err := o.Update(&user)
+	//fmt.Printf("NUM: %d, ERR: %v\n", num, err)
+
+	// 读取 one
+	u := UserInfo{Uid: user.Uid}
+	err = o.Read(&u)
+	fmt.Printf("ERR: %v\n", err)
+	//
+	//	// 删除表
+	//	//num, err = o.Delete(&u)
+	//fmt.Printf("NUM: %d, ERR: %v\n", num, err)
+}
+```
 
 
 

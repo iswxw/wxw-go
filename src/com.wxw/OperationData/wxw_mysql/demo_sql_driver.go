@@ -17,7 +17,7 @@ func main() {
 	checkErr(err)
 
 	//2. 插入数据
-	stmt, err := db.Prepare("INSERT userinfo SET username=?,company=?,createtime=?")
+	stmt, err := db.Prepare("INSERT user_info SET username=?,company=?,createtime=?")
 	checkErr(err)
 	res, err := stmt.Exec("w02", "WeChat", "2012-12-09")
 	checkErr(err)
@@ -27,7 +27,7 @@ func main() {
 	fmt.Printf("插入的Id = %d\n", id)
 
 	//3. 更新数据
-	stmt, err = db.Prepare("update userinfo set username=? where uid=?")
+	stmt, err = db.Prepare("update user_info set username=? where uid=?")
 	checkErr(err)
 	res, err = stmt.Exec("w02", id)
 	checkErr(err)
@@ -36,7 +36,7 @@ func main() {
 	fmt.Println(affect)
 
 	//1. 查询数据
-	rows, err := db.Query("SELECT * FROM userinfo")
+	rows, err := db.Query("SELECT * FROM user_info")
 	checkErr(err)
 	for rows.Next() {
 		var uid int
@@ -49,7 +49,7 @@ func main() {
 	}
 
 	//删除数据
-	stmt, err = db.Prepare("delete from userinfo where uid=?")
+	stmt, err = db.Prepare("delete from user_info where uid=?")
 	checkErr(err)
 	res, err = stmt.Exec(id)
 	checkErr(err)
