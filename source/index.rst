@@ -19,8 +19,7 @@ Contents:
    w02/index
    w03/index
    w04/index
-
-   about
+   wend/about
 
 --------------------------------------------
 
