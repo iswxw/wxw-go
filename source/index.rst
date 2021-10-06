@@ -19,7 +19,7 @@ Contents:
    w02/index
    w03/index
    w04/index
-   readme
+   about
 
 --------------------------------------------
 
