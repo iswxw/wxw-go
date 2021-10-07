@@ -12,6 +12,8 @@
     :maxdepth: 1
     :numbered: 2
 
-    w02_object
+    w021_struct
+    w022_interface
+
 
 --------------------------------------------
