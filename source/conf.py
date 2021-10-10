@@ -109,5 +109,11 @@ if not on_rtd:  # only import and set the theme if we're building docs locally
 _exts = "../exts"
 sys.path.append(os.path.abspath(_exts))
 
+## 百度统计和阅读全文
+html_js_files = [
+    'js/readmore.js',
+    'js/baidutongji.js',
+]
+
 smv_latest_version = 'master'
 sitemap_url_scheme = "{link}"
