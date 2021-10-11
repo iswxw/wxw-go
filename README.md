@@ -11,6 +11,8 @@
 #### 文章目录
 
 - 第一章：基础知识
+  - [1.基础知识之 流程控制](https://wxw-go.readthedocs.io/en/latest/w01/w011_goto.html)
+  - [2. 基础知识之异常处理](https://wxw-go.readthedocs.io/en/latest/w01/w012_defer.html)  
 - 第二章：面向对象
   - [1. 面向对象之结构体](https://wxw-go.readthedocs.io/en/latest/w02/w021_struct.html) 
   - [2. 面向对象之接口](https://wxw-go.readthedocs.io/en/latest/w02/w022_interface.html)
