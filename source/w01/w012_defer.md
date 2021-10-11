@@ -779,3 +779,117 @@ func main() {
     open()
 }
 ```
+
+### 捕获异常：recover
+
+Golang 异常的抛出与捕获，依赖两个内置函数：
+
+- panic：抛出异常，使程序崩溃
+- recover：捕获异常，恢复程序或做收尾工作
+
+revocer 调用后，抛出的 panic 将会在此处终结，不会再外抛，但是 recover，并不能任意使用，它有 **强制要求，必须得在 defer 下才能发挥用途** 。
+
+#### 1.  recover 仅在延迟函数 defer 中有效
+
+先来看个例子：
+
+```go
+package main
+
+import "fmt"
+
+func main() {
+	recover()     // 无任何作用
+	panic("停止运行")
+	recover()     // 不会执行到
+	fmt.Println("结束")
+	
+	// 输出
+	// panic: 停止运行
+	// goroutine 1 [running]:exit status 2
+}
+```
+
+修改下代码：
+
+```go
+package main
+
+import "fmt"
+
+func main() {
+	defer func() {
+		fmt.Println("捕获到异常:", recover())
+	}()
+	panic("手动抛出异常")
+	
+	// 输出
+	// 捕获到异常: 手动抛出异常
+}
+```
+
+**结论：**
+
+ recover 仅在延迟函数 defer 中有效，在正常的执行过程中，调用 recover 会返回 nil 并且没有其他任何效果.
+
+**重要的事再说一遍：仅当在一个defer函数中被完成时，调用recover()才生效。** 
+
+#### 2. recover在defer中直接调用才生效
+
+举个例子
+
+```go
+package main
+
+import "fmt"
+
+func doRecover() {
+	fmt.Println("捕获到异常 =>", recover()) //输出: 捕获到异常 => <nil>
+}
+func main() {
+	defer func() {
+		doRecover() //注意：这里间接使用函数，在函数中调用了recover()函数，
+		// panic 没有恢复,没有捕获到错误信息
+	}()
+	panic("手动抛出异常")
+}
+```
+
+输出
+
+```bash
+捕获到异常 => <nil>
+panic: 手动抛出异常
+
+goroutine 1 [running]:
+main.main()
+```
+
+**总结：panic配合recover使用，recover要在defer函数中直接调用才生效。** 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
