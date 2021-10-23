@@ -9,23 +9,25 @@ package main
 import "fmt"
 
 func main() {
-	var phone Phone
+	var phone IPhone
 	phone = new(XiaoMi)
 	phone.call()
 
-	phone = new(HuaWei)
+	// 结构体变量，实现了call() 方法也就实现了IPhone接口
+	var huawei HuaWei
+	phone = huawei
 	phone.call()
 }
 
-// Phone 定义一个手机接口
-type Phone interface {
+// IPhone 定义一个手机接口
+type IPhone interface {
 	call()
 }
 
 // XiaoMi 定义一个手机结构体
 type XiaoMi struct{}
 
-// Xiaomi方法
+// Xiaomi方法   通过实现IPhone接口中call()方法 用XiaoMi实例指向它
 func (xiaomi XiaoMi) call() {
 	fmt.Println("小米中该方法实现了Phone接口的方法")
 }
