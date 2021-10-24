@@ -4,12 +4,69 @@
 
 ### 并发与并行
 
-- 并发：同一时间段内执行多个任务
-- 并行：同一时刻执行多个任务
+- 并发：同一时间段内执行多个任务，即多个线程在单核上运行
+- 并行：同一时刻执行多个任务，即多个线程在多核上运行
 
 Go语言的并发通过`goroutine`实现。`goroutine`类似于线程，属于用户态的线程，我们可以根据需要创建成千上万个`goroutine`并发工作。`goroutine`是由Go语言的运行时（runtime）调度完成，而线程是由操作系统调度完成。
 
 Go语言还提供`channel`在多个`goroutine`间进行通信。`goroutine`和`channel`是 Go 语言秉承的 CSP（Communicating Sequential Process）并发模式的重要实现基础。
+
+### 进程与线程
+
+- 进程就是程序在操作系统中的一次执行过程，它是系统进行资源分配和调度的基本单位
+- 线程是进程的一个执行实例，是程序执行的最小单元，它是比进程更小的可独立运行的基本单元
+- 一个进程可创建和销毁多个线程，同一个进程中多个线程资源共享，可以并发执行
+- 一个程序至少有一个进程，一个进程至少有一个线程
+
+### go协程和go主线程
+
+1. ` go` 主线程（有人直接叫 **线程** /也可以理解为 **进程**）：一个Go 线程上，可以启多个协程，**你也可以这样** **协程是轻量级的线程**
+2. ` Go` 协程的主要特点
+   - 有独立的栈空间
+   - 共享程序堆空间
+   - 调度由用户控制
+   - 协程是轻量级的线程
+
+举例如下：
+
+下面执行过程中，**如果主线程执行结束了并退出，那开启的协程即使没有执行完也会退出。也就是协程会随着主线的执行结束而被动关闭** 
+
+```go
+package main
+
+import (
+	"fmt"
+	"strconv"
+	"time"
+)
+
+// 主线程 每隔一秒输出 hello world
+// goroutine 每隔一秒输出 hello world
+func main() {
+	go test() // 开启了一个协程
+	for i := 1; i < 10; i++ {
+		fmt.Println("hello world! main = "+strconv.Itoa(i))
+		time.Sleep(time.Second)
+	}
+}
+
+// 编写一个函数，每隔一秒，输出一次hello world
+func test()  {
+	for i := 1; i < 10; i++ {
+		fmt.Println("hello world! test = "+strconv.Itoa(i))
+		time.Sleep(time.Second)
+	}
+}
+
+// 同时执行
+hello world! main = 1
+hello world! test = 1
+hello world! test = 2
+hello world! main = 2
+hello world! main = 3
+hello world! test = 3
+....
+```
 
 ### goroutine
 
