@@ -782,7 +782,28 @@ func main() {
 
 ### 捕获异常：recover
 
-Golang 异常的抛出与捕获，依赖两个内置函数：
+`For example`  
+
+```go
+func recoverDemo1() {
+	defer func() {
+		if r := recover(); r != nil {
+			log.Printf("Runtime error caught: %v", r)
+		}
+	}()
+    
+    // 调用foo() 方法
+    foo()
+}
+
+func foo(){
+    panic("test panic")
+}
+```
+
+无论`  foo()` 中是否触发了错误处理流程，该匿名defer函数都将在函数退出时得到执行。假 如 `  foo()` 中触发了错误处理流程，recover()函数执行将使得该错误处理过程终止。如果错误处 理流程被触发时，程序传给panic函数的参数不为nil，则该函数还会打印详细的错误信息。
+
+`Golang`  异常的抛出与捕获，依赖两个内置函数：
 
 - panic：抛出异常，使程序崩溃
 - recover：捕获异常，恢复程序或做收尾工作

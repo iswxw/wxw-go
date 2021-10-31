@@ -5,9 +5,31 @@
 */
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"log"
+)
 
 func main() {
+	deferDemo1()
+	recoverDemo1()
+
+}
+
+// 异常捕获 测试方法二
+func recoverDemo1() {
+	defer func() {
+		if r := recover(); r != nil {
+			log.Printf("Runtime error caught: %v", r)
+		}
+	}()
+	panic("test panic")
+
+}
+
+// 捕捉异常测试方法一
+func deferDemo1() {
+
 	defer func() {
 		fmt.Println("捕获到异常:", recover())
 	}()
