@@ -476,5 +476,118 @@ func main() {
 |     append     | 用来追加元素到数组、slice中                                  |
 | panic和recover | 用来做错误处理                                               |
 
+#### 1. make
+
+make 也是用于内存分配的，但是和 new 不同，它只用于 chan、map 以及 slice 的内存创建，而且它返回的类型就是这三个类型本身，而不是他们的指针类型，因为这三种类型就是引用类型，所以就没有必要返回他们的指针了。
+
+在Go语言中，make 函数的描述如下：
+
+```go
+// The make built-in function allocates and initializes an object of type
+// slice, map, or chan (only). Like new, the first argument is a type, not a
+// value. Unlike new, make's return type is the same as the type of its
+// argument, not a pointer to it. The specification of the result depends on
+// the type:
+// Slice: The size specifies the length. The capacity of the slice is
+// equal to its length. A second integer argument may be provided to
+// specify a different capacity; it must be no smaller than the
+// length, so make([]int, 0, 10) allocates a slice of length 0 and
+// capacity 10.
+// Map: An empty map is allocated with enough space to hold the
+// specified number of elements. The size may be omitted, in which case
+// a small starting size is allocated.
+// Channel: The channel's buffer is initialized with the specified
+// buffer capacity. If zero, or the size is omitted, the channel is
+// unbuffered.
+func make(t Type, size ...IntegerType) Type
+```
+
+通过上面的代码可以看出 make 函数的 t 参数必须是 chan（通道）、map（字典）、slice（切片）中的一个，并且返回值也是类型本身。
+
+**注意** ：make 函数只用于 map，slice 和 channel，并且不返回指针。如果想要获得一个显式的指针，可以使用 new 函数进行分配，或者显式地使用一个变量的地址。
+
+Go语言中的 new 和 make 主要区别如下：
+
+- make 只能用来分配及初始化类型为 slice、map、chan 的数据。new 可以分配任意类型的数据；
+- new 分配返回的是指针，即类型 *Type。make 返回引用，即 Type；
+- new 分配的空间被清零。make 分配空间后，会进行初始化；
+
+**（1）创建数组切片** 
+
+Go语言提供的内置函数make()可以用于灵活地创建数组切片。
+
+```go
+// 创建一个初始元素个数为5的数组切片，元素初始值为0：
+mySlice1 := make([]int, 5)
+
+// 创建一个初始元素个数为5的数组切片，元素初始值为0，并预留10个元素的存储空间：
+mySlice2 := make([]int, 5, 10) 
+```
+
+**（2）创建map** 
+
+```go
+//  创建了一个键类型为string、值类型为PersonInfo的map
+myMap = make(map[string] PersonInfo)
+
+// 也可以选择是否在创建时指定该map的初始存储能力，创建了一个初始存储能力为100的map.
+myMap = make(map[string] PersonInfo, 100) 
+
+// 创建并初始化map的代码.
+myMap = map[string] PersonInfo{ 
+    "1234": PersonInfo{"1", "Jack", "Room 101,..."},
+} 
+```
+
+**（3）通道（` chan`）** 
+
+通道的缓冲区被初始化为指定的缓冲容量。如果为零，或省略大小，则通道为无缓冲。
+
+#### 2. new
+
+new 函数只接受一个参数，这个参数是一个类型，并且返回一个指向该类型内存地址的指针。同时 new 函数会把分配的内存置为零，也就是类型的零值。
+
+```
+func new(Type) *Type
+```
+
+【示例】使用 new 函数为变量分配内存空间。
+
+```go
+var sum *int
+sum = new(int) //分配空间
+*sum = 98
+fmt.Println(*sum)
+```
+
+当然，new 函数不仅仅能够为系统默认的数据类型，分配空间，自定义类型也可以使用 new 函数来分配空间，如下所示：
+
+```go
+type Student struct {
+name string
+age int
+}
+var s *Student
+s = new(Student) //分配空间
+s.name ="dequan"
+fmt.Println(s)
+```
+
+这里如果我们不使用 new 函数为自定义类型分配空间（将第 7 行注释），就会报错：
+
+```go
+panic: runtime error: invalid memory address or nil pointer dereference
+[signal SIGSEGV: segmentation violation code=0x1 addr=0x0 pc=0x80bd277]
+goroutine 1 [running]:
+```
+
+这就是 new 函数，它返回的永远是类型的指针，指针指向分配类型的内存地址。
 
 
+
+**总结** 
+
+简单总结一下Go语言中 make 和 new 关键字的实现原理，
+
+- make 关键字的主要作用是创建 slice、map 和 Channel 等内置的数据结构
+- new 的主要作用是为类型申请一片内存空间，并返回指向这片内存的指针
