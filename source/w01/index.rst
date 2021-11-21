@@ -12,7 +12,8 @@
     :maxdepth: 1
     :numbered: 2
 
-    w011_goto
-    w012_defer
+    w011_process
+    w012_exception
+    w013_function
 
 --------------------------------------------

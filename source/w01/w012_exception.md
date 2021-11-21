@@ -25,26 +25,37 @@ defer用途
 
 #### 1. 怎么使用
 
-`defer` 后面会接受一个函数，但该函数不会立刻被执行，而是等到包含它的程序返回时(包含它的函数执行了return语句、运行到函数结尾自动返回、对应的goroutine panic），defer函数才会被执行。通常用于资源释放、打印日志、异常捕获等
+Go语言中的`defer`语句会将其后面跟随的语句进行延迟处理。在`defer`归属的函数即将返回时，将延迟处理的语句按`defer`定义的逆序进行执行，也就是说，先被`defer`的语句最后被执行，最后被`defer`的语句，最先被执行。
 
-下面看一段打开文件的：
+举个例子：
 
 ```go
-func OpenFile()  {
-	file, err := os.Open("/home/demo/info.txt")
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	// 这里将 defer 放在 err 判断的后面，而不是 os.Open() 的后面
-	// 因为若 err != nil ，文件打开是失败的, 没必要释放
-	// 若 err != nil, file 有可能为 nil ,这时候释放资源可能会导致程序崩溃
-	defer file.Close()
+func main() {
+	fmt.Println("start")
+	defer fmt.Println(1)
+	defer fmt.Println(2)
+	defer fmt.Println(3)
+	fmt.Println("end")
 }
-
 ```
 
+输出结果：
+
+```go
+start
+end
+3
+2
+1
+```
+
+由于`defer`语句延迟调用的特性，所以`defer`语句能非常方便的处理资源释放问题。比如：资源清理、文件关闭、解锁及记录时间等。
+
 #### 2. 理解defer的执行时机
+
+在Go语言的函数中`return`语句在底层并不是原子操作，它分为给返回值赋值和RET指令两步。而`defer`语句执行的时机就在返回值赋值操作后，RET指令执行前。具体如下图所示：
+
+<img src="https://www.liwenzhou.com/images/Go/func/defer.png" alt="defer执行时机" style="zoom: 80%;" />  
 
 下面有一段相对复杂的 defer 定义，这个方法里面有定义 4 个 defer , 分别以不同的方式来定义 defer 后的函数
 
@@ -231,6 +242,8 @@ func defer3() (res int) {
 
 #### 4. 深入理解defer
 
+
+
 通过实例加深理解，我们先看看一段代码
 
 - **defer 执行顺序可以理解为 先进后出**   
@@ -389,14 +402,12 @@ func defer3() (res int) {
 
   - defer后面的语句在执行的时候，函数调用的参数会被保存起来，但是不执行。也就是复制了一份。但是并没有说struct这里的*指针如何处理，
 
-  
-
   通过这个例子可以看出go语言并没有把这个明确写出来的this指针(比如这里的* Users)当作参数来看待。
 
   到这里有滴朋友会说。看似多此一举的声明，直接去掉指针调用 t *Users改成 t Users 不就行了？
 
   ```
-  package main
+package main
   
   import "fmt"
   
@@ -415,7 +426,7 @@ func defer3() (res int) {
       }
   }
   ```
-
+  
   输出：清风扬 慕容复 乔峰。这就回归到上面的 defer 函数非引用调用的示例了。
 
   所以这里我们要注意：
@@ -888,11 +899,76 @@ main.main()
 
 **总结：panic配合recover使用，recover要在defer函数中直接调用才生效。** 
 
+#### 3. 案例解析
 
+`panic`可以在任何地方引发，但`recover`只有在`defer`调用的函数中有效。 首先来看一个例子：
 
+```go
+func funcA() {
+	fmt.Println("func A")
+}
 
+func funcB() {
+	panic("panic in B")
+}
 
+func funcC() {
+	fmt.Println("func C")
+}
+func main() {
+	funcA()
+	funcB()
+	funcC()
+}
+```
 
+输出：
+
+```bash
+func A
+panic: panic in B
+
+goroutine 1 [running]:
+main.funcB(...)
+        .../code/func/main.go:12
+main.main()
+        .../code/func/main.go:20 +0x98
+```
+
+程序运行期间`funcB`中引发了`panic`导致程序崩溃，异常退出了。
+
+这个时候我们就可以通过`recover`将程序恢复回来，继续往后执行。
+
+```go
+func funcA() {
+	fmt.Println("func A")
+}
+
+func funcB() {
+	defer func() {
+		err := recover()
+		//如果程序出出现了panic错误,可以通过recover恢复过来
+		if err != nil {
+			fmt.Println("recover in B")
+		}
+	}()
+	panic("panic in B")
+}
+
+func funcC() {
+	fmt.Println("func C")
+}
+func main() {
+	funcA()
+	funcB()
+	funcC()
+}
+```
+
+**注意：**
+
+1. `recover()`必须搭配`defer`使用。
+2. `defer`一定要在可能引发`panic`的语句之前定义。
 
 
 
