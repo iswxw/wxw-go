@@ -128,17 +128,17 @@ func deferTest() {
   // 3. 传递 fish=0
 	defer func(fish int) {
     // 6. 内部 fish 0 + 2 =2
-		fish += 2											// fish 只作用于内部
+		fish += 2	// fish 只作用于内部
     // 7. 打印内部 fish
 		fmt.Println("d3: ", fish)			// 2
-	}(fish)							    				// 声明时传递, fish = 0
+	}(fish)	// 声明时传递, fish = 0
   
 	// 直接引用(闭包)
 	defer func() {
     // 4. 打印 fish = 1
 		fmt.Println("d4: ", fish)			// 1
     // 5. fish = 3
-		fish +=2											// fish = 3, 作用域与外部的相同
+		fish +=2 // fish = 3, 作用域与外部的相同
 	}()
   
   // 3. fish=1
@@ -233,7 +233,7 @@ func defer3() (res int) {
     // 3. 内部res为形参，不影响外边的值 res=2+2=4
 		res += 2
 		fmt.Println("内部 res ", res)   // 4
-	}(res)		// defer 参数的值是在声明的时候确定的，也就是只有 defer 之前的语句会影响这个值
+	}(res) // defer 参数的值是在声明的时候确定的，也就是只有 defer 之前的语句会影响这个值
 	// 2. res = 10
   // 4. return res(10)
 	return 10
@@ -260,10 +260,9 @@ func defer3() (res int) {
       }
   }
   
-  ----
   输出：4 3 2 1 0 ,defer 是先进后出,这个输出没啥好说的
   ```
-
+  
 - **defer后面的语句在执行的时候，函数调用的参数会被保存起来，但是不执行。也就是复制了一份。但是并没有说struct这里的*指针如何处理** 
 
   我们把上面的代码改下：
@@ -406,8 +405,8 @@ func defer3() (res int) {
 
   到这里有滴朋友会说。看似多此一举的声明，直接去掉指针调用 t *Users改成 t Users 不就行了？
 
-  ```
-package main
+  ```go
+  package main
   
   import "fmt"
   
@@ -426,7 +425,7 @@ package main
       }
   }
   ```
-  
+
   输出：清风扬 慕容复 乔峰。这就回归到上面的 defer 函数非引用调用的示例了。
 
   所以这里我们要注意：
@@ -437,7 +436,7 @@ package main
 
   我们看看这一段代码：
 
-  ```
+  ```go
   package main
   
   func users(i int) {
@@ -457,7 +456,7 @@ package main
       println("武林排行榜,这里不会被输出哦")
   }
   
-  ----
+  
   东邪
   西毒
   南帝
@@ -471,7 +470,7 @@ package main
 
 - **延迟调用参数在求值或复制，指针或闭包会 "延迟" 读取。** 
 
-  ```
+  ```go
   package main
   
   func test() {
@@ -491,7 +490,7 @@ package main
       test()
   }
   
-  ---
+  
   x = 乔峰第一 
   y = 慕容复第二
   defer: 乔峰 慕容复第二
@@ -499,7 +498,7 @@ package main
 
 - **defer与return** 
 
-  ```
+  ```go
   package main
   
   import "fmt"
@@ -527,7 +526,7 @@ package main
 
 - **在错误的位置使用 defer,来一段不严谨滴代码：** 
 
-  ```
+  ```go
   package main
   
   import "net/http"
@@ -549,20 +548,21 @@ package main
   }
   
   输出
-  -------- 
   panic: runtime error: invalid memory address or nil pointer dereference
   [signal 0xc0000005 code=0x0 addr=0x40 pc=0x5e553e]
   ```
+  
 
-  Why？
+Why？
 
-  - 因为在这里我们并没有检查我们的请求是否成功执行，当它失败的时候，我们访问了 Body 中的空变量 res ，所以会抛出异常。
+- 因为在这里我们并没有检查我们的请求是否成功执行，当它失败的时候，我们访问了 Body 中的空变量 res ，所以会抛出异常。
+  
 
-  怎么优化呢？
+怎么优化呢？
 
-  - 我们应该总是在一次成功的资源分配下面使用 defer ，简单点说就是：当且仅当 http.Get 成功执行时才使用 defer.
-
-  ```
+- 我们应该总是在一次成功的资源分配下面使用 defer ，简单点说就是：当且仅当 http.Get 成功执行时才使用 defer.
+  
+```go
   package main
   
   import "net/http"
@@ -585,23 +585,24 @@ package main
   func main() {
       request()
   }
-  ```
+```
 
-  这样，当有错误的时候，err 会被返回，否则当整个函数返回的时候，会关闭 res.Body 。
+这样，当有错误的时候，err 会被返回，否则当整个函数返回的时候，会关闭 res.Body 。
 
-  解释：
+解释：
 
-  - 在这里，同样需要检查 res 的值是否为 nil ，这是 http.Get 中的一个警告。
+- 在这里，同样需要检查 res 的值是否为 nil ，这是 http.Get 中的一个警告。
+  
 
-  通常情况下，出错的时候，返回的内容应为空并且错误会被返回，可当你获得的是一个重定向 error 时， res 的值并不会为 nil ，
+通常情况下，出错的时候，返回的内容应为空并且错误会被返回，可当你获得的是一个重定向 error 时， res 的值并不会为 nil ，
 
-  但其又会将错误返回。所以上面的代码保证了无论如何 Body 都会被关闭。
+但其又会将错误返回。所以上面的代码保证了无论如何 Body 都会被关闭。
 
 另外我们再聊下关于文件的defer close。我们看一段代码：
 
 - **在这里，f.Close() 可能会返回一个错误，可这个错误会被我们忽略掉** 
 
-  ```
+  ```go
   package main
   
   import "os"
@@ -628,7 +629,7 @@ package main
 
   表面上看似没问题，其实f.Close可能关闭文件失败，我们优化下：
 
-  ```
+  ```go
   package main
   
   import "os"
@@ -659,7 +660,7 @@ package main
 
   如果有代码洁癖优化强迫症滴，哈哈。这里我们还可以优化下，可以通过命名的返回变量来返回 defer 内的错误。 如下：
 
-  ```
+  ```go
   package main
   
   import "os"
@@ -692,7 +693,7 @@ package main
 
 神马意思？继续看：
 
-```
+```go
 package main
 
 import (
@@ -730,13 +731,12 @@ func open() error {
     return nil
 }
 
+
 func main() {
     open()
 }
 
-输出
-----
-延迟关闭文件result.json 错误 close result2.json: file already closed
+// 延迟关闭文件result.json 错误 close result2.json: file already closed
 ```
 
 **结论：** 
@@ -747,7 +747,7 @@ func main() {
 
 其实还是在关闭result2.json.这样重复关闭同一个文件导致错误异常。肿么解决？很好办？用io.Closer属性
 
-```
+```go
 package main
 
 import (
