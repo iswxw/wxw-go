@@ -1,9 +1,10 @@
-## ` package/encoding/json` 
+##  package/encoding/json
 
 ### 初识`json` 
 
 ```json
-Package json implements encoding and decoding of JSON as defined in RFC 7159. The mapping between JSON and Go values is described in the documentation for the Marshal and Unmarshal functions.
+Package json implements encoding and decoding of JSON as defined in RFC 7159. 
+The mapping between JSON and Go values is described in the documentation for the Marshal and Unmarshal functions.
 ```
 
 - 出处：https://golang.google.cn/pkg/encoding/json/
@@ -374,7 +375,7 @@ func Marshal(v interface{}) ([]byte, error) {
 
 相关资料
 
-1. 源码：https://golang.google.cn/src/encoding/json/encode.go?s=6458:6501#L148 
+1. 源码：[https://golang.google.cn/src/encoding/json/encode.go?s=6458:6501#L148](https://golang.google.cn/src/encoding/json/encode.go?s=6458:6501#L148)  
 
 #### 2. `func unMarshal` 
 
@@ -484,5 +485,5 @@ func Unmarshal(data []byte, v interface{}) error {
 
 相关资料
 
-1. 源码：https://golang.google.cn/src/encoding/json/decode.go?s=4081:4129#L86
+1. 源码：[https://golang.google.cn/src/encoding/json/decode.go?s=4081:4129#L86](https://golang.google.cn/src/encoding/json/decode.go?s=4081:4129#L86) 
 
