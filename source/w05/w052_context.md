@@ -40,11 +40,90 @@ Go内置两个函数：`Background()`和`TODO()`，这两个函数分别返回�
 
 `background`和`todo`本质上都是`emptyCtx`结构体类型，是一个不可取消，没有设置截止时间，没有携带任何值的Context。
 
+#### 为什么需要context
+
+WaitGroup 和信道(channel)是常见的 2 种并发控制的方式。
+
+如果并发启动了多个子协程，需要等待所有的子协程完成任务，WaitGroup 非常适合于这类场景，例如下面的例子：
+
+```go
+var wg sync.WaitGroup
+
+func doTask(n int) {
+	time.Sleep(time.Duration(n))
+	fmt.Printf("Task %d Done\n", n)
+	wg.Done()
+}
+
+func main() {
+	for i := 0; i < 3; i++ {
+		wg.Add(1)
+		go doTask(i + 1)
+	}
+	wg.Wait()
+	fmt.Println("All Task Done")
+}
+```
+
+`wg.Wait()` 会等待所有的子协程任务全部完成，所有子协程结束后，才会执行 `wg.Wait()` 后面的代码。
+
+```bash
+Task 3 Done
+Task 1 Done
+Task 2 Done
+All Task Done
+```
+
+WaitGroup 只是傻傻地等待子协程结束，但是并不能主动通知子协程退出。假如开启了一个定时轮询的子协程，有没有什么办法，通知该子协程退出呢？这种场景下，可以使用 `select+chan` 的机制。
+
+```go
+var stop chan bool
+
+func reqTask(name string) {
+	for {
+		select {
+		case <-stop:
+			fmt.Println("stop", name)
+			return
+		default:
+			fmt.Println(name, "send request")
+			time.Sleep(1 * time.Second)
+		}
+	}
+}
+
+func main() {
+	stop = make(chan bool)
+	go reqTask("worker1")
+	time.Sleep(3 * time.Second)
+	stop <- true
+	time.Sleep(3 * time.Second)
+}
+```
+
+子协程使用 for 循环定时轮询，如果 `stop` 信道有值，则退出，否则继续轮询。
+
+```bash
+worker1 send request
+worker1 send request
+worker1 send request
+stop worker1
+```
+
+更复杂的场景如何做并发控制呢？比如子协程中开启了新的子协程，或者需要同时控制多个子协程。这种场景下，`select+chan`的方式就显得力不从心了。
+
+Go 语言提供了 Context 标准库可以解决这类场景的问题，Context 的作用和它的名字很像，上下文，即子协程的下上文。Context 有两个主要的功能：
+
+- 通知子协程退出（正常退出，超时退出等）；
+- 传递必要的参数。
+
 ### with 系列函数
 
 此外，`context`包中还定义了四个With系列函数。
 
 #### 1. withCancel
+
+`context.WithCancel()` 创建可取消的 Context 对象，即可以主动通知子协程退出。
 
 `WithCancel`的函数签名如下：
 
@@ -52,42 +131,71 @@ Go内置两个函数：`Background()`和`TODO()`，这两个函数分别返回�
 func WithCancel(parent Context) (ctx Context, cancel CancelFunc)
 ```
 
-`WithCancel`返回带有新Done通道的父节点的副本。当调用返回的cancel函数或当关闭父上下文的Done通道时，将关闭返回上下文的Done通道，无论先发生什么情况。
+**（1）控制单个协程**  
 
-取消此上下文将释放与其关联的资源，因此代码应该在此上下文中运行的操作完成后立即调用cancel。
+使用 Context 改写上述的例子，效果与 `select+chan` 相同。
 
 ```go
-func gen(ctx context.Context) <-chan int {
-		dst := make(chan int)
-		n := 1
-		go func() {
-			for {
-				select {
-				case <-ctx.Done():
-					return // return结束该goroutine，防止泄露
-				case dst <- n:
-					n++
-				}
-			}
-		}()
-		return dst
-	}
-func main() {
-	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel() // 当我们取完需要的整数后调用cancel
-
-	for n := range gen(ctx) {
-		fmt.Println(n)
-		if n == 5 {
-			break
+func reqTask(ctx context.Context, name string) {
+	for {
+		select {
+		case <-ctx.Done():
+			fmt.Println("stop", name)
+			return
+		default:
+			fmt.Println(name, "send request")
+			time.Sleep(1 * time.Second)
 		}
 	}
 }
+
+func main() {
+	ctx, cancel := context.WithCancel(context.Background())
+	go reqTask(ctx, "worker1")
+	time.Sleep(3 * time.Second)
+	cancel()
+	time.Sleep(3 * time.Second)
+}
 ```
 
-上面的示例代码中，`gen`函数在单独的goroutine中生成整数并将它们发送到返回的通道。 gen的调用者在使用生成的整数之后需要取消上下文，以免`gen`启动的内部goroutine发生泄漏。
+说明：
+
+- `context.Backgroud()` 创建根 Context，通常在 main 函数、初始化和测试代码中创建，作为顶层 Context。
+- `context.WithCancel(parent)` 创建可取消的子 Context，同时返回函数 `cancel`。
+- 在子协程中，使用 select 调用 `<-ctx.Done()` 判断是否需要退出。
+- 主协程中，调用 `cancel()` 函数通知子协程退出。
+
+**（2）控制多个协程** 
+
+```go
+func main() {
+	ctx, cancel := context.WithCancel(context.Background())
+	
+	go reqTask(ctx, "worker1")
+	go reqTask(ctx, "worker2")
+	
+	time.Sleep(3 * time.Second)
+	cancel()
+	time.Sleep(3 * time.Second)
+}
+```
+
+为每个子协程传递相同的上下文 `ctx` 即可，调用 `cancel()` 函数后该 Context 控制的所有子协程都会退出。
+
+```bash
+worker1 send request
+worker2 send request
+worker1 send request
+worker2 send request
+worker1 send request
+worker2 send request
+stop worker1
+stop worker2
+```
 
 #### 2. withDeadline
+
+超时退出可以控制子协程的最长执行时间，那 `context.WithDeadline()` 则可以控制子协程的最迟退出时间
 
 `WithDeadline`的函数签名如下：
 
@@ -100,28 +208,62 @@ func WithDeadline(parent Context, deadline time.Time) (Context, CancelFunc)
 取消此上下文将释放与其关联的资源，因此代码应该在此上下文中运行的操作完成后立即调用cancel。
 
 ```go
-func main() {
-	d := time.Now().Add(50 * time.Millisecond)
-	ctx, cancel := context.WithDeadline(context.Background(), d)
-
-	// 尽管ctx会过期，但在任何情况下调用它的cancel函数都是很好的实践。
-	// 如果不这样做，可能会使上下文及其父类存活的时间超过必要的时间。
-	defer cancel()
-
-	select {
-	case <-time.After(1 * time.Second):
-		fmt.Println("overslept")
-	case <-ctx.Done():
-		fmt.Println(ctx.Err())
+func reqTask(ctx context.Context, name string) {
+	for {
+		select {
+		case <-ctx.Done():
+			fmt.Println("stop", name, ctx.Err())
+			return
+		default:
+			fmt.Println(name, "send request")
+			time.Sleep(1 * time.Second)
+		}
 	}
+}
+
+func main() {
+	ctx, cancel := context.WithDeadline(context.Background(), time.Now().Add(1*time.Second))
+	go reqTask(ctx, "worker1")
+	go reqTask(ctx, "worker2")
+
+	time.Sleep(3 * time.Second)
+	fmt.Println("before cancel")
+	cancel()
+	time.Sleep(3 * time.Second)
 }
 ```
 
-上面的代码中，定义了一个50毫秒之后过期的deadline，然后我们调用`context.WithDeadline(context.Background(), d)`得到一个上下文（ctx）和一个取消函数（cancel），然后使用一个select让主程序陷入等待：等待1秒后打印`overslept`退出或者等待ctx过期后退出。
+- `WithDeadline` 用于设置截止时间。在这个例子中，将截止时间设置为1s后，`cancel()` 函数在 3s 后调用，因此子协程将在调用 `cancel()` 函数前结束。
+- 在子协程中，可以通过 `ctx.Err()` 获取到子协程退出的错误原因。
 
-在上面的示例代码中，因为ctx 50毫秒后就会过期，所以`ctx.Done()`会先接收到context到期通知，并且会打印ctx.Err()的内容。
+运行结果如下：
+
+```bash
+worker2 send request
+worker1 send request
+stop worker2 context deadline exceeded
+stop worker1 context deadline exceeded
+before cancel
+```
+
+可以看到，子协程 `worker1` 和 `worker2` 均是因为截止时间到了而退出。
 
 #### 3. withTimeout
+
+如果需要控制子协程的执行时间，可以使用 `context.WithTimeout` 创建具有超时通知机制的 Context 对象。
+
+```go
+func main() {
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+	go reqTask(ctx, "worker1")
+	go reqTask(ctx, "worker2")
+
+	time.Sleep(3 * time.Second)
+	fmt.Println("before cancel")
+	cancel()
+	time.Sleep(3 * time.Second)
+}
+```
 
 `WithTimeout`的函数签名如下：
 
@@ -177,6 +319,8 @@ func main() {
 
 #### 4. withValue
 
+如果需要往子协程中传递参数，可以使用 `context.WithValue()`。
+
 `WithValue`函数能够将请求作用域的数据与 Context 对象建立关系。声明如下：
 
 ```go
@@ -185,61 +329,40 @@ func WithValue(parent Context, key, val interface{}) Context
 
 `WithValue`返回父节点的副本，其中与key关联的值为val。
 
-仅对API和进程间传递请求域的数据使用上下文值，而不是使用它来传递可选参数给函数。
-
-所提供的键必须是可比较的，并且不应该是`string`类型或任何其他内置类型，以避免使用上下文在包之间发生冲突。`WithValue`的用户应该为键定义自己的类型。为了避免在分配给interface{}时进行分配，上下文键通常具有具体类型`struct{}`。或者，导出的上下文关键变量的静态类型应该是指针或接口。
-
 ```go
-package main
+type Options struct{
+    Interval time.Duration
+}
 
-import (
-	"context"
-	"fmt"
-	"sync"
-
-	"time"
-)
-
-// context.WithValue
-
-type TraceCode string
-
-var wg sync.WaitGroup
-
-func worker(ctx context.Context) {
-	key := TraceCode("TRACE_CODE")
-	traceCode, ok := ctx.Value(key).(string) // 在子goroutine中获取trace code
-	if !ok {
-		fmt.Println("invalid trace code")
-	}
-LOOP:
+func reqTask(ctx context.Context, name string) {
 	for {
-		fmt.Printf("worker, trace code:%s\n", traceCode)
-		time.Sleep(time.Millisecond * 10) // 假设正常连接数据库耗时10毫秒
 		select {
-		case <-ctx.Done(): // 50毫秒后自动调用
-			break LOOP
+		case <-ctx.Done():
+			fmt.Println("stop", name)
+			return
 		default:
+			fmt.Println(name, "send request")
+			op := ctx.Value("options").(*Options)
+			time.Sleep(op.Interval * time.Second)
 		}
 	}
-	fmt.Println("worker done!")
-	wg.Done()
 }
 
 func main() {
-	// 设置一个50毫秒的超时
-	ctx, cancel := context.WithTimeout(context.Background(), time.Millisecond*50)
-	// 在系统的入口中设置trace code传递给后续启动的goroutine实现日志数据聚合
-	ctx = context.WithValue(ctx, TraceCode("TRACE_CODE"), "12512312234")
-	wg.Add(1)
-	go worker(ctx)
-	time.Sleep(time.Second * 5)
-	cancel() // 通知子goroutine结束
-	wg.Wait()
-	fmt.Println("over")
-}
+	ctx, cancel := context.WithCancel(context.Background())
+	vCtx := context.WithValue(ctx, "options", &Options{1})
 
+	go reqTask(vCtx, "worker1")
+	go reqTask(vCtx, "worker2")
+
+	time.Sleep(3 * time.Second)
+	cancel()
+	time.Sleep(3 * time.Second)
+}
 ```
+
+- `context.WithValue()` 创建了一个基于 `ctx` 的子 Context，并携带了值 `options`。
+- 在子协程中，使用 `ctx.Value("options")` 获取到传递的值，读取/修改该值。
 
 ### context 注意事项
 
