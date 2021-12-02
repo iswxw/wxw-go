@@ -14,20 +14,20 @@ func main() {
 	var avg float32
 
 	/*数组作为参数传递给函数*/
-	avg = getAverage(balance,5)
+	avg = getAverage(balance, 5)
 
 	/*输出返回的平均数*/
-	fmt.Printf("平均值为：%f",avg)
+	fmt.Printf("平均值为：%f", avg)
 }
 
 // 定义一个函数
-func getAverage/*函数名称*/(arr [5]int,size int/*函数入参*/) float32/*返回值类型*/{
-	var i,sum int
+func getAverage /*函数名称*/ (arr [5]int, size int /*函数入参*/) float32 /*返回值类型*/ {
+	var i, sum int
 	var avg float32
 
-	for i=0;i<size;i++ {
-		sum+=arr[i]
+	for i = 0; i < size; i++ {
+		sum += arr[i]
 	}
-	avg = float32(sum)/float32(size)
+	avg = float32(sum) / float32(size)
 	return avg
 }

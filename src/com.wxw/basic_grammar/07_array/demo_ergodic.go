@@ -16,7 +16,7 @@ func main() {
 		fmt.Println(a[i])
 	}
 	// 方法2：for range 遍历
-	for index,value:= range a{
-		fmt.Println(index,value)
+	for index, value := range a {
+		fmt.Println(index, value)
 	}
 }

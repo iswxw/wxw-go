@@ -106,7 +106,7 @@ goroutine 1 [running]:
 sync.(*WaitGroup).Add(0x0, 0x0)
 	D:/Installed/go1.17.1/src/sync/waitgroup.go:74 +0x105
 main.main()
-	D:/Project/wxw-go/src/com.wxw/BasicGrammar/14_waitgroup/demo01.go:15 +0x36
+	D:/Project/wxw-go/src/com.wxw/basic_grammar/14_waitgroup/demo01.go:15 +0x36
 ```
 
 同样使用`Done()` 也要特别注意不要把计数器设置成负数了。

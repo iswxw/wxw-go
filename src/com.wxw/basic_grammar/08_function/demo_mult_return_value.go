@@ -10,10 +10,10 @@ package main
 import "fmt"
 
 func main() {
-	a,b := swap("百度","字节")
-	fmt.Println(a,b)
+	a, b := swap("百度", "字节")
+	fmt.Println(a, b)
 }
 
-func swap(x,y string) (string,string){
-	return y,x
+func swap(x, y string) (string, string) {
+	return y, x
 }
