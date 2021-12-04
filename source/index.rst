@@ -20,6 +20,7 @@ Contents:
    w03/index
    w04/index
    w05/index
+   w06/index
    wend/about
 
 --------------------------------------------
