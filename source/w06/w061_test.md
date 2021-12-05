@@ -279,6 +279,12 @@ go tool cover -html=test_report.out
 
 ### 基准测试
 
+当我们尝试去优化代码的性能时，首先得知道当前的性能怎么样。Go 语言标准库内置的 testing 测试框架提供了基准测试(benchmark)的能力，能让我们很容易地对某一段代码进行性能测试。
+
+性能测试受环境的影响很大，为了保证测试的可重复性，在进行性能测试时，尽可能地保持测试环境的稳定。
+
+
+
 在Go语言中，提供了测试函数性能（CPU和Memory）的测试方法，基准测试。
 
 基准测试（`Benchmark Test`）主要用来测试CPU和内存的效率问题，来评估被测代码的性能。测试人员可以根据这些性能指标的反馈，来优化我们的代码，进而提高性能问题。
@@ -667,3 +673,5 @@ BenchmarkHandleWithType-4：BenchmarkHandleWithType表示运行的函数名称�
 1. https://studygolang.com/articles/23960
 2. http://c.biancheng.net/view/124.html
 3. https://www.cnblogs.com/sss4/p/12859027.html
+4. https://geektutu.com/post/hpg-benchmark.html
+
