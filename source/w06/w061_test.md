@@ -593,7 +593,7 @@ BenchmarkHandleWithType-4：BenchmarkHandleWithType表示运行的函数名称�
   
           -json
               Convert test output to JSON suitable for automated processing.
-              See 'go doc test2json' for the encoding details.
+              See 'go doc test2json' for the w_encoding details.
   
           -o file
               Compile the test binary to the named file.

@@ -17,7 +17,7 @@ the Marshal and Unmarshal functions.
 ##### 1.1 使用 ` Marshal` 
 
 ```go
-// Marshal returns the JSON encoding of v.
+// Marshal returns the JSON w_encoding of v.
 func Marshal(v interface{}) ([]byte, error)
 ```
 
@@ -229,13 +229,13 @@ Field int `json:"-,"`
 ##### 1.3 ` marshal` 源码
 
 ```go
-// Marshal returns the JSON encoding of v.
+// Marshal returns the JSON w_encoding of v.
 //
 // Marshal traverses the value v recursively.
 // If an encountered value implements the Marshaler interface
 // and is not a nil pointer, Marshal calls its MarshalJSON method
 // to produce JSON. If no MarshalJSON method is present but the
-// value implements encoding.TextMarshaler instead, Marshal calls
+// value implements w_encoding.TextMarshaler instead, Marshal calls
 // its MarshalText method and encodes the result as a JSON string.
 // The nil pointer exception is not strictly necessary
 // but mimics a similar, necessary exception in the behavior of
@@ -265,14 +265,14 @@ Field int `json:"-,"`
 // field name as the object key, unless the field is omitted for one of the
 // reasons given below.
 //
-// The encoding of each struct field can be customized by the format string
+// The w_encoding of each struct field can be customized by the format string
 // stored under the "json" key in the struct field's tag.
 // The format string gives the name of the field, possibly followed by a
 // comma-separated list of options. The name may be empty in order to
 // specify options without overriding the default field name.
 //
 // The "omitempty" option specifies that the field should be omitted
-// from the encoding if the field has an empty value, defined as
+// from the w_encoding if the field has an empty value, defined as
 // false, 0, a nil pointer, a nil interface value, and any empty array,
 // slice, map, or string.
 //
@@ -302,7 +302,7 @@ Field int `json:"-,"`
 //
 // The "string" option signals that a field is stored as JSON inside a
 // JSON-encoded string. It applies only to fields of string, floating point,
-// integer, or boolean types. This extra level of encoding is sometimes used
+// integer, or boolean types. This extra level of w_encoding is sometimes used
 // when communicating with JavaScript programs:
 //
 //    Int64String int64 `json:",string"`
@@ -338,11 +338,11 @@ Field int `json:"-,"`
 // a JSON tag of "-".
 //
 // Map values encode as JSON objects. The map's key type must either be a
-// string, an integer type, or implement encoding.TextMarshaler. The map keys
+// string, an integer type, or implement w_encoding.TextMarshaler. The map keys
 // are sorted and used as JSON object keys by applying the following rules,
 // subject to the UTF-8 coercion described for string values above:
 //   - keys of any string type are used directly
-//   - encoding.TextMarshalers are marshaled
+//   - w_encoding.TextMarshalers are marshaled
 //   - integer keys are converted to strings
 //
 // Pointer values encode as the value pointed to.
@@ -412,7 +412,7 @@ func Unmarshal(data []byte, v interface{}) error
 // To unmarshal JSON into a value implementing the Unmarshaler interface,
 // Unmarshal calls that value's UnmarshalJSON method, including
 // when the input is a JSON null.
-// Otherwise, if the value implements encoding.TextUnmarshaler
+// Otherwise, if the value implements w_encoding.TextUnmarshaler
 // and the input is a JSON quoted string, Unmarshal calls that value's
 // UnmarshalText method with the unquoted form of the string.
 //
@@ -449,7 +449,7 @@ func Unmarshal(data []byte, v interface{}) error
 // reuses the existing map, keeping existing entries. Unmarshal then stores
 // key-value pairs from the JSON object into the map. The map's key type must
 // either be any string type, an integer, implement json.Unmarshaler, or
-// implement encoding.TextUnmarshaler.
+// implement w_encoding.TextUnmarshaler.
 //
 // If a JSON value is not appropriate for a given target type,
 // or if a JSON number overflows the target type, Unmarshal

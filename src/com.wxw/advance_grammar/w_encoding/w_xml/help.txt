@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+    <students version="1">
+         <student>
+            <student-id>3782378</student-id>
+            <student-name>江华</student-name>
+            <address>北京昌平区</address>
+            <school>TaiAn School</school>
+            <age>34</age>
+            <gender>0</gender>
+        </student>
+        <student>
+            <student-id>3782379</student-id>
+            <student-name>小歪子Go</student-name>
+            <address>北京昌平区</address>
+            <school>ShiPai School</school>
+            <age>30</age>
+            <gender>1</gender>
+        </student>
+    </students>
