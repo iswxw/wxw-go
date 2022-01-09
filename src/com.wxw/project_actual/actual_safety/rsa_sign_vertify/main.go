@@ -23,13 +23,17 @@ func main() {
 	fmt.Println("============签名和验签测试==============")
 	testSignAndVerify()
 
+	// 测试分段加密和解密
+	fmt.Println("============测试分段加密和解密===========")
+	testDecryptAndEncryptMustLong()
+
 }
 
 // 测试加密和解密
 func testDecryptAndEncrypt() {
 	// 待加密字符
-	plains := "我们的人生不能靠心情活着,而要靠心态去生活,我们都不是完美的人,但要接受不完美的自己,学会独立,告别依赖,对软弱的自己说再见,永远不要停止相信自己!踏实一些,你想要的,岁月统统会还给你"
-	// plains := "我们的人生不能靠心情活着,而要靠心态去生活."
+	// plains := "我们的人生不能靠心情活着,而要靠心态去生活,我们都不是完美的人,但要接受不完美的自己,学会独立,告别依赖,对软弱的自己说再见,永远不要停止相信自己!踏实一些,你想要的,岁月统统会还给你"
+	plains := "我们的人生不能靠心情活着,而要靠心态去生活."
 
 	fmt.Println("加密前：" + plains)
 
@@ -37,6 +41,23 @@ func testDecryptAndEncrypt() {
 	fmt.Printf("加密后：%x\n", cipherText)
 
 	cipherPlains := utils.RSADecrypt(cipherText, utils.PemPath("private.pem"))
+	fmt.Println("解密后：" + string(cipherPlains))
+}
+
+// 测试 待加密字段太长问题
+func testDecryptAndEncryptMustLong() {
+	// 待加密字符
+	plains := "我们的人生不能靠心情活着,而要靠心态去生活,我们都不是完美的人,但要接受不完美的自己,学会独立,告别依赖,对软弱的自己说再见,永远不要停止相信自己!踏实一些,你想要的,岁月统统会还给你"
+	// plains := "我们的人生不能靠心情活着,而要靠心态去生活."
+	fmt.Println("加密前：" + plains)
+
+	cipherText, err := utils.RSAEncryptBlock([]byte(plains), utils.PemPath("public.pem"))
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Printf("加密后：%x\n", cipherText)
+
+	cipherPlains, _ := utils.RSADecryptBlock(cipherText, utils.PemPath("private.pem"))
 	fmt.Println("解密后：" + string(cipherPlains))
 }
 

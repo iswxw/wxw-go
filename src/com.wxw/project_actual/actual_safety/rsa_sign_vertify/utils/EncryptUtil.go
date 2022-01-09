@@ -6,6 +6,7 @@
 package utils
 
 import (
+	"bytes"
 	"crypto"
 	"crypto/md5"
 	"crypto/rand"
@@ -13,6 +14,7 @@ import (
 	"crypto/x509"
 	"encoding/pem"
 	"fmt"
+	"log"
 	"os"
 	"src/com.wxw/project_actual/src/com.wxw/common/consts"
 )
@@ -67,19 +69,9 @@ func GeneratorRsaPairKeys(bits int) {
 // path 公钥匙文件地址
 func RSAEncrypt(plainText []byte, publicPath string) []byte {
 	//打开文件
-	file, err := os.Open(publicPath)
-	if err != nil {
-		panic(err)
-	}
-	defer file.Close()
-	//读取文件的内容
-	info, _ := file.Stat()
-	buf := make([]byte, info.Size())
-	file.Read(buf)
-	//pem解码
-	block, _ := pem.Decode(buf)
+	currentKey, _ := ReadFileKey(publicPath)
 	//x509解码
-	publicKeyInterface, err := x509.ParsePKIXPublicKey(block.Bytes)
+	publicKeyInterface, err := x509.ParsePKIXPublicKey(currentKey)
 	if err != nil {
 		panic(err)
 	}
@@ -94,24 +86,63 @@ func RSAEncrypt(plainText []byte, publicPath string) []byte {
 	return cipherText
 }
 
-// [3] 私钥解密
-// cipherText 需要解密的byte数据
-// path 私钥文件路径
-func RSADecrypt(cipherText []byte, privatePath string) []byte {
-	//打开文件
-	file, err := os.Open(privatePath)
+// 读取秘钥内容
+func ReadFileKey(filePath string) (key []byte, err error) {
+	file, err := os.Open(filePath)
 	if err != nil {
-		panic(err)
+		log.Println("open file err: ", err)
+		return nil, err
 	}
 	defer file.Close()
-	//获取文件内容
+	//读取文件的内容
 	info, _ := file.Stat()
 	buf := make([]byte, info.Size())
 	file.Read(buf)
 	//pem解码
 	block, _ := pem.Decode(buf)
+	return block.Bytes, nil
+}
+
+// 公钥加密-分段
+func RSAEncryptBlock(plainText []byte, publicPath string) (bytesEncrypt []byte, err error) {
+	//打开文件
+	currentKey, _ := ReadFileKey(publicPath)
+	//x509解码
+	publicKeyInterface, err := x509.ParsePKIXPublicKey(currentKey)
+	if err != nil {
+		return
+	}
+	//类型断言
+	publicKey := publicKeyInterface.(*rsa.PublicKey)
+	keySize, srcSize := publicKey.Size(), len(plainText)
+	//单次加密的长度需要减掉padding的长度，PKCS1为11
+	offSet, once := 0, keySize-11
+	buffer := bytes.Buffer{}
+	for offSet < srcSize {
+		endIndex := offSet + once
+		if endIndex > srcSize {
+			endIndex = srcSize
+		}
+		// 加密一部分
+		bytesOnce, err := rsa.EncryptPKCS1v15(rand.Reader, publicKey, plainText[offSet:endIndex])
+		if err != nil {
+			return nil, err
+		}
+		buffer.Write(bytesOnce)
+		offSet = endIndex
+	}
+	bytesEncrypt = buffer.Bytes()
+	return
+}
+
+// [3] 私钥解密
+// cipherText 需要解密的byte数据
+// path 私钥文件路径
+func RSADecrypt(cipherText []byte, privatePath string) []byte {
+	//打开文件
+	currentKey, _ := ReadFileKey(privatePath)
 	//X509解码
-	privateKey, err := x509.ParsePKCS1PrivateKey(block.Bytes)
+	privateKey, err := x509.ParsePKCS1PrivateKey(currentKey)
 	if err != nil {
 		panic(err)
 	}
@@ -121,7 +152,36 @@ func RSADecrypt(cipherText []byte, privatePath string) []byte {
 	return plainText
 }
 
-// 签名
+// 私钥解密-分段
+func RSADecryptBlock(cipherText []byte, privatePath string) (bytesDecrypt []byte, err error) {
+	//打开文件
+	currentKey, _ := ReadFileKey(privatePath)
+	//X509解码
+	privateKey, err := x509.ParsePKCS1PrivateKey(currentKey)
+	if err != nil {
+		return
+	}
+	keySize := privateKey.Size()
+	srcSize := len(cipherText)
+	var offSet = 0
+	var buffer = bytes.Buffer{}
+	for offSet < srcSize {
+		endIndex := offSet + keySize
+		if endIndex > srcSize {
+			endIndex = srcSize
+		}
+		bytesOnce, err := rsa.DecryptPKCS1v15(rand.Reader, privateKey, cipherText[offSet:endIndex])
+		if err != nil {
+			return nil, err
+		}
+		buffer.Write(bytesOnce)
+		offSet = endIndex
+	}
+	bytesDecrypt = buffer.Bytes()
+	return
+}
+
+// 私钥 签名
 func Sign(signData []byte, privatePath string) []byte {
 	//消息先进行Hash处理
 	h := md5.New()
@@ -153,22 +213,12 @@ func Sign(signData []byte, privatePath string) []byte {
 	return sig
 }
 
-// 验签
+// 公钥 验签
 func Verify(signData []byte, publicPath string, sign []byte) bool {
 	//打开文件
-	file, err := os.Open(publicPath)
-	if err != nil {
-		panic(err)
-	}
-	defer file.Close()
-	//读取文件的内容
-	info, _ := file.Stat()
-	buf := make([]byte, info.Size())
-	file.Read(buf)
-	//pem解码
-	block, _ := pem.Decode(buf)
+	currentKey, _ := ReadFileKey(publicPath)
 	//x509解码
-	publicKeyInterface, err := x509.ParsePKIXPublicKey(block.Bytes)
+	publicKeyInterface, err := x509.ParsePKIXPublicKey(currentKey)
 	if err != nil {
 		panic(err)
 	}

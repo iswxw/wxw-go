@@ -229,3 +229,4 @@ func RsaDecryptBlock(src, privateKeyBytes []byte) (bytesDecrypt []byte, err erro
 1. [Java 公钥加密私钥解密实现理论](https://github.com/iswxw/wxw-distributed/tree/dev-wxw/cloud-safety) 
 2. [Golang 实现RSA加密解密](https://www.cnblogs.com/zhichaoma/p/12516715.html)  
 3. [Golang RSA实现加密解密和签名与验签](https://www.jianshu.com/p/0d4954aad89f) 
+3. [密码学](https://blog.csdn.net/zhongliwen1981/article/details/104718931) 
