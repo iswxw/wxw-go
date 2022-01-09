@@ -2,7 +2,14 @@
 
 ### 基础回顾
 
-基础知识可以查看 [Java 签名和验签相关文章](https://github.com/iswxw/wxw-distributed/tree/dev-wxw/cloud-safety) ，关于go加密和解密实现如下：
+基础知识可以查看 [Java 签名和验签相关文章](https://github.com/iswxw/wxw-distributed/tree/dev-wxw/cloud-safety) ，在尝试RSA加/解密的时候，发现go标准库中仅有"公钥加密，私钥解密"，而没有“私钥加密、公钥解密”。经过考虑，我认为GO的开发者是故意这样设计的，原因如下：
+
+1. 非对称加密相比对称加密的好处就是：私钥自己保留，公钥公布出去，公钥加密后只有私钥能解开，私钥加密后只有公钥能解开。
+2. 如果仅有一对密钥，与对称加密区别就不大了。假如你是服务提供方，使用私钥进行加密后，接入方使用你提供的公钥进行解密，一旦这个公钥泄漏，带来的后果和对称加密密钥泄漏是一样的。只有双方互换公钥（均使用对方公钥加密，己方私钥解密），才能充分发挥非对称加密的优势。
+
+当然，有第三方库支持“私钥加密、公钥解密”的，有兴趣的伙伴可自行百度。
+
+关于go加密和解密实现如下：
 
 #### 1. 实现加密解密
 
@@ -72,10 +79,72 @@ func main() {
 
 #### 2. 问题和方案
 
-- 通过签名和验签 避免 信息被篡改
-- 通过分段加密和解密解决 带解析信息太长问题
+- 通过 **签名和验签** 避免 信息被篡改
 
+- 通过 **分段加密和解密** 解决 待解密解密信息太长导致解密和解密失败的问题
 
+  **RSA加密时，明文长度>（密钥长度-padding长度）时需要进行分段。PKCS1填充长度为11**  
+
+```go
+/**
+ * 公钥加密-分段
+ */
+func RsaEncryptBlock(src, publicKeyByte []byte) (bytesEncrypt []byte, err error) {
+	publicKey, err := x509.ParsePKCS1PublicKey(publicKeyByte)
+	if err != nil {
+		return
+	}
+	keySize, srcSize := publicKey.Size(), len(src)
+	log.Println("密钥长度：", keySize, "\t明文长度：\t", srcSize)
+	//单次加密的长度需要减掉padding的长度，PKCS1为11
+	offSet, once := 0, keySize-11
+	buffer := bytes.Buffer{}
+	for offSet < srcSize {
+		endIndex := offSet + once
+		if endIndex > srcSize {
+			endIndex = srcSize
+		}
+		// 加密一部分
+		bytesOnce, err := rsa.EncryptPKCS1v15(rand.Reader, publicKey, src[offSet:endIndex])
+		if err != nil {
+			return nil, err
+		}
+		buffer.Write(bytesOnce)
+		offSet = endIndex
+	}
+	bytesEncrypt = buffer.Bytes()
+	return
+}
+
+/**
+ * 私钥解密-分段
+ */
+func RsaDecryptBlock(src, privateKeyBytes []byte) (bytesDecrypt []byte, err error) {
+	privateKey, err := x509.ParsePKCS1PrivateKey(privateKeyBytes)
+	if err != nil {
+		return
+	}
+	keySize := privateKey.Size()
+	srcSize := len(src)
+	log.Println("密钥长度：", keySize, "\t密文长度：\t", srcSize)
+	var offSet = 0
+	var buffer = bytes.Buffer{}
+	for offSet < srcSize {
+		endIndex := offSet + keySize
+		if endIndex > srcSize {
+			endIndex = srcSize
+		}
+		bytesOnce, err := rsa.DecryptPKCS1v15(rand.Reader, privateKey, src[offSet:endIndex])
+		if err != nil {
+			return nil, err
+		}
+		buffer.Write(bytesOnce)
+		offSet = endIndex
+	}
+	bytesDecrypt = buffer.Bytes()
+	return
+}
+```
 
 ### 辅助工具
 

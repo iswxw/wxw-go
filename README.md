@@ -11,26 +11,28 @@
 #### 文章目录
 
 - 第一章：基础知识
-  - [1.基础知识之 流程控制](https://wxw-go.readthedocs.io/en/latest/w01/w011_goto.html)
-  - [2. 基础知识之异常处理](https://wxw-go.readthedocs.io/en/latest/w01/w012_defer.html)  
-  
+  - [1. 基础知识之流程控制](https://wxw-go.readthedocs.io/en/dev-wxw/w01/w011_process.html)
+  - [2. 基础知识之异常处理](https://wxw-go.readthedocs.io/en/dev-wxw/w01/w012_exception.html)
+  - [3. 基础知识之函数](https://wxw-go.readthedocs.io/en/dev-wxw/w01/w013_function.html)
 - 第二章：面向对象
-  - [1. 面向对象之结构体](https://wxw-go.readthedocs.io/en/latest/w02/w021_struct.html) 
-  - [2. 面向对象之接口](https://wxw-go.readthedocs.io/en/latest/w02/w022_interface.html)
-  - [3. 面向对象之数组](https://wxw-go.readthedocs.io/en/latest/w02/w023_array.html)
-  - [4. 面向对象之切片Slice](https://wxw-go.readthedocs.io/en/latest/w02/w024_slice.html)
-  - [5. 面向对象之集合Map](https://wxw-go.readthedocs.io/en/latest/w02/w025_map.html)
-  
+  - [1. 面向对象之结构体](https://wxw-go.readthedocs.io/en/dev-wxw/w02/w021_struct.html)
+  - [2. 面向对象之接口](https://wxw-go.readthedocs.io/en/dev-wxw/w02/w022_interface.html)
+  - [3. 面向对象之数组](https://wxw-go.readthedocs.io/en/dev-wxw/w02/w023_array.html)
+  - [4. 面向对象之切片Slice](https://wxw-go.readthedocs.io/en/dev-wxw/w02/w024_slice.html)
+  - [5. 面向对象之集合Map](https://wxw-go.readthedocs.io/en/dev-wxw/w02/w025_map.html)
 - 第三章：并发编程
-
   - [1. 并发编程 概述](https://wxw-go.readthedocs.io/en/dev-wxw/w03/w031_summary.html)
-
-  - [2. 并发编程之` goroutine`](https://wxw-go.readthedocs.io/en/dev-wxw/w03/w032_goroutine.html) 
-
+  - [2. 并发编程之` goroutine`](https://wxw-go.readthedocs.io/en/dev-wxw/w03/w032_goroutine.html)
 - 第四章：数据操作
-  - [1. Go 操作MySQL](https://wxw-go.readthedocs.io/en/latest/w04/w04_mysql.html)
-
-
+  - [1. Go 操作MySQL](https://wxw-go.readthedocs.io/en/dev-wxw/w04/w041_mysql.html)
+  - [2. Go 操作 Redis](https://wxw-go.readthedocs.io/en/dev-wxw/w04/w042_redis.html)
+- 第五章：源码学习
+  - [1. package/sync](https://wxw-go.readthedocs.io/en/dev-wxw/w05/w051_sync.html)
+  - [2. pkg/context](https://wxw-go.readthedocs.io/en/dev-wxw/w05/w052_context.html)
+  - [3. package/encoding/json](https://wxw-go.readthedocs.io/en/dev-wxw/w05/w053_json.html)
+- 第六章：工程实践
+  - [1. 工程实践之测试](https://wxw-go.readthedocs.io/en/dev-wxw/w06/w061_test.html)
+  - [2. 工程实践之安全](https://wxw-go.readthedocs.io/en/dev-wxw/w06/w062_safety.html) 
 
 ---
 
