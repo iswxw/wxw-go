@@ -3,5 +3,4 @@ build/*
 .idea/
 Makefile
 Pipfile
-test*
 Untitled*
