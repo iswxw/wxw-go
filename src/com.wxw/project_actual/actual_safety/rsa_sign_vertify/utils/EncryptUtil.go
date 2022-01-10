@@ -189,26 +189,16 @@ func Sign(signData []byte, privatePath string) []byte {
 	hashed := h.Sum(nil)
 	//签名
 	//打开文件
-	file, err := os.Open(privatePath)
-	if err != nil {
-		panic(err)
-	}
-	defer file.Close()
-	//获取文件内容
-	info, _ := file.Stat()
-	buf := make([]byte, info.Size())
-	file.Read(buf)
-	//pem解码
-	block, _ := pem.Decode(buf)
+	currentKey, _ := ReadFileKey(privatePath)
 	//X509解码
-	privateKey, err := x509.ParsePKCS1PrivateKey(block.Bytes)
+	privateKey, err := x509.ParsePKCS1PrivateKey(currentKey)
 	if err != nil {
 		panic(err)
 	}
 	opts := &rsa.PSSOptions{SaltLength: rsa.PSSSaltLengthAuto, Hash: crypto.MD5}
 	sig, e := rsa.SignPSS(rand.Reader, privateKey, crypto.MD5, hashed, opts)
 	if e != nil {
-		fmt.Println(e)
+		log.Println("sign err：", e)
 	}
 	return sig
 }
