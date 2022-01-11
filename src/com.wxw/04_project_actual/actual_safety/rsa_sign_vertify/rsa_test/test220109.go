@@ -7,8 +7,8 @@ package main
 
 import (
 	"fmt"
-	"src/com.wxw/project_actual/src/com.wxw/project_actual/actual_safety/rsa_sign_vertify/rsa_test/dd220109"
-	"src/com.wxw/project_actual/src/com.wxw/project_actual/actual_safety/rsa_sign_vertify/utils"
+	"src/com.wxw/project_actual/src/com.wxw/04_project_actual/actual_safety/rsa_sign_vertify/rsa_test/dd220109"
+	"src/com.wxw/project_actual/src/com.wxw/04_project_actual/actual_safety/rsa_sign_vertify/utils"
 )
 
 func main() {

@@ -98,7 +98,7 @@ func BenchmarkUnmarshalWithPool(b *testing.B) {
 $ go test -bench . -benchmem
 goos: darwin
 goarch: amd64
-pkg: example/hpg-sync-pool
+05_pkg: example/hpg-sync-pool
 BenchmarkUnmarshal-8           1993   559768 ns/op   5096 B/op 7 allocs/op
 BenchmarkUnmarshalWithPool-8   1976   550223 ns/op    234 B/op 6 allocs/op
 PASS
@@ -749,7 +749,7 @@ goroutine 1 [running]:
 sync.(*WaitGroup).Add(0x0, 0x0)
 	D:/Installed/go1.17.1/src/sync/waitgroup.go:74 +0x105
 main.main()
-	D:/Project/wxw-go/src/com.wxw/basic_grammar/14_waitgroup/demo01.go:15 +0x36
+	D:/Project/wxw-go/src/com.wxw/01_basic_grammar/14_waitgroup/demo01.go:15 +0x36
 ```
 
 同样使用`Done()` 也要特别注意不要把计数器设置成负数了。

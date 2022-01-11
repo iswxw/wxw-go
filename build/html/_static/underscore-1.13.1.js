@@ -427,7 +427,7 @@
         return false;
       }
     }
-    // Assume equality for cyclic structures. The algorithm for detecting cyclic
+    // Assume equality for cyclic structures. The 06_algorithm for detecting cyclic
     // structures is adapted from ES 5.1 section 15.12.3, abstract operation `JO`.
 
     // Initializing stack of traversed objects.
@@ -1715,10 +1715,10 @@
   });
 
   // Produce a duplicate-free version of the array. If the array has already
-  // been sorted, you have the option of using a faster algorithm.
-  // The faster algorithm will not work with an iteratee if the iteratee
+  // been sorted, you have the option of using a faster 06_algorithm.
+  // The faster 06_algorithm will not work with an iteratee if the iteratee
   // is not a one-to-one function, so providing an iteratee will disable
-  // the faster algorithm.
+  // the faster 06_algorithm.
   function uniq(array, isSorted, iteratee, context) {
     if (!isBoolean(isSorted)) {
       context = iteratee;

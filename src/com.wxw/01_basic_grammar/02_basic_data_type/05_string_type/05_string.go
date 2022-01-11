@@ -14,7 +14,7 @@ import (
 // 字符串
 func main() {
 	// \ 本来具有特殊含义，所以加 \ 表示单纯的 \ 不再解析
-	path := "F:\\Study_GO\\Study_Project\\go\\wxw-go\\src\\com.wxw\\basic_grammar\\02_basic_data_type\\05_string_type\\05_string.go"
+	path := "F:\\Study_GO\\Study_Project\\go\\wxw-go\\src\\com.wxw\\01_basic_grammar\\02_basic_data_type\\05_string_type\\05_string.go"
 	fmt.Printf("%s \n", path)
 
 	s := "I‘m ok"

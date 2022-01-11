@@ -104,7 +104,7 @@ func loadIni(fileName string, data interface{}) (err error) {
 func main() {
 	// fmt.Println(os.Getwd())
 	var cfg Config
-	err := loadIni("./src/com.wxw/basic_grammar/06_go_ini/conf.ini", &cfg)
+	err := loadIni("./src/com.wxw/01_basic_grammar/06_go_ini/conf.ini", &cfg)
 	if err != nil {
 		fmt.Printf("load ini failed,err: %v \n", err)
 		return

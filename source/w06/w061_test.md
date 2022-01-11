@@ -108,7 +108,7 @@ C:\Project\wxw-go\src\com.wxw\project_actual\actual_test\unit_test>go test -v
 === RUN   TestPunctuationSplit
 --- PASS: TestPunctuationSplit (0.00s)
 PASS
-ok      src/com.wxw/project_actual/src/com.wxw/project_actual/actual_test/unit_test     0.120s
+ok      src/com.wxw/04_project_actual/src/com.wxw/04_project_actual/actual_test/unit_test     0.120s
 ```
 
 当然，我们可以继续优化测试代码！利用结构体组织测试数据把多个测试用例合到一起，在1个函数内对1组测试用例进行统一测试。
@@ -383,7 +383,7 @@ HandleType: 1BenchMark Test: Sub
 HandleType: 1BenchMark Test: Sub
    52947             98138 ns/op              96 B/op          3 allocs/op
 PASS
-ok      src/com.wxw/project_actual/src/com.wxw/project_actual/actual_test/benchmark_test        6.476s
+ok      src/com.wxw/04_project_actual/src/com.wxw/04_project_actual/actual_test/benchmark_test        6.476s
 ```
 
 **输出结果分析** 
@@ -578,8 +578,8 @@ BenchmarkHandleWithType-4：BenchmarkHandleWithType表示运行的函数名称�
               the package list (if present) must appear before this flag.
   
           -c
-              Compile the test binary to pkg.test but do not run it
-              (where pkg is the last element of the package's import path).
+              Compile the test binary to 05_pkg.test but do not run it
+              (where 05_pkg is the last element of the package's import path).
               The file name can be changed with the -o flag.
   
           -exec xprog
