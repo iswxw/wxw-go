@@ -1,0 +1,11 @@
+{
+  "system":{
+    "mode": "development"
+  },
+  "log": {
+    "prefix": "[MY-LOG] ",
+    "log-file": true,
+    "stdout": "DEBUG",
+    "file": "WARNING"
+  }
+}

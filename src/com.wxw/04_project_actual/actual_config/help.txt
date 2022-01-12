@@ -1,0 +1,18 @@
+
+
+1. 日常开发中读取配置文件包含以下几种格式：
+    - json 格式字符串
+    - K=V 键值对
+    - xml 文件
+    - yml 格式文件
+    - toml 格式文件
+
+2. 相关的工具
+   1. Viper一个方便Go语言应用程序处理配置信息的库
+       = https://github.com/spf13/viper
+       - https://www.liwenzhou.com/posts/Go/viper_tutorial/
+
+相关文章
+  1. https://www.liwenzhou.com/posts/Go/viper_tutorial/
+  2. https://www.cnblogs.com/zhangyafei/p/12863384.html
+  3. [github]https://github.com/spf13/viper
