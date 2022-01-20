@@ -1,7 +1,7 @@
 /*
 @Time : 2022/1/19 22:44
 @Author : weixiaowei
-@File : demo01 文档：http://books.studygolang.com/go-patterns/behavioral/strategy.html
+@File : demo 文档：http://books.studygolang.com/go-patterns/behavioral/strategy.html
 */
 package main
 
