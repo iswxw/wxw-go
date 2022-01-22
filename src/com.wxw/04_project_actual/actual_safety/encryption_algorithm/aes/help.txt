@@ -1,0 +1,9 @@
+
+[笔记]
+  1. 和其它语言交互 AES、DES、RSA 加密和解密总结 (https://github.com/polaris1119/myblog_article_code)
+  2. 各种语言使用汇总，语言之间的交互待验证（https://github.com/mervick/aes-everywhere）
+  3. go 语言实现aes cbc 128,256 (https://github.com/chentaihan/aesCbc)
+
+
+[相关问题]
+  1. 处理了由于base64编码在url请求传输导致 解码失败的问题 (https://blog.csdn.net/u014270740/article/details/91038606)

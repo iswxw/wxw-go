@@ -32,7 +32,7 @@ func AesEncrypt(orig string, key string) string {
 	origData := []byte(orig)
 	k := []byte(key)
 
-	// 分组秘钥
+	// 分组秘钥 // NewCipher该函数限制了输入k的长度必须为16, 24或者32
 	block, _ := aes.NewCipher(k)
 	// 获取秘钥块的长度
 	blockSize := block.BlockSize()
