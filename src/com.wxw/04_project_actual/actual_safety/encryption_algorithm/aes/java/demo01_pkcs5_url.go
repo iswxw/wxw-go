@@ -17,30 +17,31 @@ func main() {
 
 	// AES-128。key长度：16, 24, 32 bytes 对应 AES-128, AES-192, AES-256
 	content := "weixiaowei@qoogle.com"
-
-	key := []byte("0123456789ABCDEF")
-	result, err := AesEncrypt02([]byte(content), key)
+	keyValue := "0123456789ABCDEF"
+	key := []byte(keyValue)
+	result, err := AesEncrypt([]byte(content), key)
 	if err != nil {
 		panic(err)
 	}
 
 	// 加密后： xBtQod-SPFDn0WVgbxa1lAwoUqffgf5nB_O4e9RO3PY
 	fmt.Println("加密后：", base64.RawURLEncoding.EncodeToString(result))
+
 	decodeString, _ := base64.RawURLEncoding.DecodeString("xBtQod-SPFDn0WVgbxa1lAwoUqffgf5nB_O4e9RO3PY")
-	origData, err := AesDecrypt02(decodeString, key)
+	origData, err := AesDecrypt(decodeString, key)
 	if err != nil {
 		panic(err)
 	}
 	fmt.Println("解密后：", string(origData))
 }
 
-func AesEncrypt02(origData, key []byte) ([]byte, error) {
+func AesEncrypt(origData, key []byte) ([]byte, error) {
 	block, err := aes.NewCipher(key)
 	if err != nil {
 		return nil, err
 	}
 	blockSize := block.BlockSize()
-	origData = PKCS7Padding02(origData, blockSize)
+	origData = PKCS7Padding01(origData, blockSize)
 	// origData = ZeroPadding(origData, block.BlockSize())
 	blockMode := cipher.NewCBCEncrypter(block, key[:blockSize])
 	crypted := make([]byte, len(origData))
@@ -50,7 +51,7 @@ func AesEncrypt02(origData, key []byte) ([]byte, error) {
 	return crypted, nil
 }
 
-func AesDecrypt02(crypted, key []byte) ([]byte, error) {
+func AesDecrypt(crypted, key []byte) ([]byte, error) {
 	block, err := aes.NewCipher(key)
 	if err != nil {
 		return nil, err
@@ -60,7 +61,7 @@ func AesDecrypt02(crypted, key []byte) ([]byte, error) {
 	origData := make([]byte, len(crypted))
 	// origData := crypted
 	blockMode.CryptBlocks(origData, crypted)
-	origData = PKCS7UnPadding02(origData)
+	origData = PKCS7UnPadding01(origData)
 	// origData = ZeroUnPadding(origData)
 	return origData, nil
 }
@@ -78,14 +79,14 @@ func AesDecrypt02(crypted, key []byte) ([]byte, error) {
 //}
 
 //补码
-func PKCS7Padding02(ciphertext []byte, blockSize int) []byte {
+func PKCS7Padding01(ciphertext []byte, blockSize int) []byte {
 	padding := blockSize - len(ciphertext)%blockSize
 	padText := bytes.Repeat([]byte{byte(padding)}, padding)
 	return append(ciphertext, padText...)
 }
 
 //去码
-func PKCS7UnPadding02(origData []byte) []byte {
+func PKCS7UnPadding01(origData []byte) []byte {
 	length := len(origData)
 	// 去掉最后一个字节 unpadding 次
 	unPadding := int(origData[length-1])

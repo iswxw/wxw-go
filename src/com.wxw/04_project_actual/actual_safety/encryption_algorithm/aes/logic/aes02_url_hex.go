@@ -1,7 +1,7 @@
 /*
-@Time : 2022/1/22 02:29
+@Time : 2022/1/23 15:01
 @Author : weixiaowei
-@File : demo02
+@File : aes_key16
 */
 package main
 
@@ -17,16 +17,21 @@ import (
 //  1. 将base64编码改为hex编码 原因是 通过程序参数执行 base64解码时位数不一致导致解密失败
 // 相关文章
 // 1. https://blog.csdn.net/u014270740/article/details/91038606
+
 func main() {
-	orig := "hello world"             // 原文
-	key := "123456781234567812345678" // 加密串、sign
-	fmt.Println("原文：", orig)
+	//m := md5.Sum([]byte("cvrhsdftredhghgfjhgwsfresdsfhjk"))
+	//key := hex.EncodeToString(m[:])[0:16]
 
-	encryptCode := AesEncrypt02(orig, key)
-	fmt.Println("密文：", encryptCode)
+	key := "0123456789ABCDEF"
+	content := "weixiaowei@qoogle.com"
 
-	decryptCode := AesDecrypt02(encryptCode, key)
-	fmt.Println("解密结果：", decryptCode)
+	// 加密
+	encryptResult := AesEncrypt02(content, key)
+	fmt.Println("加密后：", encryptResult)
+
+	decryptResult := AesDecrypt02(encryptResult, key)
+	fmt.Println("解密后：", decryptResult)
+
 }
 
 // AES 加密
