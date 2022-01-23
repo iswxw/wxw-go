@@ -65,18 +65,6 @@ func AesDecrypt05(crypted, key []byte) ([]byte, error) {
 	return origData, nil
 }
 
-//func ZeroPadding(ciphertext []byte, blockSize int) []byte {
-//	padding := blockSize - len(ciphertext)%blockSize
-//	padtext := bytes.Repeat([]byte{0}, padding)
-//	return append(ciphertext, padtext...)
-//}
-//
-//func ZeroUnPadding(origData []byte) []byte {
-//	length := len(origData)
-//	unpadding := int(origData[length-1])
-//	return origData[:(length - unpadding)]
-//}
-
 //补码
 func PKCS7Padding05(ciphertext []byte, blockSize int) []byte {
 	padding := blockSize - len(ciphertext)%blockSize

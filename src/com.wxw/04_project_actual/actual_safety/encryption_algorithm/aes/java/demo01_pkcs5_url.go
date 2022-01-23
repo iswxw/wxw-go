@@ -27,7 +27,7 @@ func main() {
 	// 加密后： xBtQod-SPFDn0WVgbxa1lAwoUqffgf5nB_O4e9RO3PY
 	fmt.Println("加密后：", base64.RawURLEncoding.EncodeToString(result))
 
-	decodeString, _ := base64.RawURLEncoding.DecodeString("xBtQod-SPFDn0WVgbxa1lAwoUqffgf5nB_O4e9RO3PY")
+	decodeString, _ := base64.RawURLEncoding.DecodeString("w0xFzL8zZVcpZq_KHzTmISwibcKpzwh6FseTq2KP8Xg")
 	origData, err := AesDecrypt(decodeString, key)
 	if err != nil {
 		panic(err)
