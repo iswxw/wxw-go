@@ -9,7 +9,9 @@ import (
 	"bytes"
 	"crypto/aes"
 	"crypto/cipher"
+	"crypto/sha1"
 	"encoding/base64"
+	"errors"
 	"fmt"
 )
 
@@ -36,6 +38,7 @@ func main() {
 }
 
 func AesEncrypt(origData, key []byte) ([]byte, error) {
+	key, _ = AesSha1prng(key, 128) // 比示例一多出这一步
 	block, err := aes.NewCipher(key)
 	if err != nil {
 		return nil, err
@@ -44,10 +47,12 @@ func AesEncrypt(origData, key []byte) ([]byte, error) {
 	origData = PKCS7Padding01(origData, blockSize)
 	// origData = ZeroPadding(origData, block.BlockSize())
 	blockMode := cipher.NewCBCEncrypter(block, key[:blockSize])
+
 	crypted := make([]byte, len(origData))
 	// 根据CryptBlocks方法的说明，如下方式初始化crypted也可以
 	// crypted := origData
 	blockMode.CryptBlocks(crypted, origData)
+
 	return crypted, nil
 }
 
@@ -91,4 +96,21 @@ func PKCS7UnPadding01(origData []byte) []byte {
 	// 去掉最后一个字节 unpadding 次
 	unPadding := int(origData[length-1])
 	return origData[:(length - unPadding)]
+}
+
+func AESSHA1PRNG(keyBytes []byte, encryptLength int) ([]byte, error) {
+	hashs := SHA1(SHA1(keyBytes))
+	maxLen := len(hashs)
+	realLen := encryptLength / 8
+	if realLen > maxLen {
+		return nil, errors.New(fmt.Sprintf("Not Support %d, Only Support Lower then %d [% x]", realLen, maxLen, hashs))
+	}
+
+	return hashs[0:realLen], nil
+}
+
+func SHA1(data []byte) []byte {
+	h := sha1.New()
+	h.Write(data)
+	return h.Sum(nil)
 }
