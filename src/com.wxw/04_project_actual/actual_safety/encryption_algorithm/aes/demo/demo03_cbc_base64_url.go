@@ -16,8 +16,6 @@ import (
 // 对接三方可以使用，有加密解密拆分交互场景
 // 1. 处理了由于base64编码在url请求传输导致 解码失败的问题(https://blog.csdn.net/u014270740/article/details/91038606)
 func main() {
-
-	// 加密
 	aesKey := "0123456789ABCDEF"
 	content := "weixiaowei@qoogle.com"
 	encrypt03 := AesEncrypt03(content, aesKey)
@@ -39,7 +37,7 @@ func AesEncrypt03(orig string, key string) string {
 	// 获取秘钥块的长度
 	blockSize := block.BlockSize()
 	// 补全码
-	origData = PKCS7Padding03(origData, blockSize)
+	origData = PKCS5Padding03(origData, blockSize)
 	// 加密模式
 	blockMode := cipher.NewCBCEncrypter(block, k[:blockSize])
 	// 创建数组
@@ -67,19 +65,19 @@ func AesDecrypt03(crypto string, key string) string {
 	// 解密
 	blockMode.CryptBlocks(orig, cryptoByte)
 	// 去补全码
-	orig = PKCS7UnPadding03(orig)
+	orig = PKCS5UnPadding03(orig)
 	return string(orig)
 }
 
 //补码
-func PKCS7Padding03(ciphertext []byte, blockSize int) []byte {
+func PKCS5Padding03(ciphertext []byte, blockSize int) []byte {
 	padding := blockSize - len(ciphertext)%blockSize
 	padText := bytes.Repeat([]byte{byte(padding)}, padding)
 	return append(ciphertext, padText...)
 }
 
 //去码
-func PKCS7UnPadding03(origData []byte) []byte {
+func PKCS5UnPadding03(origData []byte) []byte {
 	length := len(origData)
 	unPadding := int(origData[length-1])
 	return origData[:(length - unPadding)]

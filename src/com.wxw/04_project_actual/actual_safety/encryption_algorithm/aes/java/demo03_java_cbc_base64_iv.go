@@ -1,7 +1,7 @@
 /*
-@Time : 2022/1/22 20:49
+@Time : 2022/1/23 00:44
 @Author : weixiaowei
-@File : demo04_java
+@File : demo05_generator_key
 */
 package main
 
@@ -13,28 +13,35 @@ import (
 	"fmt"
 )
 
+// xBtQod-SPFDn0WVgbxa1lAwoUqffgf5nB_O4e9RO3PY
 func main() {
+
 	// AES-128。key长度：16, 24, 32 bytes 对应 AES-128, AES-192, AES-256
-	key := []byte("0123456789ABCDEF")
-	result, err := AesEncrypt04([]byte("weixiaowei@qoogle.com"), key)
+	content := "weixiaowei@qoogle.com"
+	keyValue := "0123456789ABCDEF"
+	key := []byte(keyValue)
+	result, err := AesEncrypt05([]byte(content), key)
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println("加密后：", base64.StdEncoding.EncodeToString(result))
-	origData, err := AesDecrypt04(result, key)
+
+	// 加密后： xBtQod-SPFDn0WVgbxa1lAwoUqffgf5nB_O4e9RO3PY
+	fmt.Println("加密后：", base64.RawURLEncoding.EncodeToString(result))
+	decodeString, _ := base64.RawURLEncoding.DecodeString("xBtQod-SPFDn0WVgbxa1lAwoUqffgf5nB_O4e9RO3PY")
+	origData, err := AesDecrypt05(decodeString, key)
 	if err != nil {
 		panic(err)
 	}
 	fmt.Println("解密后：", string(origData))
 }
 
-func AesEncrypt04(origData, key []byte) ([]byte, error) {
+func AesEncrypt05(origData, key []byte) ([]byte, error) {
 	block, err := aes.NewCipher(key)
 	if err != nil {
 		return nil, err
 	}
 	blockSize := block.BlockSize()
-	origData = PKCS5Padding(origData, blockSize)
+	origData = PKCS7Padding05(origData, blockSize)
 	// origData = ZeroPadding(origData, block.BlockSize())
 	blockMode := cipher.NewCBCEncrypter(block, key[:blockSize])
 	crypted := make([]byte, len(origData))
@@ -44,7 +51,7 @@ func AesEncrypt04(origData, key []byte) ([]byte, error) {
 	return crypted, nil
 }
 
-func AesDecrypt04(crypted, key []byte) ([]byte, error) {
+func AesDecrypt05(crypted, key []byte) ([]byte, error) {
 	block, err := aes.NewCipher(key)
 	if err != nil {
 		return nil, err
@@ -54,32 +61,22 @@ func AesDecrypt04(crypted, key []byte) ([]byte, error) {
 	origData := make([]byte, len(crypted))
 	// origData := crypted
 	blockMode.CryptBlocks(origData, crypted)
-	origData = PKCS5UnPadding(origData)
+	origData = PKCS7UnPadding05(origData)
 	// origData = ZeroUnPadding(origData)
 	return origData, nil
 }
 
-func ZeroPadding(ciphertext []byte, blockSize int) []byte {
+//补码
+func PKCS7Padding05(ciphertext []byte, blockSize int) []byte {
 	padding := blockSize - len(ciphertext)%blockSize
-	padtext := bytes.Repeat([]byte{0}, padding)
-	return append(ciphertext, padtext...)
+	padText := bytes.Repeat([]byte{byte(padding)}, padding)
+	return append(ciphertext, padText...)
 }
 
-func ZeroUnPadding(origData []byte) []byte {
-	length := len(origData)
-	unpadding := int(origData[length-1])
-	return origData[:(length - unpadding)]
-}
-
-func PKCS5Padding(ciphertext []byte, blockSize int) []byte {
-	padding := blockSize - len(ciphertext)%blockSize
-	padtext := bytes.Repeat([]byte{byte(padding)}, padding)
-	return append(ciphertext, padtext...)
-}
-
-func PKCS5UnPadding(origData []byte) []byte {
+//去码
+func PKCS7UnPadding05(origData []byte) []byte {
 	length := len(origData)
 	// 去掉最后一个字节 unpadding 次
-	unpadding := int(origData[length-1])
-	return origData[:(length - unpadding)]
+	unPadding := int(origData[length-1])
+	return origData[:(length - unPadding)]
 }

@@ -1,7 +1,7 @@
 /*
-@Time : 2022/1/22 02:29
+@Time : 2022/1/20 22:46
 @Author : weixiaowei
-@File : demo02
+@File : demo
 */
 package main
 
@@ -18,19 +18,19 @@ import (
 // 相关文章
 // 1. https://blog.csdn.net/u014270740/article/details/91038606
 func main() {
-	orig := "hello world"             // 原文
-	key := "123456781234567812345678" // 加密串、sign
+	orig := "weixiaowei@qoogle.com" // 原文
+	key := "0123456789ABCDEF"       // 加密串、sign
 	fmt.Println("原文：", orig)
 
-	encryptCode := AesEncrypt02(orig, key)
+	encryptCode := AesEncrypt(orig, key)
 	fmt.Println("密文：", encryptCode)
 
-	decryptCode := AesDecrypt02(encryptCode, key)
+	decryptCode := AesDecrypt(encryptCode, key)
 	fmt.Println("解密结果：", decryptCode)
 }
 
 // AES 加密
-func AesEncrypt02(orig string, key string) string {
+func AesEncrypt(orig string, key string) string {
 	// 转成字节数组
 	origData := []byte(orig)
 	k := []byte(key)
@@ -40,7 +40,7 @@ func AesEncrypt02(orig string, key string) string {
 	// 获取秘钥块的长度
 	blockSize := block.BlockSize()
 	// 补全码
-	origData = PKCS7Padding02(origData, blockSize)
+	origData = PKCS5Padding(origData, blockSize)
 	// 加密模式
 	blockMode := cipher.NewCBCEncrypter(block, k[:blockSize])
 	// 创建数组
@@ -51,7 +51,7 @@ func AesEncrypt02(orig string, key string) string {
 }
 
 // AES 解密
-func AesDecrypt02(crypto string, key string) string {
+func AesDecrypt(crypto string, key string) string {
 	// 转成字节数组
 	// cryptoByte, _ := base64.StdEncoding.DecodeString(crypto) //
 	cryptoByte, _ := hex.DecodeString(crypto)
@@ -67,19 +67,19 @@ func AesDecrypt02(crypto string, key string) string {
 	// 解密
 	blockMode.CryptBlocks(orig, cryptoByte)
 	// 去补全码
-	orig = PKCS7UnPadding02(orig)
+	orig = PKCS5UnPadding(orig)
 	return string(orig)
 }
 
 //补码
-func PKCS7Padding02(ciphertext []byte, blockSize int) []byte {
+func PKCS5Padding(ciphertext []byte, blockSize int) []byte {
 	padding := blockSize - len(ciphertext)%blockSize
 	padText := bytes.Repeat([]byte{byte(padding)}, padding)
 	return append(ciphertext, padText...)
 }
 
 //去码
-func PKCS7UnPadding02(origData []byte) []byte {
+func PKCS5UnPadding(origData []byte) []byte {
 	length := len(origData)
 	unPadding := int(origData[length-1])
 	return origData[:(length - unPadding)]

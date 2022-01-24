@@ -1,7 +1,7 @@
 /*
-@Time : 2022/1/24 13:53
+@Time : 2022/1/24 23:05
 @Author : weixiaowei
-@File : demo02_java
+@File : demo01_java_cbc_base64
 */
 package main
 
@@ -11,36 +11,50 @@ import (
 	"crypto/cipher"
 	"encoding/base64"
 	"fmt"
+	"log"
 )
 
+// Wqm8-LnVkjfurtZT5ntvJ23fwA4H7dd6frJegphx2v0
+func main() {
+	content := "weixiaowei@qoogle.com" // 原文
+	key := "0123456789ABCDEF"          // 加密串、sign
+
+	result, err := AesEncrypt01(content, key)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println("加密后：", result)
+
+	origData, err := AesDecrypt01(result, key)
+	if err != nil {
+		log.Println("err:", err)
+	}
+	fmt.Println("解密后：", origData)
+}
+
 // AES 加密
-func AesEncrypt02(orig string, key string) (string, error) {
+func AesEncrypt01(orig string, key string) (string, error) {
 	// 转成字节数组
 	origData := []byte(orig)
 	k := []byte(key)
-
 	// 分组秘钥
 	block, _ := aes.NewCipher(k)
 	// 获取秘钥块的长度
 	blockSize := block.BlockSize()
 	// 补全码
-	origData = PKCS5Padding(origData, blockSize)
+	origData = PKCS5Padding01(origData, blockSize)
 	// 创建数组
 	crypted := make([]byte, len(origData))
-	err := cryptBlocks(block, origData, crypted)
+	err := cryptBlocks01(block, origData, crypted)
 	if err != nil {
 		return "", err
 	}
-	//// 加密模式
-	//blockMode := cipher.NewCBCEncrypter(block, k[:blockSize])
-	//// 加密
-	//blockMode.CryptBlocks(cryted, origData)
-	// return base64.RawURLEncoding.EncodeToString(crypted), nil
-	return base64.StdEncoding.EncodeToString(crypted), nil
+	//return base64.StdEncoding.EncodeToString(crypted), nil
+	return base64.RawURLEncoding.EncodeToString(crypted), nil
 }
 
 // AES 解密
-func AesDecrypt02(crypto string, key string) (string, error) {
+func AesDecrypt01(crypto string, key string) (string, error) {
 	// 转成字节数组
 	crypted, _ := base64.RawURLEncoding.DecodeString(crypto)
 	// crypted, _ := base64.StdEncoding.DecodeString(crypto)
@@ -50,34 +64,30 @@ func AesDecrypt02(crypto string, key string) (string, error) {
 	// 创建数组
 	decrypted := make([]byte, len(crypted))
 	// 解密处理
-	if err := decryptBlocks(block, crypted, decrypted); err != nil {
+	if err := decryptBlocks01(block, crypted, decrypted); err != nil {
 		return "", err
 	}
-	//// 加密模式
-	//blockMode := cipher.NewCBCDecrypter(block, k[:blockSize])
-	//// 解密
-	//blockMode.CryptBlocks(orig, cryptoByte)
 	// 去补全码
-	decrypted = PKCS5UnPadding(decrypted)
+	decrypted = PKCS5UnPadding01(decrypted)
 	return string(decrypted), nil
 }
 
 //补码
-func PKCS5Padding(ciphertext []byte, blockSize int) []byte {
+func PKCS5Padding01(ciphertext []byte, blockSize int) []byte {
 	padding := blockSize - len(ciphertext)%blockSize
 	padText := bytes.Repeat([]byte{byte(padding)}, padding)
 	return append(ciphertext, padText...)
 }
 
 //去码
-func PKCS5UnPadding(origData []byte) []byte {
+func PKCS5UnPadding01(origData []byte) []byte {
 	length := len(origData)
 	// 去掉最后一个字节 unPadding 次
 	unPadding := int(origData[length-1])
 	return origData[:(length - unPadding)]
 }
 
-func cryptBlocks(cb cipher.Block, src, dst []byte) error {
+func cryptBlocks01(cb cipher.Block, src, dst []byte) error {
 
 	if len(src)%cb.BlockSize() != 0 {
 		return fmt.Errorf("crypto/cipher: input not full blocks")
@@ -93,7 +103,7 @@ func cryptBlocks(cb cipher.Block, src, dst []byte) error {
 	return nil
 }
 
-func decryptBlocks(cb cipher.Block, src, dst []byte) error {
+func decryptBlocks01(cb cipher.Block, src, dst []byte) error {
 	if len(src)%cb.BlockSize() != 0 {
 		return fmt.Errorf("crypto/cipher: input not full blocks")
 	}

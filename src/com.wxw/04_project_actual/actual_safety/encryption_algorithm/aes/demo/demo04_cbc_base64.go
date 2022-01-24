@@ -17,8 +17,8 @@ func main() {
 
 	// AES-128。key长度：16, 24, 32 bytes 对应 AES-128, AES-192, AES-256
 	content := "weixiaowei@qoogle.com"
-
-	key := []byte("0123456789ABCDEF")
+	keyValue := "0123456789ABCDEF"
+	key := []byte(keyValue)
 	result, err := AesEncrypt05([]byte(content), key)
 	if err != nil {
 		panic(err)
@@ -79,29 +79,3 @@ func PKCS7UnPadding05(origData []byte) []byte {
 	unPadding := int(origData[length-1])
 	return origData[:(length - unPadding)]
 }
-
-/**
- *
- * AES CBC 256 位加密
- * @param content 加密内容字节数组
- * @param keyBytes 加密字节数组
- * @param iv 加密向量字节数组
- * @param encryptLength 仅支持 128、256 长度
- * @return 解密后字节内容
- */
-/*public static byte[] encryptAESCBC( byte[] content, byte[] keyBytes,byte[] iv, int encryptLength ){
-
-KeyGenerator	keyGenerator	= KeyGenerator.getInstance( "AES" );
-SecureRandom	secureRandom	= SecureRandom.getInstance( "SHA1PRNG" );
-secureRandom.setSeed( keyBytes );
-keyGenerator.init( encryptLength, secureRandom );
-SecretKey	key	= keyGenerator.generateKey();
-// 以上应该是使用任意长度的 keyBytes，生成指定长度为 encryptLength 的 key
-// 后面再使用 AES/CBC/PKCS5Padding 算法，对 content 加密，加密角度是上面生成的固定长度的 key
-// 我的主要疑问就在这里，  如何用 golang 生成与 keyGenerator.generateKey() 一样的 key 呢？
-
-Cipher		cipher	= Cipher.getInstance( "AES/CBC/PKCS5Padding" );
-cipher.init( Cipher.ENCRYPT_MODE, key, new IvParameterSpec( iv ) );
-byte[] result = cipher.doFinal( content );
-return(result);
-}*/

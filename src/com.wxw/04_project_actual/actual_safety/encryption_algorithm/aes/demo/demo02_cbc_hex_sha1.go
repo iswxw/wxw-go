@@ -1,7 +1,7 @@
 /*
-@Time : 2022/1/20 22:46
+@Time : 2022/1/24 22:52
 @Author : weixiaowei
-@File : demo
+@File : demo02_cbc_sha1
 */
 package main
 
@@ -21,25 +21,25 @@ func main() {
 	key := "0123456789ABCDEF"       // 加密串、sign
 	fmt.Println("原文：", orig)
 
-	encryptCode := AesEncrypt(orig, key)
+	encryptCode := AesEncrypt02(orig, key)
 	fmt.Println("加密后：", encryptCode)
-	decryptCode := AesDecrypt(encryptCode, key)
+	decryptCode := AesDecrypt02(encryptCode, key)
 	fmt.Println("解密结果：", decryptCode)
 }
 
 // AES 加密
-func AesEncrypt(orig string, key string) string {
+func AesEncrypt02(orig string, key string) string {
 	// 转成字节数组
 	origData := []byte(orig)
 
 	ck := []byte(key)
-	k, _ := AESSHA1PRNG01(ck, 128)
+	k, _ := AesSha1prng(ck, 128)
 	// 分组秘钥 // NewCipher该函数限制了输入k的长度必须为16, 24或者32
 	block, _ := aes.NewCipher(k)
 	// 获取秘钥块的长度
 	blockSize := block.BlockSize()
 	// 补全码
-	origData = PKCS7Padding(origData, blockSize)
+	origData = PKCS5Padding02(origData, blockSize)
 	// 加密模式
 	blockMode := cipher.NewCBCEncrypter(block, k[:blockSize])
 	// 创建数组
@@ -52,11 +52,11 @@ func AesEncrypt(orig string, key string) string {
 }
 
 // AES 解密
-func AesDecrypt(crypto string, key string) string {
+func AesDecrypt02(crypto string, key string) string {
 	// 转成字节数组
 	cryptoByte, _ := base64.RawURLEncoding.DecodeString(crypto)
 	ck := []byte(key)
-	k, _ := AESSHA1PRNG01(ck, 128)
+	k, _ := AesSha1prng(ck, 128)
 	// 分组秘钥
 	block, _ := aes.NewCipher(k)
 	// 获取秘钥块的长度
@@ -68,35 +68,35 @@ func AesDecrypt(crypto string, key string) string {
 	// 解密
 	blockMode.CryptBlocks(orig, cryptoByte)
 	// 去补全码
-	orig = PKCS7UnPadding(orig)
+	orig = PKCS5UnPadding02(orig)
 	return string(orig)
 }
 
 //补码
-func PKCS7Padding(ciphertext []byte, blockSize int) []byte {
+func PKCS5Padding02(ciphertext []byte, blockSize int) []byte {
 	padding := blockSize - len(ciphertext)%blockSize
 	padText := bytes.Repeat([]byte{byte(padding)}, padding)
 	return append(ciphertext, padText...)
 }
 
 //去码
-func PKCS7UnPadding(origData []byte) []byte {
+func PKCS5UnPadding02(origData []byte) []byte {
 	length := len(origData)
 	unPadding := int(origData[length-1])
 	return origData[:(length - unPadding)]
 }
 
-func AESSHA1PRNG01(keyBytes []byte, encryptLength int) ([]byte, error) {
-	hashs := SHA101(SHA101(keyBytes))
-	maxLen := len(hashs)
+func AesSha1prng(keyBytes []byte, encryptLength int) ([]byte, error) {
+	hashes := SHA1(SHA1(keyBytes))
+	maxLen := len(hashes)
 	realLen := encryptLength / 8
 	if realLen > maxLen {
-		return nil, errors.New(fmt.Sprintf("Not Support %d, Only Support Lower then %d [% x]", realLen, maxLen, hashs))
+		return nil, errors.New(fmt.Sprintf("Not Support %d, Only Support Lower then %d [% x]", realLen, maxLen, hashes))
 	}
-	return hashs[0:realLen], nil
+	return hashes[0:realLen], nil
 }
 
-func SHA101(data []byte) []byte {
+func SHA1(data []byte) []byte {
 	h := sha1.New()
 	h.Write(data)
 	return h.Sum(nil)
