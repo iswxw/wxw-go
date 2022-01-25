@@ -21,7 +21,6 @@ func main() {
 	keyValue := "0123456789ABCDEF"     // 加密串、sign
 
 	result := AesEncryptECB([]byte(content), []byte(keyValue))
-	// 加密后： xBtQod-SPFDn0WVgbxa1lAwoUqffgf5nB_O4e9RO3PY
 	fmt.Println("加密后：", base64.RawURLEncoding.EncodeToString(result))
 
 	decryptECB := AesDecryptECB(result, []byte(keyValue))
