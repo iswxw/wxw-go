@@ -11,7 +11,6 @@ import (
 	"github.com/xuri/excelize/v2"
 	"log"
 	"strconv"
-	"time"
 )
 
 func main() {
@@ -43,9 +42,9 @@ func ExcelExportData360(header []interface{}, data [][]interface{}, sheetName st
 		}
 	}
 	f.SetActiveSheet(index)
-	timeStr := time.Now().Format("2006-01-02 15:04:05")
+	//timeStr := time.Now().Format("2006-01-02 15:04:05")
 	// Save xlsx file by the given path.
-	if err := f.SaveAs(util.GetPath(timeStr + ".xlsx")); err != nil {
+	if err := f.SaveAs(util.GetPath("books.xlsx")); err != nil {
 		fmt.Println(err)
 	}
 }
