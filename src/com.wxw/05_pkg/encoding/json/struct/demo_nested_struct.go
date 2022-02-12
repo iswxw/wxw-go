@@ -7,6 +7,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 )
 
@@ -33,12 +34,15 @@ type (
 // 嵌套结构体
 func main() {
 
+	fmt.Println("============结构体中包含结构体==============")
 	TestNestedStruct()
+
+	fmt.Println("============结构体中包含接口==============")
 
 	// 结构体中包含接口
 	jsonStr := `{"class_id":1,"class_name":"子材班","student":{"student_id":11,"student_name":"魏同学"}}`
-	class1 := Class1{}
-	if err := json.Unmarshal([]byte(jsonStr), &class1); err != nil {
+	class1 := &Class1{}
+	if err := json.Unmarshal([]byte(jsonStr), class1); err != nil {
 		log.Println("err:", err)
 	}
 	log.Printf("Unmarshal:%#v", class1)
