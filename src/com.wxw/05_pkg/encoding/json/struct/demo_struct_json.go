@@ -42,12 +42,12 @@ func main() {
 	if err != nil {
 		log.Fatal("json marshal error:", err)
 	}
-	fmt.Printf(" user: %#v\n", byteUser)
+	fmt.Printf(" user: %s\n", string(byteUser))
 
 	// unmarshal
 	user1 := NewEmptyUser()
 	if err = json.Unmarshal(byteUser, &user1); err != nil {
 		log.Fatal("json unmarshal error:", err)
 	}
-	fmt.Printf(" user: %#v\n", user1)
+	fmt.Printf(" user: %s\n", user1)
 }

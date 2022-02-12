@@ -12,4 +12,5 @@ import (
 
 func main() {
 	fmt.Println(time.Now().Format("2006-01"))
+	fmt.Println(time.Now().Format("20060102150405"))
 }
