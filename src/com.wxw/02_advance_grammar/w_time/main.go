@@ -17,4 +17,6 @@ func main() {
 	//date, _ := cast.StringToDate("2021-04-16 00:00:00")
 	location, _ := cast.StringToDateInDefaultLocation("2021-04-16 00:00:00", time.Local)
 	fmt.Println(location)
+
+	fmt.Println(cast.ToInt(""))
 }
