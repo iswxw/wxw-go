@@ -47,7 +47,7 @@ func main() {
 
 	// unmarshal
 	// byteUser1 := []byte(`{"user_name":"Java半颗糖","age":18,"gender":"\"男\"","birthday":"0001-01-01T00:00:00Z"}`)
-	byteUserData := []byte(`{"user_name":"Java半颗糖","age":18,"gender":"\"男\"","birthday":"2021-04-16T00:00:01Z"}`)
+	byteUserData := []byte(`{"user_name":"Java半颗糖","age":18,"gender":"\"男\"","birthday":"2021-04-16 00:00:01"}`)
 	user1 := NewEmptyUser()
 	if err = json.Unmarshal(byteUserData, &user1); err != nil {
 		log.Fatal("json unmarshal error:", err)
