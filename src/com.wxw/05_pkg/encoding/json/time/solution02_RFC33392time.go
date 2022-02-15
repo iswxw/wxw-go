@@ -1,0 +1,56 @@
+/*
+@Time : 2022/2/14 18:45
+@Author : weixiaowei
+@File : solution_time
+*/
+package main
+
+import (
+	"encoding/json"
+	"log"
+	"time"
+)
+
+type Time time.Time
+
+const (
+	timeFormart = "2006-01-02 15:04:05"
+)
+
+func (t *Time) UnmarshalJSON(data []byte) (err error) {
+	now, err := time.ParseInLocation(`"`+timeFormart+`"`, string(data), time.Local)
+	*t = Time(now)
+	return
+}
+
+func (t Time) MarshalJSON() ([]byte, error) {
+	b := make([]byte, 0, len(timeFormart)+2)
+	b = append(b, '"')
+	b = time.Time(t).AppendFormat(b, timeFormart)
+	b = append(b, '"')
+	return b, nil
+}
+
+func (t Time) String() string {
+	return time.Time(t).Format(timeFormart)
+}
+
+type Person struct {
+	Id       int64  `json:"id"`
+	Name     string `json:"name"`
+	Birthday Time   `json:"birthday"`
+}
+
+// [golang 自定义time.Time json输出格式] https://www.cnblogs.com/xiaofengshuyu/p/5664654.html
+func main() {
+	now := Time(time.Now())
+	log.Println(now)
+	src := `{"id":5,"name":"xiaoming","birthday":"2016-06-30 16:09:51"}`
+	p := new(Person)
+	err := json.Unmarshal([]byte(src), p)
+	if err != nil {
+		log.Println("err:", err)
+	}
+	js, _ := json.Marshal(p)
+	log.Println(string(js))
+}
