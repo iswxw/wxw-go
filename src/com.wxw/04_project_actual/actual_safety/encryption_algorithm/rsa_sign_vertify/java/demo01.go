@@ -13,16 +13,10 @@ import (
 	"encoding/base64"
 	"encoding/pem"
 	"errors"
-	"flag"
 	"fmt"
 )
 
 var decrypted string
-
-func init() {
-	flag.StringVar(&decrypted, "d", "", "加密过的数据")
-	flag.Parse()
-}
 
 func main() {
 	// 测试java生成的公钥和私钥加密和解密
