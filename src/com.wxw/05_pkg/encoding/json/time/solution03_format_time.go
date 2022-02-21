@@ -13,19 +13,20 @@ import (
 )
 
 type Student struct {
-	Id         int64           `json:"id"`
-	Name       string          `json:"name"`
-	Birthday   util.FormatTime `json:"birthday"`
-	UpdateTime util.FormatTime `json:"updateTime,omitempty"`
+	Id         int64            `json:"id"`
+	Name       string           `json:"name"`
+	Birthday   util.FormatTime  `json:"birthday"`
+	UpdateTime *util.FormatTime `json:"updateTime,omitempty"`
 }
 
+// 此时 omitempty 生效必须使用指针类型
 // [golang 自定义time.Time json输出格式] https://www.cnblogs.com/xiaofengshuyu/p/5664654.html
 func main() {
 	now := util.FormatTime(time.Now())
 	log.Println("current = ", now)
 
-	src := `{"id":5,"name":"xiaoming","birthday":"2016-06-30 16:09:51","updateTime":""}`
-	// src := `{"id":5,"name":"xiaoming","birthday":"2016-06-30 16:09:51"}`
+	//src := `{"id":5,"name":"xiaoming","birthday":"2016-06-30 16:09:51","updateTime":""}`
+	src := `{"id":5,"name":"xiaoming","birthday":"2016-06-30 16:09:51"}`
 	p := &Student{}
 	if err := json.Unmarshal([]byte(src), p); err != nil {
 		log.Println("err:", err)
