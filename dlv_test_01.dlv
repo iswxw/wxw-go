@@ -1,0 +1,23 @@
+(dlv) Starting main
+count :  0
+count :  1
+count :  2
+count :  3
+count :  4
+count :  5
+count :  6
+count :  7
+count :  8
+count :  9
+(dlv) (dlv) (dlv) (dlv) (dlv) (dlv) (dlv) (dlv) (dlv) (dlv) (dlv) (dlv) (dlv) (dlv) (dlv) (dlv) (dlv) received SIGINT, stopping process (will not forward signal)
+received SIGINT, stopping process (will not forward signal)
+received SIGINT, stopping process (will not forward signal)
+received SIGINT, stopping process (will not forward signal)
+received SIGINT, stopping process (will not forward signal)
+(dlv) (dlv) (dlv) Breakpoint runtime-fatal-throw (enabled) at 0xd06040 for runtime.throw() d:/installed/go1.17.1/src/runtime/panic.go:1188 (0)
+Breakpoint unrecovered-panic (enabled) at 0xd063a0 for runtime.fatalpanic() d:/installed/go1.17.1/src/runtime/panic.go:1271 (0)
+	print runtime.curg._panic.arg
+(dlv) Breakpoint runtime-fatal-throw (enabled) at 0xd06040 for runtime.throw() d:/installed/go1.17.1/src/runtime/panic.go:1188 (0)
+Breakpoint unrecovered-panic (enabled) at 0xd063a0 for runtime.fatalpanic() d:/installed/go1.17.1/src/runtime/panic.go:1271 (0)
+	print runtime.curg._panic.arg
+(dlv) (dlv) (dlv) (dlv) (dlv) (dlv) 
