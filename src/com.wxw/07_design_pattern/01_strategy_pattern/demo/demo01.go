@@ -5,11 +5,12 @@
 */
 package main
 
-// 控制器
+// 策略
 type Operator interface {
 	Apply(int, int) int
 }
 
+// 执行策略的类
 type Operation struct {
 	Operator Operator
 }
@@ -18,6 +19,7 @@ func (o *Operation) Operate(leftValue, rightValue int) int {
 	return o.Operator.Apply(leftValue, rightValue)
 }
 
+// 执行
 func main() {
 	add := Operation{
 		Operator: Addition{},
@@ -25,14 +27,14 @@ func main() {
 	add.Operate(3, 5) // 8
 }
 
-// 策略一
+// 策略一 加法
 type Addition struct{}
 
 func (Addition) Apply(lval, rval int) int {
 	return lval + rval
 }
 
-// 策略二
+// 策略二 乘法
 type Multiplication struct{}
 
 func (Multiplication) Apply(lval, rval int) int {
