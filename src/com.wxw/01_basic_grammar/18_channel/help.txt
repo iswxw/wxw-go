@@ -1,0 +1,7 @@
+
+
+
+[channel]
+  定义：通道（channel）是用来传递数据的一个数据结构
+  相关文档
+    1. https://www.runoob.com/go/go-concurrent.html
