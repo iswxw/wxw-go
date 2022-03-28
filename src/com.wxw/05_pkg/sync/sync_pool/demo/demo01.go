@@ -6,43 +6,49 @@
 package main
 
 import (
-	"bytes"
 	"fmt"
-	"io"
-	"os"
 	"sync"
 	"time"
 )
 
-var bufPool = sync.Pool{
+// 构建一个pool
+var bytePool = sync.Pool{
 	New: func() interface{} {
-		// The Pool's New function should generally only return pointer
-		// types, since a pointer can be put into the return interface
-		// value without an allocation:
-		return new(bytes.Buffer)
+		b := make([]byte, 1024)
+		return &b
 	},
 }
 
+// https://www.cnblogs.com/sunsky303/p/9706210.html
 func main() {
-	fmt.Println("Begin:==============")
-	Log(os.Stdout, "path", "/search?q=flowers")
-	fmt.Println("\nEnd:==============")
-}
+	//defer
+	//debug.SetGCPercent(debug.SetGCPercent(-1))
 
-func Log(w io.Writer, key, val string) {
-	b := bufPool.Get().(*bytes.Buffer)
-	b.Reset()
-	// Replace this with time.Now() in a real logger.
-	b.WriteString(timeNow().UTC().Format(time.RFC3339))
-	b.WriteByte(' ')
-	b.WriteString(key)
-	b.WriteByte('=')
-	b.WriteString(val)
-	w.Write(b.Bytes())
-	bufPool.Put(b)
-}
+	// 记录开始构建对象时间
+	a := time.Now().Unix() // 返回单位是 秒（s）
 
-// timeNow is a fake version of time.Now for tests.
-func timeNow() time.Time {
-	return time.Unix(1136214245, 0)
+	// 构建对象到内存中
+	for i := 0; i < 1000000000; i++ {
+		obj := make([]byte, 1024)
+		_ = obj
+	}
+
+	// 对象构建完成时间
+	b := time.Now().Unix()
+
+	for j := 0; j < 1000000000; j++ {
+
+		// 获取对象
+		obj := bytePool.Get().(*[]byte)
+		_ = obj
+
+		// 放入对象
+		bytePool.Put(obj)
+	}
+
+	// 存取对象
+	c := time.Now().Unix()
+
+	fmt.Println("without pool ", b-a, "s")
+	fmt.Println("with    pool ", c-b, "s")
 }
