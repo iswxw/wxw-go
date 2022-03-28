@@ -3,3 +3,4 @@
 [redis]
  相关文章
   1. redis分布式锁：https://www.cnblogs.com/taoshihan/p/14110353.html
+  2. go-redis依赖文档：https://pkg.go.dev/github.com/go-redis/redis

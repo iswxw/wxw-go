@@ -41,7 +41,7 @@ func ReadConfig() *Config {
 		if err != nil {
 			config.Port = 8080 // default port
 		}
-		log.Printf("init config: %+v", config)
+		log.Printf("init_redis config: %+v", config)
 	})
 	return config
 }

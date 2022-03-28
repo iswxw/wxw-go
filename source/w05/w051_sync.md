@@ -442,7 +442,7 @@ writer 接收数据花费了 1s，同步通知所有等待的协程。
 // Do is intended for initialization that must be run exactly once. Since f
 // is niladic, it may be necessary to use a function literal to capture the
 // arguments to a function to be invoked by Do:
-// 	config.once.Do(func() { config.init(filename) })
+// 	config.once.Do(func() { config.init_redis(filename) })
 //
 // Because no call to Do returns until the one call to f returns, if f causes
 // Do to be called, it will deadlock.
@@ -517,7 +517,7 @@ func ReadConfig() *Config{
 		if err != nil {
 			config.Port = 8080 // default port
 		}
-		log.Printf("init config: %+v",config)
+		log.Printf("init_redis config: %+v",config)
 	})
 	return config
 }
@@ -532,7 +532,7 @@ func ReadConfig() *Config{
 
 ```bash
 $ go run .
-2021/01/07 23:51:49 init config
+2021/01/07 23:51:49 init_redis config
 ```
 
 **`init config` 仅打印了一次，即 sync.Once 中的初始化函数仅执行了一次。**  

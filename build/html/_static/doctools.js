@@ -241,7 +241,7 @@ var Documentation = {
   },
 
   /**
-   * init the domain index toggle buttons
+   * init_redis the domain index toggle buttons
    */
   initIndexTable : function() {
     var togglers = $('img.toggler').click(function() {
