@@ -1,0 +1,26 @@
+
+
+
+[相关文档]
+  1，https://studygolang.com/articles/23960?fr=sidebar
+
+[测试及指令]
+  1，直接测试： go test -bench=.
+  2. 查看内存情况：go test -bench=. -benchmem
+  3. 忽略单测：go test -bench=. -benchmem -run=none
+
+[实例]
+go test -bench=. -benchtime=5s -benchmem -run=none
+参数介绍：
+   -bench=. ：表示的是运行所有的基准测试，. 表示全部。
+   -benchtime=5s:表示的是运行时间为5s，默认的时间是1s。
+   -benchmem:表示显示memory的指标。
+   -run=none:表示过滤掉单元测试，不去跑UT的cases。
+输出的结果内容分析：
+   - goos: darwin：表示的是操作系统是darwin。
+   - goarch: amd64：表示目标平台的体系架构是amd64。
+   - BenchmarkHandleWithType-4：BenchmarkHandleWithType表示运行的函数名称； 4表示的是，运行时对应的GOMAXPROCS的值。
+   - 10000000000：表示的是b.N的在5s内的值。
+   - 0.28 ns/op：表示执行一次这个函数，消耗的时间是0.28ns。
+   - 0 B/op：表示每次执行操作，分配0B的内存。
+   - 0 allocs/op：表示执行一次这个函数，分配内存的次数为1次。
