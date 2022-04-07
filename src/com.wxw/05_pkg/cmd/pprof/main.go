@@ -5,10 +5,14 @@
 */
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"reflect"
+)
 
 func main() {
-	f(nil)
+	x := reflect.ValueOf(nil)
+	fmt.Println(x.IsNil())
 }
 
 func f(arg interface{}) {
