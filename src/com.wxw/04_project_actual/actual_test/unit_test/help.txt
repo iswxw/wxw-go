@@ -1,0 +1,6 @@
+
+[使用]
+  1. go test -v  // 并行测试
+
+[相关资料]
+  1. https://www.liwenzhou.com/posts/Go/golang-unit-test-0/

@@ -15,14 +15,19 @@ func main() {
 	fmt.Println(getIns05)
 }
 
+// GetLazyInstance 懒汉式
 type singleton05 struct{}
 
-var ins05 *singleton05
-var once05 sync.Once
+var (
+	ins05  *singleton05
+	once05 sync.Once
+)
 
 func GetIns05() *singleton05 {
-	once05.Do(func() {
-		ins05 = &singleton05{}
-	})
+	if ins05 == nil {
+		once05.Do(func() {
+			ins05 = &singleton05{}
+		})
+	}
 	return ins05
 }
