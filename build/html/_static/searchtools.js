@@ -252,7 +252,7 @@ var Search = {
         var requestUrl = "";
         var linkUrl = "";
         if (DOCUMENTATION_OPTIONS.BUILDER === 'dirhtml') {
-          // dirhtml builder
+          // dirhtml builder_v1.0
           var dirname = item[0] + '/';
           if (dirname.match(/\/index\/$/)) {
             dirname = dirname.substring(0, dirname.length-6);
