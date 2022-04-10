@@ -24,6 +24,11 @@ import "strings"
 */
 func main() {
 
+	// 简单使用
+	test01()
+}
+
+func test01() {
 	toFullName("carl", "sagan")
 
 	// output: "carl sagan"
