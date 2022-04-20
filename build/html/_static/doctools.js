@@ -146,7 +146,7 @@ if (!jQuery.browser) {
 }
 
 /**
- * Small JavaScript module for the documentation.
+ * Small JavaScript etcds for the documentation.
  */
 var Documentation = {
 
