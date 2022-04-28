@@ -13,13 +13,14 @@ import (
 //os.Args demo
 func main() {
 	//os.Args是一个[]string
-	if len(os.Args) > 0 {
-
-		// arg 就是传入的参数
-		for index, arg := range os.Args {
-			fmt.Printf("args[%d]=%v\n", index, arg)
-		}
+	if len(os.Args) < 0 {
+		return
 	}
+	// arg 就是传入的参数
+	for index, arg := range os.Args {
+		fmt.Printf("args[%d]=%v\n", index, arg)
+	}
+	fmt.Printf("%s\n", os.Args)
 }
 
 // 执行脚本
