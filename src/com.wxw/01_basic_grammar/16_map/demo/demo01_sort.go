@@ -1,7 +1,7 @@
 /*
-@Time : 2022/1/20 23:59
+@Time : 2022/4/29 14:49
 @Author : weixiaowei
-@File : demo01
+@File : demo01_sort
 */
 package main
 
@@ -16,6 +16,7 @@ func main() {
 	m["tom"] = 2
 	m["jame"] = 4
 	m["amy"] = 5
+
 	// To store the keys in slice in sorted order
 	var strs []string
 	for k := range m {
