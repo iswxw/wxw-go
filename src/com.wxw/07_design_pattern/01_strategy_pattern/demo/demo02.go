@@ -31,10 +31,12 @@ type Traveler struct {
 	impl Vehicle
 }
 
+// 设置策略
 func (r *Traveler) SetVehicle(i Vehicle) {
 	r.impl = i
 }
 
+// 执行策略
 func (r *Traveler) Go() {
 	r.impl.Go()
 }

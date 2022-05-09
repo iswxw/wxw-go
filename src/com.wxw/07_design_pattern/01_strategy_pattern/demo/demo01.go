@@ -10,11 +10,12 @@ type Operator interface {
 	Apply(int, int) int
 }
 
-// 执行策略的类
+// 执行策略的类：具体策略的执行者
 type Operation struct {
 	Operator Operator
 }
 
+// 调用策略中的方法
 func (o *Operation) Operate(leftValue, rightValue int) int {
 	return o.Operator.Apply(leftValue, rightValue)
 }
