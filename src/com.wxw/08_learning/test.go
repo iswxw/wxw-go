@@ -7,9 +7,19 @@ package main
 
 import (
 	"fmt"
-	"time"
+	"github.com/spf13/cast"
 )
 
 func main() {
-	fmt.Println(time.Now().Unix())
+	m := map[string]interface{}{
+		"2": 2,
+	}
+
+	valueStr := m["2"]
+	fmt.Println(valueStr)
+
+	value := valueStr.(int)
+
+	fmt.Println(cast.ToInt(valueStr))
+	fmt.Println(value)
 }
