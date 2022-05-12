@@ -8,8 +8,11 @@ package main
 import "fmt"
 
 type Template interface {
+	// 具体子类实现
 	fun1()
 	fun2()
+
+	// 抽象类实现
 	Result()
 }
 
@@ -18,7 +21,7 @@ type Funcs struct {
 	temp Template
 }
 
-// 抽象结构体部分实现接口
+// 抽象结构体部分实现
 func (r *Funcs) Result() {
 	r.temp.fun2()
 	r.temp.fun1()
@@ -54,7 +57,8 @@ func (c *ConcreteB) fun2() {
 
 func main() {
 	instance := ConcreteB{}
-	fmt.Printf("%P \n", instance.Funcs)
+	fmt.Printf("%p \n", instance.Funcs)
 	ta := Funcs{temp: &instance}
 	ta.Result()
+
 }
