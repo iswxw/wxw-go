@@ -4,7 +4,7 @@
 @File: demo
 @Link: https://www.liwenzhou.com/posts/Go/viper_tutorial/
 */
-package viper
+package main
 
 import "github.com/spf13/viper"
 
