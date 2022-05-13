@@ -10,7 +10,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
-	"src/com.wxw/project_actual/src/com.wxw/04_project_actual/actual_config/common/consts"
+	"src/com.wxw/project_actual/src/com.wxw/04_project_actual/02_actual_config/common/consts"
 	"src/com.wxw/project_actual/src/com.wxw/common/util"
 	"sync"
 )

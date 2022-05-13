@@ -1,0 +1,13 @@
+
+安装swagger
+ - 安装：go get -u github.com/go-swagger/go-swagger/cmd/swagger
+ - 查看版本：swagger version
+
+使用说明
+ - 生成 Swagger API 文档: swagger generate spec -o swagger.yaml
+ - 启动 HTTP 服务: swagger serve --no-open -F=swagger --port 36666 swagger.yaml
+ - 浏览器查看： http://localhost:36666/docs
+
+相关资料
+  1. 说明文档：https://time.geekbang.org/column/article/391142
+  2. 工具：https://github.com/go-swagger/go-swagger
