@@ -41,7 +41,7 @@
 
 // Edge <= 12 - 13+, Firefox <=18 - 45+, IE 10 - 11, Safari 5.1 - 9+, iOS 6 - 9.1
 // throw exceptions when non-strict code (e.g., ASP.NET 4.5) accesses strict mode
-// arguments.callee.caller (trac-13335). But as of jQuery 3.0 (2016), strict mode should be common
+// arguments.callee.caller (trac-13335). But as of jQuery 3.0 (2016), strict mode should be tools
 // enough that all such attempts are guarded in a try block.
 "use strict";
 
@@ -1581,7 +1581,7 @@ setDocument = Sizzle.setDocument = function( node ) {
 
 		return i ?
 
-			// Do a sibling check if the nodes have a common ancestor
+			// Do a sibling check if the nodes have a tools ancestor
 			siblingCheck( ap[ i ], bp[ i ] ) :
 
 			// Otherwise nodes in our document sort first
@@ -5789,7 +5789,7 @@ jQuery.Event.prototype = {
 	}
 };
 
-// Includes all common event props including KeyEvent and MouseEvent specific props
+// Includes all tools event props including KeyEvent and MouseEvent specific props
 jQuery.each( {
 	altKey: true,
 	bubbles: true,
@@ -8449,7 +8449,7 @@ jQuery.fn.extend( {
 
 				ret = elem.value;
 
-				// Handle most common string cases
+				// Handle most tools string cases
 				if ( typeof ret === "string" ) {
 					return ret.replace( rreturn, "" );
 				}

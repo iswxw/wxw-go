@@ -108,7 +108,7 @@ C:\Project\wxw-go\src\com.wxw\project_actual\actual_test\unit_test>go test -v
 === RUN   TestPunctuationSplit
 --- PASS: TestPunctuationSplit (0.00s)
 PASS
-ok      src/com.wxw/04_project_actual/src/com.wxw/04_project_actual/01_actual_test/unit_test     0.120s
+ok      src/com.wxw/04_project_actual/src/com.wxw/04_project_actual/w_test/unit_test     0.120s
 ```
 
 当然，我们可以继续优化测试代码！利用结构体组织测试数据把多个测试用例合到一起，在1个函数内对1组测试用例进行统一测试。
@@ -383,7 +383,7 @@ HandleType: 1BenchMark Test: Sub
 HandleType: 1BenchMark Test: Sub
    52947             98138 ns/op              96 B/op          3 allocs/op
 PASS
-ok      src/com.wxw/04_project_actual/src/com.wxw/04_project_actual/01_actual_test/benchmark_test        6.476s
+ok      src/com.wxw/04_project_actual/src/com.wxw/04_project_actual/w_test/benchmark_test        6.476s
 ```
 
 **输出结果分析** 

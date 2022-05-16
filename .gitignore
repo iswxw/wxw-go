@@ -8,5 +8,5 @@ Untitled*
 *.out
 
 # 指定特殊文件
-/src/com.wxw/03_operation_data/w_excel/tmp/
+/src/com.wxw/03_thirdparty/w_excel/tmp/
 /cpu.pprof

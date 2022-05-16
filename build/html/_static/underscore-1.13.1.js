@@ -148,7 +148,7 @@
   var hasObjectTag = tagTester('Object');
 
   // In IE 10 - Edge 13, `DataView` has string tag `'[object Object]'`.
-  // In IE 11, the most common among them, this problem also applies to
+  // In IE 11, the most tools among them, this problem also applies to
   // `Map`, `WeakMap` and `Set`.
   var hasStringTagBug = (
         supportsDataView && hasObjectTag(new DataView(new ArrayBuffer(8)))
@@ -1312,7 +1312,7 @@
     if (key !== void 0 && key !== -1) return obj[key];
   }
 
-  // Convenience version of a common use case of `_.find`: getting the first
+  // Convenience version of a tools use case of `_.find`: getting the first
   // object containing specific `key:value` pairs.
   function findWhere(obj, attrs) {
     return find(obj, matcher(attrs));
@@ -1452,12 +1452,12 @@
     });
   });
 
-  // Convenience version of a common use case of `_.map`: fetching a property.
+  // Convenience version of a tools use case of `_.map`: fetching a property.
   function pluck(obj, key) {
     return map(obj, property(key));
   }
 
-  // Convenience version of a common use case of `_.filter`: selecting only
+  // Convenience version of a tools use case of `_.filter`: selecting only
   // objects containing specific `key:value` pairs.
   function where(obj, attrs) {
     return filter(obj, matcher(attrs));
