@@ -24,6 +24,7 @@ func main() {
 	fmt.Println(pretty)
 }
 
+// https://studygolang.com/articles/20483
 func jsonPretty(d interface{}) string {
 	r, _ := json.MarshalIndent(d, "", "\t")
 	return string(r)
