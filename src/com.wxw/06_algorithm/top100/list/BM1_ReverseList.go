@@ -5,6 +5,11 @@
 */
 package main
 
+// 链表翻转
+func main() {
+
+}
+
 type ListNode struct {
 	Val  int
 	Next *ListNode
