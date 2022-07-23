@@ -3,7 +3,7 @@
 @Author: wxw
 @File: list
 */
-package main
+package basic
 
 import "fmt"
 
@@ -30,9 +30,4 @@ func Show(p *ListNode) { //遍历
 		fmt.Println(*p)
 		p = p.next //移动指针
 	}
-}
-
-func main() {
-	node := &ListNode{val: 0}
-	Show(InitList(node, 10))
 }
