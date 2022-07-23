@@ -18,7 +18,7 @@ func hasCycle( head *ListNode ) bool {
 		return false
 	}
 	p1 := head
-	p2 := head.Next
+	p2 := head
 	for p2 != nil && p2.Next != nil {
 		p1 = p1.Next
 		p2 = p2.Next.Next
