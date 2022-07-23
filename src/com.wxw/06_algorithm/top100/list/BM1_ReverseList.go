@@ -5,14 +5,38 @@
 */
 package main
 
+import (
+	"fmt"
+)
+
 // 链表翻转
 func main() {
-
+	pHead := &ListNode{
+		Val: 0,
+		Next: &ListNode{
+			Val: 1,
+			Next: &ListNode{
+				Val: 2,
+				Next: &ListNode{
+					Val: 3,
+				},
+			},
+		},
+	}
+	show(ReverseList(pHead))
 }
 
 type ListNode struct {
 	Val  int
 	Next *ListNode
+}
+
+func show(pHead *ListNode) {
+	fmt.Println("++++++++++++")
+	for pHead != nil {
+		fmt.Println(*pHead)
+		pHead = pHead.Next //移动指针
+	}
 }
 
 // 迭代实现
@@ -26,6 +50,7 @@ func ReverseList(pHead *ListNode) *ListNode {
 		pHead.Next = newHead // 节点反转
 		newHead = pHead      // 更新已反转的节点
 		pHead = pNext        // 更新当前节点
+		show(pHead)
 	}
 	return newHead
 }
