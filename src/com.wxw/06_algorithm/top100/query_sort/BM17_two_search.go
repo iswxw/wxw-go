@@ -7,6 +7,7 @@ package main
 
 
 /**
+ * 二分法查找
  * @param nums int整型一维数组
  * @param target int整型
  * @return int整型
