@@ -4,3 +4,7 @@
 @File : main
 */
 package main
+
+func main() {
+
+}
