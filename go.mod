@@ -10,11 +10,14 @@ require (
 require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
+	github.com/jung-kurt/gofpdf v1.16.2 // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/olivere/elastic v6.2.37+incompatible // indirect
+	github.com/phpdave11/gofpdi v1.0.13 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/rogpeppe/go-internal v1.8.1 // indirect
+	github.com/signintech/gopdf v0.14.1 // indirect
 	golang.org/x/xerrors v0.0.0-20220411194840-2f41105eb62f // indirect
 	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
 	gopkg.in/yaml.v3 v3.0.0-20220512140231-539c8e751b99 // indirect
