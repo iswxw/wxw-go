@@ -1,4 +1,4 @@
-package goroutine_control
+package concurrent_control
 
 import (
 	"errors"
@@ -14,21 +14,21 @@ func TestSemaphore(t *testing.T) {
 	arr := make([]int, 0)
 
 	for i := 0; i < 10; i++ {
-		fmt.Printf("goroutine_control.AvailablePermits : %d \n", sema.AvailablePermits())
+		fmt.Printf("concurrent_control.AvailablePermits : %d \n", sema.AvailablePermits())
 		sema.Acquire() //数量不足，阻塞等待
 		go func(i int) {
 			defer sema.Release()
 			lock.Lock()
 			defer lock.Unlock()
 			arr = append(arr, i)
-			fmt.Println("goroutine_control")
+			fmt.Println("concurrent_control")
 			time.Sleep(time.Second)
 		}(i)
 
 	}
 
 	_ = sema.Wait()
-	fmt.Printf("goroutine_control.AvailablePermits : %d \n", sema.AvailablePermits())
+	fmt.Printf("concurrent_control.AvailablePermits : %d \n", sema.AvailablePermits())
 
 	for i := range arr {
 		fmt.Println(arr[i])
@@ -41,18 +41,18 @@ func TestTrySemaphore(t *testing.T) {
 	sema := New(3)
 
 	for i := 0; i < 10; i++ {
-		fmt.Printf("goroutine_control.AvailablePermits : %d \n", sema.AvailablePermits())
+		fmt.Printf("concurrent_control.AvailablePermits : %d \n", sema.AvailablePermits())
 		if sema.TryAcquire() { //不阻塞等待
 			go func() {
 				defer sema.Release()
-				fmt.Println("goroutine_control")
+				fmt.Println("concurrent_control")
 				time.Sleep(time.Second)
 			}()
 		}
 	}
 
 	_ = sema.Wait()
-	fmt.Printf("goroutine_control.AvailablePermits : %d \n", sema.AvailablePermits())
+	fmt.Printf("concurrent_control.AvailablePermits : %d \n", sema.AvailablePermits())
 
 	fmt.Println("---------- TestTrySemaphore done ----------")
 }

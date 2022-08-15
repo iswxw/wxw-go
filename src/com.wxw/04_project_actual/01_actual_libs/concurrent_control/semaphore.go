@@ -1,4 +1,4 @@
-package goroutine_control
+package concurrent_control
 
 import (
 	"context"
