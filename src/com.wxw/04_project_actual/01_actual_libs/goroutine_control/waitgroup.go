@@ -1,5 +1,5 @@
 // @Time : 2022/8/5 15:51
-// @Author : xiaoweiwei@didiglobal.com
+// @Author : xiaoweiwei
 // @File : waitgroup
 
 package sugar
