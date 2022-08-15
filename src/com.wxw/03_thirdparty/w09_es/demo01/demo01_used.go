@@ -8,7 +8,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/olivere/elastic/v7"
+	"github.com/olivere/elastic"
 	"reflect"
 	"time"
 )
@@ -141,7 +141,7 @@ func main() {
 	fmt.Printf("Found a total of %d tweets\n", searchResult.TotalHits())
 
 	// Here's how you iterate through results with full control over each step.
-	if searchResult.Hits.TotalHits.Value > 0 {
+	if searchResult.Hits.TotalHits > 0 {
 		fmt.Printf("Found a total of %d tweets\n", searchResult.Hits.TotalHits)
 
 		// Iterate through results
