@@ -6,7 +6,9 @@ Pipfile
 Untitled*
 *.pprof
 *.out
+*.pdf
 
 # 指定特殊文件
 /src/com.wxw/03_thirdparty/w_excel/tmp/
 /cpu.pprof
+**/tmp/
