@@ -29,15 +29,15 @@ func main() {
 	r := core.CreateReport()
 	font1 := core.FontMap{
 		FontName: TableIg,
-		FileName: basePath + "common/ttf/Loma.ttf",
+		FileName: basePath + "common/ttf/ipaexg.ttf",
 	}
 	font2 := core.FontMap{
 		FontName: TableMd,
-		FileName: basePath + "common/ttf/Loma.ttf",
+		FileName: basePath + "common/ttf/mplus-1p-bold.ttf",
 	}
 	font3 := core.FontMap{
 		FontName: TableMy,
-		FileName: basePath + "common/ttf/Loma.ttf",
+		FileName: basePath + "common/ttf/microsoft.ttf",
 	}
 	r.SetFonts([]*core.FontMap{&font1, &font2, &font3})
 	r.SetPage("A4", "P")
