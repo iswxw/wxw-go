@@ -20,12 +20,12 @@ const (
 )
 
 var (
-	seed = rand.New(rand.NewSource(time.Now().UnixNano()))
+	seed     = rand.New(rand.NewSource(time.Now().UnixNano()))
+	basePath = "src/com.wxw/03_thirdparty/w10_pdf/"
 )
 
 func main() {
 
-	basePath := "D:\\Project\\wxw-go\\src\\com.wxw\\03_thirdparty\\w10_pdf\\"
 	r := core.CreateReport()
 	font1 := core.FontMap{
 		FontName: TableIg,

@@ -10,24 +10,26 @@ import (
 	"log"
 )
 
+var rootPath = "src/com.wxw/03_thirdparty/w10_pdf/"
+
 func main() {
-
-	basePath := "D:\\Project\\wxw-go\\src\\com.wxw\\03_thirdparty\\w10_pdf\\"
-
 	pdf := gopdf.GoPdf{}
 	pdf.Start(gopdf.Config{PageSize: *gopdf.PageSizeA4})
 	pdf.AddPage()
-	err := pdf.AddTTFFont("wts11", basePath+"common\\ttf\\wts11.ttf")
+	err := pdf.AddTTFFont("wts11", rootPath+"common/ttf/wts11.ttf")
 	if err != nil {
 		log.Print(err.Error())
 		return
 	}
+
 	err = pdf.SetFont("wts11", "", 14)
 	if err != nil {
 		log.Print(err.Error())
 		return
 	}
+	pdf.SetTextColor(156, 197, 140)
 	pdf.Cell(nil, "您好")
-	pdf.WritePdf(basePath + "tmp\\hello.pdf")
+
+	pdf.WritePdf(rootPath + "tmp/hello.pdf")
 
 }
