@@ -1,5 +1,7 @@
 
 
 
+相关资料
+  - 相关使用教程：https://blog.csdn.net/zhangyibei2008/article/details/107057883
   - pdf开源组件选型：https://blog.csdn.net/weixin_42677653/article/details/121600419
   - 推荐组件：https://github.com/signintech/gopdf

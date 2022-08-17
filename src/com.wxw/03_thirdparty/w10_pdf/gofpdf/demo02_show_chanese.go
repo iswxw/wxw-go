@@ -1,20 +1,21 @@
-// @Time : 2022/8/17 10:59
+// @Time : 2022/8/17 16:15
 // @Author : xiaoweiwei
-// @File : quick_start
+// @File : demo02_show_chanese
 
 package main
 
 import (
-	"github.com/go-pdf/fpdf"
+	"github.com/jung-kurt/gofpdf"
 	"log"
 )
 
-// libs库：https://github.com/go-pdf/fpdf
-// example: https://pkg.go.dev/github.com/go-pdf/fpdf#pkg-examples
 func main() {
 	var rootPath = "src/com.wxw/03_thirdparty/w10_pdf/"
 	var fontPath = "src/com.wxw/03_thirdparty/w10_pdf/common/ttf/microsoft.ttf"
-	pdf := fpdf.New("P", "mm", "A4", "")
+
+	//设置页面参数
+	pdf := gofpdf.New("P", "mm", "A4", "")
+	//添加一页
 	pdf.AddPage()
 
 	//将字体加载进来
@@ -28,5 +29,7 @@ func main() {
 
 	if err := pdf.OutputFileAndClose(rootPath + "tmp/hello.pdf"); err != nil {
 		log.Println(err)
+		return
 	}
+
 }
