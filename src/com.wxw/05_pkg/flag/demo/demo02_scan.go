@@ -21,7 +21,7 @@ func main() {
 }
 
 // 输出结果
-//DIDI-C02G45SHQ05G:case didi$ go run demo02_scan.go
+// case didi$ go run demo02_scan.go
 //aq
 //12
 //12
