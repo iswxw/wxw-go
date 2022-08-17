@@ -1,7 +1,7 @@
 /*
 @Time: 2021/10/10 10:57
 @Author: wxw
-@File: demo
+@File: case
 @Link: https://www.runoob.com/go/go-interfaces.html
 */
 package main

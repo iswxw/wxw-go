@@ -51,7 +51,7 @@ func (d *Department) AddSub(org IOrganization) {
 	d.SubOrganizations = append(d.SubOrganizations, org)
 }
 
-// NewOrganization 构建组织架构 demo
+// NewOrganization 构建组织架构 case
 func NewOrganization() IOrganization {
 	root := &Department{Name: "root"}
 	for i := 0; i < 10; i++ {

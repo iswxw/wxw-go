@@ -10,7 +10,7 @@ import (
 	"os"
 )
 
-//os.Args demo
+//os.Args case
 func main() {
 	//os.Args是一个[]string
 	if len(os.Args) < 0 {
@@ -27,7 +27,7 @@ func main() {
 // 方式一：go run demo01_args.go a b c d                           [windows使用]
 // 方式二：go build -o "demo01_args.go" 之后 ./demo01_args a b c d  [mac/linux使用]
 
-//D:\Project\wxw-go\src\com.wxw\05_pkg\flag\demo>go run demo01_args.go a b c d
+//D:\Project\wxw-go\src\com.wxw\05_pkg\flag\case>go run demo01_args.go a b c d
 //args[0]=C:\Users\wxw\AppData\Local\Temp\go-build1027210589\b001\exe\demo01_args.exe
 //args[1]=a
 //args[2]=b

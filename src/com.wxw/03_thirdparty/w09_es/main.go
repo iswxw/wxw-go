@@ -11,7 +11,7 @@ import (
 	"github.com/olivere/elastic"
 )
 
-// Elasticsearch demo
+// Elasticsearch case
 
 type Person struct {
 	Name    string `json:"name"`

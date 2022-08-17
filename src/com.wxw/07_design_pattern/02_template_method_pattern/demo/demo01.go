@@ -1,7 +1,7 @@
 /*
 @Time : 2022/1/19 23:10
 @Author : weixiaowei
-@File : demo 模板方法模式
+@File : case 模板方法模式
 */
 package main
 
