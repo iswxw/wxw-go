@@ -3,7 +3,7 @@
 @Author : wxw
 @File : demo_type_transformation 类型转换
 */
-package main
+package type_convert
 
 import (
 	"encoding/json"
@@ -16,12 +16,10 @@ type Person struct {
 	Age  int    `json:"age"`
 }
 
-/**
-核心功能
- 1. Json和struct互换
- 2. json和map互转
- 3. struct和map互转
-*/
+//核心功能
+// 1. Json和struct互换
+// 2. json和map互转
+// 3. struct和map互转
 
 func main() {
 
@@ -80,8 +78,4 @@ func Struct2MapByReflect(obj interface{}) map[string]interface{} {
 		data[t.Field(i).Name] = v.Field(i).Interface()
 	}
 	return data
-}
-
-func Map2Struct() {
-
 }
