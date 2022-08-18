@@ -7,11 +7,12 @@ package main
 
 import (
 	"fmt"
-	"framework/w05_excel/excelize/common/dto"
-	"framework/w05_excel/excelize/common/util"
 	"github.com/mitchellh/mapstructure"
 	"github.com/xuri/excelize/v2"
+	"log"
 	"os"
+	"src/com.wxw/project_actual/src/com.wxw/03_thirdparty/w05_excel/common/dto"
+	"src/com.wxw/project_actual/src/com.wxw/03_thirdparty/w05_excel/common/util"
 )
 
 // 来源 https://github.com/liangzibo/go-excel
@@ -32,7 +33,7 @@ func main() {
 	var demoStruct dto.ExcelTest
 	// map 转 结构体
 	if err2 := mapstructure.Decode(rows, &demoStruct); err2 != nil {
-
+		log.Println(err2)
 	}
 	fmt.Println(demoStruct)
 }

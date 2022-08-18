@@ -5,7 +5,7 @@
 */
 package util
 
-import "framework/w05_excel/excelize/common/dto"
+import "src/com.wxw/project_actual/src/com.wxw/03_thirdparty/w05_excel/common/dto"
 
 func GetUsers() []dto.User {
 	return []dto.User{

@@ -8,6 +8,7 @@ package main
 import (
 	"fmt"
 	"github.com/xuri/excelize/v2"
+	"src/com.wxw/project_actual/src/com.wxw/03_thirdparty/w05_excel/common/util"
 )
 
 func main() {
@@ -20,7 +21,7 @@ func main() {
 	// 设置工作簿的默认工作表
 	f.SetActiveSheet(index)
 	// 根据指定路径保存文件
-	if err := f.SaveAs("Book1.xlsx"); err != nil {
+	if err := f.SaveAs(util.GetPath("Book1.xlsx")); err != nil {
 		fmt.Println(err)
 	}
 }

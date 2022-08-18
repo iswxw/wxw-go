@@ -12,5 +12,5 @@ import (
 
 func GetPath(fileName string) string {
 	rootPath, _ := os.Getwd()
-	return fmt.Sprintf("%s/w_excel/tmp/%s", rootPath, fileName)
+	return fmt.Sprintf("%s/%s", rootPath, fileName)
 }

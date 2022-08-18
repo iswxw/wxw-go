@@ -1,18 +1,15 @@
-/*
-@Time : 2022/1/26 00:14
-@Author : weixiaowei
-@File : User
-*/
+// @Time : 2022/8/18 11:17
+// @Author : xiaoweiwei
+// @File : excel_struct
+
 package dto
 
 import "time"
 
-type User struct {
-	Id        int     `json:"id"`
-	Name      string  `json:"name"`
-	Amount    float64 `json:"amount"`
-	Price     string  `json:"price"`
-	UnitPrice float64 `json:"unitPrice"`
+type ParamWriteExcel struct {
+	Headers      []string           `json:"headers"`
+	ColumnWidths map[string]float64 `json:"column_widths"`
+	FileData     [][]interface{}    `json:"file_data"`
 }
 
 type ExcelTest struct {
