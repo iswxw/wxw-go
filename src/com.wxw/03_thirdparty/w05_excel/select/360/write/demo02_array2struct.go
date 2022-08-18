@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"github.com/360EntSecGroup-Skylar/excelize"
 	"github.com/mitchellh/mapstructure"
+	"log"
 	"os"
 	"src/com.wxw/project_actual/src/com.wxw/03_thirdparty/w05_excel/common/dto"
 	"src/com.wxw/project_actual/src/com.wxw/03_thirdparty/w05_excel/common/lib"
@@ -17,8 +18,7 @@ import (
 // https://github.com/liangzibo/go-excel
 
 func Array2Struct() {
-
-	xlsx, err := excelize.OpenFile("src/com.wxw/03_thirdparty/w05_excel/tmp/test.xlsx")
+	xlsx, err := excelize.OpenFile(GetPath("tmp/test.xlsx"))
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
@@ -41,7 +41,8 @@ func Array2Struct() {
 		fmt.Println(err)
 		os.Exit(1)
 	}
-	fmt.Println(arr)
+	log.Println("arr1 = ", arr)
+
 	//rows 为[][]string 类型
 	//结果在  arr 中
 	var arr2 []dto.ExcelTest
@@ -60,5 +61,5 @@ func Array2Struct() {
 		fmt.Println(err)
 		os.Exit(1)
 	}
-	fmt.Println(arr)
+	log.Println("arr2 = ", arr2)
 }

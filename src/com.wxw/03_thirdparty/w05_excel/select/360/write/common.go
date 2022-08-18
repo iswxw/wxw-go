@@ -6,10 +6,9 @@ package write
 
 import (
 	"fmt"
-	"os"
 )
 
 func GetPath(fileName string) string {
-	rootPath, _ := os.Getwd()
-	return fmt.Sprintf("%s/%s", rootPath, fileName)
+	//rootPath, _ := os.Getwd()
+	return fmt.Sprintf("%s/%s", "../../../", fileName)
 }
