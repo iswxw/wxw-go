@@ -6,43 +6,97 @@ package main
 
 import (
 	"fmt"
-	"github.com/go-pdf/fpdf"
+	"github.com/jung-kurt/gofpdf"
+	"io/ioutil"
 	"log"
 )
 
+// 主要演示 多行文字段落、行对齐、分页
 func main() {
+
 	var rootPath = "src/com.wxw/03_thirdparty/w10_pdf/"
-	pdf := fpdf.New("P", "mm", "A4", "")
-	pdf.SetTopMargin(30)
-	imagePath := fmt.Sprintf("%scommon/imgs/logo.png", rootPath)
+	var fontPath = "src/com.wxw/03_thirdparty/w10_pdf/common/ttf/microsoft.ttf"
+	//var imagePath = "src/com.wxw/03_thirdparty/w10_pdf/common/imgs/logo.png"
 
-	// 设置header部分
+	//设置页面参数
+	pdf := gofpdf.New("P", "mm", "A4", "")
+	w, h := pdf.GetPageSize()
+	fmt.Printf("页面规格字段 pdf size, w:%.2f, h:%.2f \n", w, h) //pdf size, w:210.00, h:297.00
+
+	//将字体加载进来
+	//AddUTF8Font("给字体起个别名", "", "fontPath")
+	pdf.AddUTF8Font("microsoft", "", fontPath)
+
+	//使用这个字体
+	//SetFont("字体的别名", "", size)
+	pdf.SetFont("microsoft", "", 14)
+
+	titleStr := "车险服务周报"
+
+	pdf.SetTitle(titleStr, false)
+	pdf.SetAuthor("isWXW", false)
+
+	//设置页眉
 	pdf.SetHeaderFuncMode(func() {
-		pdf.Image(imagePath, 10, 6, 30, 0, false, "", 0, "")
-		pdf.SetY(5)
-		pdf.SetFont("Arial", "B", 15)
-		pdf.Cell(80, 0, "")
-		pdf.CellFormat(30, 10, fmt.Sprintf("平台车险服务周报"), "1", 0, "C", false, 0, "")
-		pdf.Ln(20)
-	}, true)
+		wd := pdf.GetStringWidth(titleStr) + 6
+		pdf.SetY(0.6)            // 先要设置 Y，然后再设置 X。否则，会导致 X 失效
+		pdf.SetX((210 - wd) / 2) // 水平居中的算法
+		//pdf.SetDrawColor(0, 80, 180)  //frame color
+		//pdf.SetFillColor(250, 250, 250) //background color
 
-	// 设置 Footer 部分
-	pdf.SetFooterFunc(func() {
-		pdf.SetY(-15)
-		pdf.SetFont("Arial", "I", 8)
-		pdf.CellFormat(0, 10, fmt.Sprintf("Page %d/{nb}", pdf.PageNo()), "", 0, "C", false, 0, "")
-	})
-	pdf.AliasNbPages("")
+		pdf.SetTextColor(0, 0, 0) //text color
+		pdf.SetLineWidth(10)
+		pdf.CellFormat(wd, 20, titleStr, "0", 1, "CM", false, 0, "")
 
-	pdf.AddPage()
-	pdf.SetFont("Times", "", 12)
+		// 副标题
+		pdf.SetY(20)             // 先要设置 Y，然后再设置 X。否则，会导致 X 失效
+		pdf.SetX((210 - wd) / 2) // 水平居中的算法
+		pdf.CellFormat(wd, 10, "2022年08月08日-2022年08月14日", "0", 1, "CM", false, 0, "")
 
-	// Body 写内容
-	for j := 1; j <= 10; j++ {
-		pdf.CellFormat(0, 10, fmt.Sprintf("你好 line number %d", j), "", 1, "", false, 0, "")
+		// 第 5 个参数，实际效果是：指定下一行的位置
+		// Ln(h float64) 表示：创建一个高度为 h 的空行。
+		pdf.Ln(5)
+		// 0：表示不换行，并紧跟在这个 Cell 的右边。
+		// 1：发生换行，并在下一行的顶头位置。
+		// 2：发生换行，但是会在这个 Cell 的下方。
+
+	}, false)
+
+	// 设置标题
+	// chapNum 章节数据
+	// titleStr 章节标题
+	chapterTitle := func(chapNum int, titleStr string) {
+		pdf.SetFillColor(200, 220, 255) //background color
+		pdf.CellFormat(0, 6, fmt.Sprintf("%s", titleStr), "", 1, "L", true, 0, "")
+
+		pdf.Ln(2)
 	}
 
-	if err := pdf.OutputFileAndClose(rootPath + "/tmp/Fpdf_AddPage.pdf"); err != nil {
+	// 设置主体
+	chapterBody := func(fileStr string) {
+		textStr, err := ioutil.ReadFile(fileStr)
+		if err != nil {
+			pdf.SetError(err)
+		}
+
+		//输出对齐文本
+		pdf.MultiCell(0, 5, string(textStr), "", "", false)
+		pdf.Ln(-1)
+		//pdf.SetFont("microsoft", "I", 0)
+		pdf.Cell(0, 5, "本章节加载完毕")
+	}
+
+	//印刷每一页
+	printChapter := func(chapNum int, titleStr, fileStr string) {
+		pdf.AddPage()
+		chapterTitle(chapNum, titleStr)
+		chapterBody(fileStr)
+	}
+
+	printChapter(1, "第一章，项目背景", rootPath+"common/text/20k_c2.txt")
+	//printChapter(2, "A RUNAWAY REEF", rootPath+"common/text/20k_c1.txt")
+
+	if err := pdf.OutputFileAndClose(rootPath + "tmp/hello.pdf"); err != nil {
 		log.Println(err)
 		return
 	}
