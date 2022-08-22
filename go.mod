@@ -16,6 +16,7 @@ require (
 	github.com/jung-kurt/gofpdf v1.16.2 // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/mitchellh/mapstructure v1.5.0
+	github.com/nguyenthenguyen/docx v0.0.0-20220721043308-1903da0ef37d // indirect
 	github.com/olivere/elastic v6.2.37+incompatible // indirect
 	github.com/phpdave11/gofpdi v1.0.13 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
