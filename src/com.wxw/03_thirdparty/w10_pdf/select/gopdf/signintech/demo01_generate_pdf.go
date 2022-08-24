@@ -10,12 +10,11 @@ import (
 	"log"
 )
 
-var rootPath = "src/com.wxw/03_thirdparty/w10_pdf/"
-
 func main() {
 	pdf := gopdf.GoPdf{}
 	pdf.Start(gopdf.Config{PageSize: *gopdf.PageSizeA4})
 	pdf.AddPage()
+	rootPath := "src/com.wxw/03_thirdparty/w10_pdf/"
 	err := pdf.AddTTFFont("wts11", rootPath+"common/ttf/wts11.ttf")
 	if err != nil {
 		log.Print(err.Error())
@@ -31,5 +30,4 @@ func main() {
 	pdf.Cell(nil, "您好")
 
 	pdf.WritePdf(rootPath + "tmp/hello.pdf")
-
 }

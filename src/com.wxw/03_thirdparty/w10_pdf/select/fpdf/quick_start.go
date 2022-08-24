@@ -25,7 +25,6 @@ func main() {
 	//SetFont("字体的别名", "", size)
 	pdf.SetFont("microsoft", "", 20)
 	pdf.Text(5, 10, "横看成岭侧成峰")
-
 	if err := pdf.OutputFileAndClose(rootPath + "tmp/hello.pdf"); err != nil {
 		log.Println(err)
 	}
