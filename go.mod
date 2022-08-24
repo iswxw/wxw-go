@@ -34,6 +34,7 @@ require (
 require (
 	github.com/SebastiaanKlippert/go-wkhtmltopdf v1.7.2 // indirect
 	github.com/andrewcharlton/wkhtmltopdf-go v0.0.0-20181104223037-0049d75fb708 // indirect
+	github.com/jackdon/go-htmltopdf v0.0.0-20200608081125-b13d53e20f6a // indirect
 	github.com/mohae/deepcopy v0.0.0-20170929034955-c48cc78d4826 // indirect
 	github.com/richardlehane/mscfb v1.0.4 // indirect
 	github.com/richardlehane/msoleps v1.0.1 // indirect
