@@ -6,12 +6,9 @@ package main
 
 import (
 	"bytes"
-	"fmt"
-	"github.com/SebastiaanKlippert/go-wkhtmltopdf"
+	"github.com/jung-kurt/gofpdf"
 	"html/template"
-	"log"
 	"net/http"
-	"strings"
 )
 
 const page = `
@@ -38,33 +35,27 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 // 需要安装wkhtmltopdf环境
 func GeneratorPdf() {
-	const html = `<!doctype html><html><head><title>WKHTMLTOPDF TEST</title></head><body>HELLO PDF</body></html>`
 
-	// Client code
-	pdfg := wkhtmltopdf.NewPDFPreparer()
-	pdfg.AddPage(wkhtmltopdf.NewPageReader(strings.NewReader(html)))
-	pdfg.Dpi.Set(600)
+	var rootPath = "src/com.wxw/03_thirdparty/w10_pdf/"
 
-	// The html string is also saved as base64 string in the JSON file
-	jsonBytes, err := pdfg.ToJSON()
-	if err != nil {
-		log.Fatal(err)
+	//设置页面参数
+	pdf := gofpdf.New("P", "mm", "A4", "")
+
+	//添加一页
+	pdf.AddPage()
+
+	//写文字内容之前，必须先要设置好字体
+	pdf.SetFont("Arial", "B", 16)
+
+	//CellFormat: 表格显示样式设置
+	//CellFormat(width, height, text, border, position after, align, fill, link, linkStr)
+	pdf.CellFormat(0, 0, "Welcome to golang code.com", "0", 0, "LM", false, 0, "")
+
+	htmlBasicNew := pdf.HTMLBasicNew()
+	fontSize, _ := pdf.GetFontSize()
+	htmlBasicNew.Write(fontSize, page)
+
+	if err := pdf.OutputFileAndClose(rootPath + "tmp/hello.pdf"); err != nil {
+		return
 	}
-
-	// The JSON can be saved, uploaded, etc.
-
-	// Server code, create a new PDF generator from JSON, also looks for the wkhtmltopdf executable
-	pdfgFromJSON, err := wkhtmltopdf.NewPDFGeneratorFromJSON(bytes.NewReader(jsonBytes))
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// Create the PDF
-	err = pdfgFromJSON.Create()
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// Use the PDF
-	fmt.Printf("PDF size %d bytes", pdfgFromJSON.Buffer().Len())
 }
