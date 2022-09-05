@@ -6,8 +6,8 @@ package main
 
 import (
 	"bytes"
+	"github.com/jung-kurt/gofpdf"
 	"html/template"
-	//"github.com/pleximus/go-htmltopdf"
 	"net/http"
 )
 
@@ -35,6 +35,27 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 // 需要安装wkhtmltopdf环境
 func GeneratorPdf() {
-	const html = `<!doctype html><html><head><title>WKHTMLTOPDF TEST</title></head><body>HELLO PDF</body></html>`
 
+	var rootPath = "src/com.wxw/03_thirdparty/w10_pdf/"
+
+	//设置页面参数
+	pdf := gofpdf.New("P", "mm", "A4", "")
+
+	//添加一页
+	pdf.AddPage()
+
+	//写文字内容之前，必须先要设置好字体
+	pdf.SetFont("Arial", "B", 16)
+
+	//CellFormat: 表格显示样式设置
+	//CellFormat(width, height, text, border, position after, align, fill, link, linkStr)
+	pdf.CellFormat(0, 0, "Welcome to golang code.com", "0", 0, "LM", false, 0, "")
+
+	htmlBasicNew := pdf.HTMLBasicNew()
+	fontSize, _ := pdf.GetFontSize()
+	htmlBasicNew.Write(fontSize, page)
+
+	if err := pdf.OutputFileAndClose(rootPath + "tmp/hello.pdf"); err != nil {
+		return
+	}
 }
