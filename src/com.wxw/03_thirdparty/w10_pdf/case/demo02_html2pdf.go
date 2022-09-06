@@ -5,10 +5,7 @@
 package main
 
 import (
-	"bytes"
 	"github.com/jung-kurt/gofpdf"
-	"html/template"
-	"net/http"
 )
 
 const page = `
@@ -22,15 +19,6 @@ const page = `
 
 func main() {
 	GeneratorPdf()
-}
-
-func handler(w http.ResponseWriter, r *http.Request) {
-	tmpl := template.Must(template.New("page").Parse(page))
-	buf := &bytes.Buffer{}
-	tmpl.Execute(buf, r.URL.String())
-
-	//w.Header().Set("Content-Type", "application/pdf")
-	//w.Header().Set("Content-Disposition", `attachment; filename="test.pdf"`)
 }
 
 // 需要安装wkhtmltopdf环境

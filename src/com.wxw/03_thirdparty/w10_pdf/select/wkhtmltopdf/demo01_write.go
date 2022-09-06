@@ -6,8 +6,7 @@ package main
 
 import (
 	"bytes"
-	"fmt"
-	"github.com/SebastiaanKlippert/go-wkhtmltopdf"
+	"github.com/jung-kurt/gofpdf"
 	"html/template"
 	"io/ioutil"
 	"log"
@@ -15,51 +14,42 @@ import (
 )
 
 // https://pkg.go.dev/github.com/andrewcharlton/wkhtmltopdf-go
-
-var RootPath = "src/com.wxw/03_thirdparty/w10_pdf/"
-
 func main() {
-	// Create new PDF generator
-	pdfg, err := wkhtmltopdf.NewPDFGenerator()
-	if err != nil {
-		log.Fatal(err)
+
+	var rootPath = "src/com.wxw/03_thirdparty/w10_pdf/"
+	var fontPath = "src/com.wxw/03_thirdparty/w10_pdf/common/ttf/microsoft.ttf"
+
+	//设置页面参数
+	pdf := gofpdf.New("P", "mm", "A4", "")
+
+	//添加一页
+	pdf.AddPage()
+
+	//写文字内容之前，必须先要设置好字体
+	pdf.SetFont("Arial", "B", 16)
+
+	//CellFormat: 表格显示样式设置
+	//CellFormat(width, height, text, border, position after, align, fill, link, linkStr)
+	pdf.CellFormat(0, 0, "Welcome to golang code.com", "0", 0, "LM", false, 0, "")
+
+	//将字体加载进来
+	//AddUTF8Font("给字体起个别名", "", "fontPath")
+	pdf.AddUTF8Font("microsoft", "", fontPath)
+
+	//使用这个字体
+	//SetFont("字体的别名", "", size)
+	pdf.SetFont("microsoft", "", 20)
+	htmlBasicNew := pdf.HTMLBasicNew()
+	fontSize, _ := pdf.GetFontSize()
+	htmlBasicNew.Write(fontSize, getTagHTML(rootPath))
+
+	if err := pdf.OutputFileAndClose(rootPath + "tmp/hello.pdf"); err != nil {
+		return
 	}
-
-	// Set global options
-	pdfg.Dpi.Set(300)
-	pdfg.Orientation.Set(wkhtmltopdf.OrientationLandscape)
-	pdfg.Grayscale.Set(true)
-
-	// Create a new input page from an URL
-	page := wkhtmltopdf.NewPage("https://godoc.org/github.com/SebastiaanKlippert/go-wkhtmltopdf")
-
-	// Set options for this page
-	page.FooterRight.Set("[page]")
-	page.FooterFontSize.Set(10)
-	page.Zoom.Set(0.95)
-
-	// Add to document
-	pdfg.AddPage(page)
-
-	// Create PDF document in internal buffer
-	err = pdfg.Create()
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// Write buffer contents to file on disk
-	err = pdfg.WriteFile("./simplesample.pdf")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	fmt.Println("Done")
-	// Output: Done
-
 }
 
-func ParseHtml() bytes.Buffer {
-	t, err := template.ParseFiles(RootPath + "common/tmpl/test.html")
+func ParseHtml(path string) bytes.Buffer {
+	t, err := template.ParseFiles(path + "common/tmpl/test.html")
 	if err != nil {
 		log.Printf("Parse template failed, err%v\n", err)
 		return bytes.Buffer{}
@@ -72,12 +62,9 @@ func ParseHtml() bytes.Buffer {
 	return buf
 }
 
-func GeneratorPdf() {
+func getTagHTML(path string) string {
 
-}
-
-func getTagHTML() string {
-	file, err := os.Open(RootPath + "common/tmpl/test.html")
+	file, err := os.Open(path + "common/tmpl/test.html")
 	if err != nil {
 		log.Fatal(err)
 	}
