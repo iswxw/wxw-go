@@ -8,9 +8,7 @@ import (
 	"bytes"
 	"github.com/SebastiaanKlippert/go-wkhtmltopdf"
 	"html/template"
-	"io/ioutil"
 	"log"
-	"os"
 )
 
 // https://pkg.go.dev/github.com/andrewcharlton/wkhtmltopdf-go
@@ -21,11 +19,11 @@ func main() {
 		log.Fatal(err)
 	}
 
-	url := "http://www.baidu.com/"
-	pdf.AddPage(wkhtmltopdf.NewPage(url))
+	//url := "http://www.baidu.com/"
+	//pdf.AddPage(wkhtmltopdf.NewPage(url))
 
-	//html := ParseHtml(rootPath)
-	//pdf.AddPage(wkhtmltopdf.NewPageReader(bytes.NewReader(html.Bytes())))
+	html := ParseHtml(rootPath)
+	pdf.AddPage(wkhtmltopdf.NewPageReader(bytes.NewReader(html.Bytes())))
 
 	if err := pdf.Create(); err != nil {
 		return
@@ -47,15 +45,4 @@ func ParseHtml(path string) bytes.Buffer {
 		return bytes.Buffer{}
 	}
 	return buf
-}
-
-func getTagHTML(path string) string {
-
-	file, err := os.Open(path + "common/tmpl/test.html")
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer file.Close()
-	b, err := ioutil.ReadAll(file)
-	return string(b)
 }
