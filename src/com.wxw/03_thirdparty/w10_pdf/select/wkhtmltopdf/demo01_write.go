@@ -6,7 +6,7 @@ package main
 
 import (
 	"bytes"
-	"github.com/jung-kurt/gofpdf"
+	"github.com/SebastiaanKlippert/go-wkhtmltopdf"
 	"html/template"
 	"io/ioutil"
 	"log"
@@ -15,35 +15,22 @@ import (
 
 // https://pkg.go.dev/github.com/andrewcharlton/wkhtmltopdf-go
 func main() {
-
 	var rootPath = "src/com.wxw/03_thirdparty/w10_pdf/"
-	var fontPath = "src/com.wxw/03_thirdparty/w10_pdf/common/ttf/microsoft.ttf"
+	pdf, err := wkhtmltopdf.NewPDFGenerator()
+	if err != nil {
+		log.Fatal(err)
+	}
 
-	//设置页面参数
-	pdf := gofpdf.New("P", "mm", "A4", "")
+	url := "http://www.baidu.com/"
+	pdf.AddPage(wkhtmltopdf.NewPage(url))
 
-	//添加一页
-	pdf.AddPage()
+	//html := ParseHtml(rootPath)
+	//pdf.AddPage(wkhtmltopdf.NewPageReader(bytes.NewReader(html.Bytes())))
 
-	//写文字内容之前，必须先要设置好字体
-	pdf.SetFont("Arial", "B", 16)
-
-	//CellFormat: 表格显示样式设置
-	//CellFormat(width, height, text, border, position after, align, fill, link, linkStr)
-	pdf.CellFormat(0, 0, "Welcome to golang code.com", "0", 0, "LM", false, 0, "")
-
-	//将字体加载进来
-	//AddUTF8Font("给字体起个别名", "", "fontPath")
-	pdf.AddUTF8Font("microsoft", "", fontPath)
-
-	//使用这个字体
-	//SetFont("字体的别名", "", size)
-	pdf.SetFont("microsoft", "", 20)
-	htmlBasicNew := pdf.HTMLBasicNew()
-	fontSize, _ := pdf.GetFontSize()
-	htmlBasicNew.Write(fontSize, getTagHTML(rootPath))
-
-	if err := pdf.OutputFileAndClose(rootPath + "tmp/hello.pdf"); err != nil {
+	if err := pdf.Create(); err != nil {
+		return
+	}
+	if err := pdf.WriteFile(rootPath + "tmp/hello.pdf"); err != nil {
 		return
 	}
 }
