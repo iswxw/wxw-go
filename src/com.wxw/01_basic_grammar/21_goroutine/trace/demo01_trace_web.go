@@ -22,9 +22,8 @@ func main() {
 
 	defer f.Close()
 
-	//启动trace goroutine
-	err = trace.Start(f)
-	if err != nil {
+	//启动 trace goroutine
+	if err = trace.Start(f); err != nil {
 		panic(err)
 	}
 	defer trace.Stop()
@@ -32,3 +31,7 @@ func main() {
 	//main
 	fmt.Println("Hello World")
 }
+
+// 当前路径下
+// go run demo01_trace_web.go 生成 trace.out文件
+// go tool trace trace.out 打开文件分析
