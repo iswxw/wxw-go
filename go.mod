@@ -33,11 +33,9 @@ require (
 
 require (
 	github.com/SebastiaanKlippert/go-wkhtmltopdf v1.7.2 // indirect
-	github.com/andrewcharlton/wkhtmltopdf-go v0.0.0-20181104223037-0049d75fb708 // indirect
 	github.com/astaxie/beego v1.12.3 // indirect
 	github.com/go-sql-driver/mysql v1.6.0 // indirect
 	github.com/hashicorp/golang-lru v0.5.4 // indirect
-	github.com/jackdon/go-htmltopdf v0.0.0-20200608081125-b13d53e20f6a // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/mattn/go-sqlite3 v2.0.3+incompatible // indirect
@@ -50,6 +48,5 @@ require (
 	golang.org/x/net v0.0.0-20220407224826-aac1ed45d8e3 // indirect
 	golang.org/x/text v0.3.7 // indirect
 	gorm.io/driver/mysql v1.4.3 // indirect
-	gorm.io/driver/sqlite v1.4.3 // indirect
 	gorm.io/gorm v1.24.1 // indirect
 )
