@@ -9,10 +9,11 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/spf13/cast"
 )
 
 type Student struct {
-	ID     int
+	ID     interface{}
 	Name   string
 	Sex    string
 	Course []string
@@ -62,6 +63,7 @@ func DecodeJsonString() {
 	fmt.Println(student1)
 	fmt.Println("studentName:", student1.Name)
 	fmt.Println("studentId:", student1.ID)
+	fmt.Println("studentId_int:", cast.ToInt64(student1.ID))
 	fmt.Println("studentSex:", student1.Sex)
 	fmt.Println("studentCourse:", student1.Course)
 }
