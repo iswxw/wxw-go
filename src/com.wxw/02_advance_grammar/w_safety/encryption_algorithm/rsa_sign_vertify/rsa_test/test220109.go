@@ -6,9 +6,9 @@
 package main
 
 import (
-	dd2201092 "com.wxw/AdvanceGrammar/w_safety/encryption_algorithm/rsa_sign_vertify/rsa_test/dd220109"
-	"com.wxw/AdvanceGrammar/w_safety/encryption_algorithm/rsa_sign_vertify/utils"
 	"fmt"
+	"src/com.wxw/project_actual/src/com.wxw/02_advance_grammar/w_safety/encryption_algorithm/rsa_sign_vertify/rsa_test/dd220109"
+	"src/com.wxw/project_actual/src/com.wxw/02_advance_grammar/w_safety/encryption_algorithm/rsa_sign_vertify/utils"
 )
 
 func main() {
@@ -17,10 +17,10 @@ func main() {
 	fmt.Println("加密前：" + plains)
 
 	publicKey, _ := utils.ReadFileKey(utils.PemPath("public.pem"))
-	cipherText, _ := dd2201092.EncryptBlock([]byte(plains), publicKey)
+	cipherText, _ := dd220109.EncryptBlock([]byte(plains), publicKey)
 	fmt.Printf("加密后：%x\n", cipherText)
 
 	privateKey, _ := utils.ReadFileKey(utils.PemPath("private.pem"))
-	cipherPlains, _ := dd2201092.DecryptBlock(cipherText, privateKey)
+	cipherPlains, _ := dd220109.DecryptBlock(cipherText, privateKey)
 	fmt.Println("解密后：" + string(cipherPlains))
 }

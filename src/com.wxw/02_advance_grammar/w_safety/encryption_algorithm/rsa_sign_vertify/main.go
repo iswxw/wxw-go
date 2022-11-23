@@ -6,8 +6,8 @@
 package main
 
 import (
-	"com.wxw/AdvanceGrammar/w_safety/encryption_algorithm/rsa_sign_vertify/utils"
 	"fmt"
+	"src/com.wxw/project_actual/src/com.wxw/02_advance_grammar/w_safety/encryption_algorithm/rsa_sign_vertify/utils"
 )
 
 func main() {

@@ -16,8 +16,9 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"src/com.wxw/project_actual/src/com.wxw/common/consts"
 )
+
+const TmpPath = "/docs/tmp/"
 
 // [1] 生成RSA私钥和公钥，保存到文件中
 // bits 证书大小
@@ -230,5 +231,5 @@ func Verify(signData []byte, publicPath string, sign []byte) bool {
 // 获取文件路径
 func PemPath(fileName string) string {
 	currentDir, _ := os.Getwd()
-	return fmt.Sprintf("%s%s%s", currentDir, consts.TmpPath, fileName)
+	return fmt.Sprintf("%s%s%s", currentDir, TmpPath, fileName)
 }
