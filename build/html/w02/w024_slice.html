@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>4. 面向对象之切片Slice &mdash; Go 深入浅出 1.0.0 文档</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/translations.js"></script>
+        <script src="../_static/js/readmore.js"></script>
+        <script src="../_static/js/baidutongji.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="5. 面向对象之集合Map" href="w025_map.html" />
+    <link rel="prev" title="3. 面向对象之数组" href="w023_array.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> Go 深入浅出
+          </a>
+              <div class="version">
+                1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../preface.html">前言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../w01/index.html">第一章：基础知识</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">第二章：面向对象</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="w021_struct.html">1. 面向对象之结构体</a></li>
+<li class="toctree-l2"><a class="reference internal" href="w022_interface.html">2. 面向对象之接口</a></li>
+<li class="toctree-l2"><a class="reference internal" href="w023_array.html">3. 面向对象之数组</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">4. 面向对象之切片Slice</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id1">4.1. 前言</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id2">4.2. 切片的定义</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id3">1. 切片的长度和容量</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id4">2. 切片表达式</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#make">3. 使用make函数构造切片</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id5">4. 切片的本质</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id6">5. 判断切片是否为空</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#id7">4.3. 切片不能直接比较</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id8">4.4. 切片的赋值拷贝</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id9">4.5. 切片遍历</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#append">4.6. 切片添加元素append()方法</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id10">4.7. 切片的扩容策略</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#copy">4.8. 切片复制copy()方法</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id11">4.9. 切片删除</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="w025_map.html">5. 面向对象之集合Map</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../w03/index.html">第三章：并发编程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../w04/index.html">第四章：数据操作</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../w05/index.html">第五章：源码学习</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../w06/index.html">第六章：工程实践</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../wend/about.html">关于作者</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Go 深入浅出</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="index.html">第二章：面向对象</a> &raquo;</li>
+      <li><span class="section-number">4. </span>面向对象之切片Slice</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/w02/w024_slice.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="slice">
+<h1><span class="section-number">4. </span>面向对象之切片Slice<a class="headerlink" href="#slice" title="永久链接至标题">¶</a></h1>
+<hr class="docutils" />
+<section id="id1">
+<h2><span class="section-number">4.1. </span>前言<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h2>
+<p>因为数组的长度是固定的并且数组长度属于类型的一部分，所以数组有很多的局限性。 例如：</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">func</span> <span class="nx">arraySum</span><span class="p">(</span><span class="nx">x</span> <span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="kt">int</span><span class="p">)</span> <span class="kt">int</span><span class="p">{</span>
+    <span class="nx">sum</span> <span class="o">:=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">v</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">x</span><span class="p">{</span>
+        <span class="nx">sum</span> <span class="p">=</span> <span class="nx">sum</span> <span class="o">+</span> <span class="nx">v</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nx">sum</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>这个求和函数 <strong>只能接受<code class="docutils literal notranslate"><span class="pre">[3]int</span></code>类型，其他的都不支持</strong>。 再比如，</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="nx">a</span> <span class="o">:=</span> <span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="kt">int</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>数组a中已经有三个元素了，我们 <strong>不能再继续往数组a中添加新元素</strong>了，所以就有了slice类型。</p>
+<p>**切片（Slice）**是一个拥有相同类型元素的可变长度的序列。它是基于数组类型做的一层封装。它非常灵活，支持自动扩容。</p>
+<p>切片是一个引用类型，它的内部结构包含<code class="docutils literal notranslate"><span class="pre">地址</span></code>、<code class="docutils literal notranslate"><span class="pre">长度</span></code>和<code class="docutils literal notranslate"><span class="pre">容量</span></code>。切片一般用于快速地操作一块数据集合。</p>
+</section>
+<section id="id2">
+<h2><span class="section-number">4.2. </span>切片的定义<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h2>
+<p>声明切片类型的基本语法如下：</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">var</span> <span class="nx">name</span> <span class="p">[]</span><span class="nx">T</span>
+</pre></div>
+</div>
+<p>其中，</p>
+<ul class="simple">
+<li><p>name:表示变量名</p></li>
+<li><p>T:表示切片中的元素类型</p></li>
+</ul>
+<p>举例：</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="c1">// 声明切片类型</span>
+	<span class="kd">var</span> <span class="nx">a</span> <span class="p">[]</span><span class="kt">string</span>              <span class="c1">//声明一个字符串切片</span>
+	<span class="kd">var</span> <span class="nx">b</span> <span class="p">=</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{}</span>             <span class="c1">//声明一个整型切片并初始化</span>
+	<span class="kd">var</span> <span class="nx">c</span> <span class="p">=</span> <span class="p">[]</span><span class="kt">bool</span><span class="p">{</span><span class="kc">false</span><span class="p">,</span> <span class="kc">true</span><span class="p">}</span> <span class="c1">//声明一个布尔切片并初始化</span>
+	<span class="kd">var</span> <span class="nx">d</span> <span class="p">=</span> <span class="p">[]</span><span class="kt">bool</span><span class="p">{</span><span class="kc">false</span><span class="p">,</span> <span class="kc">true</span><span class="p">}</span> <span class="c1">//声明一个布尔切片并初始化</span>
+    
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">a</span><span class="p">)</span>              <span class="c1">//[]</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">b</span><span class="p">)</span>              <span class="c1">//[]</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">c</span><span class="p">)</span>              <span class="c1">//[false true]</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">a</span> <span class="o">==</span> <span class="kc">nil</span><span class="p">)</span>       <span class="c1">//true</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">b</span> <span class="o">==</span> <span class="kc">nil</span><span class="p">)</span>       <span class="c1">//false</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">c</span> <span class="o">==</span> <span class="kc">nil</span><span class="p">)</span>       <span class="c1">//false</span>
+	<span class="c1">// fmt.Println(c == d)      //切片是引用类型，不支持直接比较，只能和nil比较</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<section id="id3">
+<h3>1. 切片的长度和容量<a class="headerlink" href="#id3" title="永久链接至标题">¶</a></h3>
+<p>切片拥有自己的长度和容量，我们可以通过使用内置的<code class="docutils literal notranslate"><span class="pre">len()</span></code>函数求长度，使用内置的<code class="docutils literal notranslate"><span class="pre">cap()</span></code>函数求切片的容量。</p>
+</section>
+<section id="id4">
+<h3>2. 切片表达式<a class="headerlink" href="#id4" title="永久链接至标题">¶</a></h3>
+<p>切片表达式从字符串、数组、指向数组或切片的指针构造子字符串或切片。它有两种变体：</p>
+<ul class="simple">
+<li><p>一种指定low和high两个索引界限值的简单的形式，</p></li>
+<li><p>另一种是除了low和high索引界限值外还指定容量的完整的形式。</p></li>
+</ul>
+<p><strong>简单的切片表达式</strong></p>
+<p>切片的底层就是一个数组，所以我们可以基于数组通过切片表达式得到切片。 切片表达式中的<code class="docutils literal notranslate"><span class="pre">low</span></code>和<code class="docutils literal notranslate"><span class="pre">high</span></code>表示一个索引范围（左包含，右不包含），也就是下面代码中从数组a中选出<code class="docutils literal notranslate"><span class="pre">1&lt;=索引值&lt;4</span></code>的元素组成切片s，得到的切片<code class="docutils literal notranslate"><span class="pre">长度=high-low</span></code>，容量等于得到的切片的底层数组的容量。</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">a</span> <span class="o">:=</span> <span class="p">[</span><span class="mi">5</span><span class="p">]</span><span class="kt">int</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">}</span>
+	<span class="nx">s</span> <span class="o">:=</span> <span class="nx">a</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span>  <span class="c1">// s := a[low:high]</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;s:%v len(s):%v cap(s):%v\n&quot;</span><span class="p">,</span> <span class="nx">s</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="nx">s</span><span class="p">),</span> <span class="nb">cap</span><span class="p">(</span><span class="nx">s</span><span class="p">))</span>
+<span class="p">}</span>
+
+
+<span class="o">-----</span>
+<span class="nx">s</span><span class="p">:[</span><span class="mi">2</span> <span class="mi">3</span><span class="p">]</span> <span class="nb">len</span><span class="p">(</span><span class="nx">s</span><span class="p">):</span><span class="mi">2</span> <span class="nb">cap</span><span class="p">(</span><span class="nx">s</span><span class="p">):</span><span class="mi">4</span>
+</pre></div>
+</div>
+<p>为了方便起见，可以省略切片表达式中的任何索引。省略了<code class="docutils literal notranslate"><span class="pre">low</span></code>则默认为0；省略了<code class="docutils literal notranslate"><span class="pre">high</span></code>则默认为切片操作数的长度:</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="nx">a</span><span class="p">[</span><span class="mi">2</span><span class="p">:]</span>  <span class="c1">// 等同于 a[2:len(a)]</span>
+<span class="nx">a</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span>  <span class="c1">// 等同于 a[0:3]</span>
+<span class="nx">a</span><span class="p">[:]</span>   <span class="c1">// 等同于 a[0:len(a)]</span>
+</pre></div>
+</div>
+<p><strong>注意：</strong></p>
+<p>对于数组或字符串，如果<code class="docutils literal notranslate"><span class="pre">0</span> <span class="pre">&lt;=</span> <span class="pre">low</span> <span class="pre">&lt;=</span> <span class="pre">high</span> <span class="pre">&lt;=</span> <span class="pre">len(a)</span></code>，则索引合法，否则就会索引越界（out of range）。</p>
+<p>对切片再执行切片表达式时（切片再切片），<code class="docutils literal notranslate"><span class="pre">high</span></code>的上限边界是切片的容量<code class="docutils literal notranslate"><span class="pre">cap(a)</span></code>，而不是长度。<strong>常量索引</strong>必须是非负的，并且可以用int类型的值表示;对于数组或常量字符串，常量索引也必须在有效范围内。如果<code class="docutils literal notranslate"><span class="pre">low</span></code>和<code class="docutils literal notranslate"><span class="pre">high</span></code>两个指标都是常数，它们必须满足<code class="docutils literal notranslate"><span class="pre">low</span> <span class="pre">&lt;=</span> <span class="pre">high</span></code>。如果索引在运行时超出范围，就会发生运行时<code class="docutils literal notranslate"><span class="pre">panic</span></code>。</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">a</span> <span class="o">:=</span> <span class="p">[</span><span class="mi">5</span><span class="p">]</span><span class="kt">int</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">}</span>
+	<span class="nx">s</span> <span class="o">:=</span> <span class="nx">a</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span>  <span class="c1">// s := a[low:high]</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;s:%v len(s):%v cap(s):%v\n&quot;</span><span class="p">,</span> <span class="nx">s</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="nx">s</span><span class="p">),</span> <span class="nb">cap</span><span class="p">(</span><span class="nx">s</span><span class="p">))</span>
+	<span class="nx">s2</span> <span class="o">:=</span> <span class="nx">s</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="mi">4</span><span class="p">]</span>  <span class="c1">// 索引的上限是cap(s)而不是len(s)</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;s2:%v len(s2):%v cap(s2):%v\n&quot;</span><span class="p">,</span> <span class="nx">s2</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="nx">s2</span><span class="p">),</span> <span class="nb">cap</span><span class="p">(</span><span class="nx">s2</span><span class="p">))</span>
+<span class="p">}</span>
+
+<span class="o">----</span>
+<span class="nx">s</span><span class="p">:[</span><span class="mi">2</span> <span class="mi">3</span><span class="p">]</span> <span class="nb">len</span><span class="p">(</span><span class="nx">s</span><span class="p">):</span><span class="mi">2</span> <span class="nb">cap</span><span class="p">(</span><span class="nx">s</span><span class="p">):</span><span class="mi">4</span>
+<span class="nx">s2</span><span class="p">:[</span><span class="mi">5</span><span class="p">]</span> <span class="nb">len</span><span class="p">(</span><span class="nx">s2</span><span class="p">):</span><span class="mi">1</span> <span class="nb">cap</span><span class="p">(</span><span class="nx">s2</span><span class="p">):</span><span class="mi">1</span>
+</pre></div>
+</div>
+<p><strong>完整切片表达式</strong></p>
+<p>对于数组，指向数组的指针，或切片a(<strong>注意不能是字符串</strong>)支持完整切片表达式：</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="nx">a</span><span class="p">[</span><span class="nx">low</span> <span class="p">:</span> <span class="nx">high</span> <span class="p">:</span> <span class="nx">max</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>上面的代码会构造与简单切片表达式<code class="docutils literal notranslate"><span class="pre">a[low:</span> <span class="pre">high]</span></code>相同类型、相同长度和元素的切片。另外，它会将得到的结果切片的容量设置为<code class="docutils literal notranslate"><span class="pre">max-low</span></code>。在完整切片表达式中只有第一个索引值（low）可以省略；它默认为0。</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">a</span> <span class="o">:=</span> <span class="p">[</span><span class="mi">5</span><span class="p">]</span><span class="kt">int</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">}</span>
+	<span class="nx">t</span> <span class="o">:=</span> <span class="nx">a</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">3</span><span class="p">:</span><span class="mi">5</span><span class="p">]</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;t:%v len(t):%v cap(t):%v\n&quot;</span><span class="p">,</span> <span class="nx">t</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="nx">t</span><span class="p">),</span> <span class="nb">cap</span><span class="p">(</span><span class="nx">t</span><span class="p">))</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>输出结果：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>t:<span class="o">[</span><span class="m">2</span> <span class="m">3</span><span class="o">]</span> len<span class="o">(</span>t<span class="o">)</span>:2 cap<span class="o">(</span>t<span class="o">)</span>:4
+</pre></div>
+</div>
+<p>完整切片表达式需要满足的条件是<code class="docutils literal notranslate"><span class="pre">0</span> <span class="pre">&lt;=</span> <span class="pre">low</span> <span class="pre">&lt;=</span> <span class="pre">high</span> <span class="pre">&lt;=</span> <span class="pre">max</span> <span class="pre">&lt;=</span> <span class="pre">cap(a)</span></code>，其他条件和简单切片表达式相同。</p>
+</section>
+<section id="make">
+<h3>3. 使用make函数构造切片<a class="headerlink" href="#make" title="永久链接至标题">¶</a></h3>
+<p>我们上面都是基于数组来创建的切片，如果需要动态的创建一个切片，我们就需要使用内置的<code class="docutils literal notranslate"><span class="pre">make()</span></code>函数，格式如下：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make<span class="o">([]</span>T, size, cap<span class="o">)</span>
+</pre></div>
+</div>
+<p>其中：</p>
+<ul class="simple">
+<li><p>T:切片的元素类型</p></li>
+<li><p>size:切片中元素的数量</p></li>
+<li><p>cap:切片的容量</p></li>
+</ul>
+<p>举个例子：</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">a</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">int</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">a</span><span class="p">)</span>      <span class="c1">//[0 0]</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="nx">a</span><span class="p">))</span> <span class="c1">//2</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nb">cap</span><span class="p">(</span><span class="nx">a</span><span class="p">))</span> <span class="c1">//10</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>上面代码中<code class="docutils literal notranslate"><span class="pre">a</span></code>的内部存储空间已经分配了10个，但实际上只用了2个。 容量并不会影响当前元素的个数，所以<code class="docutils literal notranslate"><span class="pre">len(a)</span></code>返回2，<code class="docutils literal notranslate"><span class="pre">cap(a)</span></code>则返回该切片的容量。</p>
+</section>
+<section id="id5">
+<h3>4. 切片的本质<a class="headerlink" href="#id5" title="永久链接至标题">¶</a></h3>
+<p>切片的本质就是对底层数组的封装，它包含了三个信息：底层数组的指针、切片的长度（len）和切片的容量（cap）。</p>
+<p>举个例子，现在有一个数组<code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">:=</span> <span class="pre">[8]int{0,</span> <span class="pre">1,</span> <span class="pre">2,</span> <span class="pre">3,</span> <span class="pre">4,</span> <span class="pre">5,</span> <span class="pre">6,</span> <span class="pre">7}</span></code>，切片<code class="docutils literal notranslate"><span class="pre">s1</span> <span class="pre">:=</span> <span class="pre">a[:5]</span></code>，相应示意图如下。</p>
+<img src="asserts/slice_01.png" alt="slice_01" style="zoom: 33%;" />   <p>切片<code class="docutils literal notranslate"><span class="pre">s2</span> <span class="pre">:=</span> <span class="pre">a[3:6]</span></code>，相应示意图如下：</p>
+<img src="https://www.liwenzhou.com/images/Go/slice/slice_02.png" alt="slice_02" style="zoom: 33%;" />  </section>
+<section id="id6">
+<h3>5. 判断切片是否为空<a class="headerlink" href="#id6" title="永久链接至标题">¶</a></h3>
+<p>要检查切片是否为空，请始终使用<code class="docutils literal notranslate"><span class="pre">len(s)</span> <span class="pre">==</span> <span class="pre">0</span></code>来判断，而不应该使用<code class="docutils literal notranslate"><span class="pre">s</span> <span class="pre">==</span> <span class="pre">nil</span></code>来判断。</p>
+</section>
+</section>
+<section id="id7">
+<h2><span class="section-number">4.3. </span>切片不能直接比较<a class="headerlink" href="#id7" title="永久链接至标题">¶</a></h2>
+<p>切片之间是不能比较的，我们不能使用<code class="docutils literal notranslate"><span class="pre">==</span></code>操作符来判断两个切片是否含有全部相等元素。 切片唯一合法的比较操作是和<code class="docutils literal notranslate"><span class="pre">nil</span></code>比较。 一个<code class="docutils literal notranslate"><span class="pre">nil</span></code>值的切片并没有底层数组，一个<code class="docutils literal notranslate"><span class="pre">nil</span></code>值的切片的长度和容量都是0。但是我们不能说一个长度和容量都是0的切片一定是<code class="docutils literal notranslate"><span class="pre">nil</span></code>，例如下面的示例：</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">var</span> <span class="nx">s1</span> <span class="p">[]</span><span class="kt">int</span>         <span class="c1">//len(s1)=0;cap(s1)=0;s1==nil</span>
+<span class="nx">s2</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{}</span>        <span class="c1">//len(s2)=0;cap(s2)=0;s2!=nil</span>
+<span class="nx">s3</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">int</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="c1">//len(s3)=0;cap(s3)=0;s3!=nil</span>
+</pre></div>
+</div>
+<p>所以要判断一个切片是否是空的，要是用<code class="docutils literal notranslate"><span class="pre">len(s)</span> <span class="pre">==</span> <span class="pre">0</span></code>来判断，不应该使用<code class="docutils literal notranslate"><span class="pre">s</span> <span class="pre">==</span> <span class="pre">nil</span></code>来判断。</p>
+</section>
+<section id="id8">
+<h2><span class="section-number">4.4. </span>切片的赋值拷贝<a class="headerlink" href="#id8" title="永久链接至标题">¶</a></h2>
+<p>下面的代码中演示了拷贝前后两个变量共享底层数组，对一个切片的修改会影响另一个切片的内容，这点需要特别注意。</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">s1</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">int</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="c1">//[0 0 0]</span>
+	<span class="nx">s2</span> <span class="o">:=</span> <span class="nx">s1</span>             <span class="c1">//将s1直接赋值给s2，s1和s2共用一个底层数组</span>
+	<span class="nx">s2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="p">=</span> <span class="mi">100</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">s1</span><span class="p">)</span> <span class="c1">//[100 0 0]</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">s2</span><span class="p">)</span> <span class="c1">//[100 0 0]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="id9">
+<h2><span class="section-number">4.5. </span>切片遍历<a class="headerlink" href="#id9" title="永久链接至标题">¶</a></h2>
+<p>切片的遍历方式和数组是一致的，支持索引遍历和<code class="docutils literal notranslate"><span class="pre">for</span> <span class="pre">range</span></code>遍历。</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">s</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">}</span>
+
+	<span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="p">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="nx">s</span><span class="p">);</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
+		<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">i</span><span class="p">,</span> <span class="nx">s</span><span class="p">[</span><span class="nx">i</span><span class="p">])</span>
+	<span class="p">}</span>
+
+	<span class="k">for</span> <span class="nx">index</span><span class="p">,</span> <span class="nx">value</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">s</span> <span class="p">{</span>
+		<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">index</span><span class="p">,</span> <span class="nx">value</span><span class="p">)</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="append">
+<h2><span class="section-number">4.6. </span>切片添加元素append()方法<a class="headerlink" href="#append" title="永久链接至标题">¶</a></h2>
+<p>Go语言的内建函数<code class="docutils literal notranslate"><span class="pre">append()</span></code>可以为切片动态添加元素。 可以一次添加一个元素，可以添加多个元素，也可以添加另一个切片中的元素（后面加…）。</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">func</span> <span class="nx">main</span><span class="p">(){</span>
+	<span class="kd">var</span> <span class="nx">s</span> <span class="p">[]</span><span class="kt">int</span>
+	<span class="nx">s</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">s</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>        <span class="c1">// [1]</span>
+	<span class="nx">s</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">s</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>  <span class="c1">// [1 2 3 4]</span>
+	<span class="nx">s2</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">}</span>  
+	<span class="nx">s</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">s</span><span class="p">,</span> <span class="nx">s2</span><span class="o">...</span><span class="p">)</span>    <span class="c1">// [1 2 3 4 5 6 7]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>**注意：**通过var声明的零值切片可以在<code class="docutils literal notranslate"><span class="pre">append()</span></code>函数直接使用，无需初始化。</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">var</span> <span class="nx">s</span> <span class="p">[]</span><span class="kt">int</span>
+<span class="nx">s</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">s</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>没有必要像下面的代码一样初始化一个切片再传入<code class="docutils literal notranslate"><span class="pre">append()</span></code>函数使用，</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="nx">s</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{}</span>  <span class="c1">// 没有必要初始化</span>
+<span class="nx">s</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">s</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+
+<span class="kd">var</span> <span class="nx">s</span> <span class="p">=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">int</span><span class="p">)</span>  <span class="c1">// 没有必要初始化</span>
+<span class="nx">s</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">s</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>每个切片会指向一个底层数组，这个数组的容量够用就添加新增元素。当底层数组不能容纳新增的元素时，切片就会自动按照一定的策略进行“扩容”，此时该切片指向的底层数组就会更换。“扩容”操作往往发生在<code class="docutils literal notranslate"><span class="pre">append()</span></code>函数调用时，所以我们通常都需要用原变量接收append函数的返回值。</p>
+<p>举个例子：</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="c1">//append()添加元素和切片扩容</span>
+	<span class="kd">var</span> <span class="nx">numSlice</span> <span class="p">[]</span><span class="kt">int</span>
+	<span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="p">&lt;</span> <span class="mi">10</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
+		<span class="nx">numSlice</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">numSlice</span><span class="p">,</span> <span class="nx">i</span><span class="p">)</span>
+		<span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;%v  len:%d  cap:%d  ptr:%p\n&quot;</span><span class="p">,</span> <span class="nx">numSlice</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="nx">numSlice</span><span class="p">),</span> <span class="nb">cap</span><span class="p">(</span><span class="nx">numSlice</span><span class="p">),</span> <span class="nx">numSlice</span><span class="p">)</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>输出：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">[</span><span class="m">0</span><span class="o">]</span>  len:1  cap:1  ptr:0xc0000a8000
+<span class="o">[</span><span class="m">0</span> <span class="m">1</span><span class="o">]</span>  len:2  cap:2  ptr:0xc0000a8040
+<span class="o">[</span><span class="m">0</span> <span class="m">1</span> <span class="m">2</span><span class="o">]</span>  len:3  cap:4  ptr:0xc0000b2020
+<span class="o">[</span><span class="m">0</span> <span class="m">1</span> <span class="m">2</span> <span class="m">3</span><span class="o">]</span>  len:4  cap:4  ptr:0xc0000b2020
+<span class="o">[</span><span class="m">0</span> <span class="m">1</span> <span class="m">2</span> <span class="m">3</span> <span class="m">4</span><span class="o">]</span>  len:5  cap:8  ptr:0xc0000b6000
+<span class="o">[</span><span class="m">0</span> <span class="m">1</span> <span class="m">2</span> <span class="m">3</span> <span class="m">4</span> <span class="m">5</span><span class="o">]</span>  len:6  cap:8  ptr:0xc0000b6000
+<span class="o">[</span><span class="m">0</span> <span class="m">1</span> <span class="m">2</span> <span class="m">3</span> <span class="m">4</span> <span class="m">5</span> <span class="m">6</span><span class="o">]</span>  len:7  cap:8  ptr:0xc0000b6000
+<span class="o">[</span><span class="m">0</span> <span class="m">1</span> <span class="m">2</span> <span class="m">3</span> <span class="m">4</span> <span class="m">5</span> <span class="m">6</span> <span class="m">7</span><span class="o">]</span>  len:8  cap:8  ptr:0xc0000b6000
+<span class="o">[</span><span class="m">0</span> <span class="m">1</span> <span class="m">2</span> <span class="m">3</span> <span class="m">4</span> <span class="m">5</span> <span class="m">6</span> <span class="m">7</span> <span class="m">8</span><span class="o">]</span>  len:9  cap:16  ptr:0xc0000b8000
+<span class="o">[</span><span class="m">0</span> <span class="m">1</span> <span class="m">2</span> <span class="m">3</span> <span class="m">4</span> <span class="m">5</span> <span class="m">6</span> <span class="m">7</span> <span class="m">8</span> <span class="m">9</span><span class="o">]</span>  len:10  cap:16  ptr:0xc0000b8000
+</pre></div>
+</div>
+<p>从上面的结果可以看出：</p>
+<ol class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">append()</span></code>函数将元素追加到切片的最后并返回该切片。</p></li>
+<li><p>切片numSlice的容量按照1，2，4，8，16这样的规则自动进行扩容，每次扩容后都是扩容前的2倍。</p></li>
+</ol>
+<p>append()函数还支持一次性追加多个元素。 例如：</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">var</span> <span class="nx">citySlice</span> <span class="p">[]</span><span class="kt">string</span>
+<span class="c1">// 追加一个元素</span>
+<span class="nx">citySlice</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">citySlice</span><span class="p">,</span> <span class="s">&quot;北京&quot;</span><span class="p">)</span>
+<span class="c1">// 追加多个元素</span>
+<span class="nx">citySlice</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">citySlice</span><span class="p">,</span> <span class="s">&quot;上海&quot;</span><span class="p">,</span> <span class="s">&quot;广州&quot;</span><span class="p">,</span> <span class="s">&quot;深圳&quot;</span><span class="p">)</span>
+<span class="c1">// 追加切片</span>
+<span class="nx">a</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">string</span><span class="p">{</span><span class="s">&quot;成都&quot;</span><span class="p">,</span> <span class="s">&quot;重庆&quot;</span><span class="p">}</span>
+<span class="nx">citySlice</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">citySlice</span><span class="p">,</span> <span class="nx">a</span><span class="o">...</span><span class="p">)</span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">citySlice</span><span class="p">)</span> <span class="c1">//[北京 上海 广州 深圳 成都 重庆]</span>
+</pre></div>
+</div>
+</section>
+<section id="id10">
+<h2><span class="section-number">4.7. </span>切片的扩容策略<a class="headerlink" href="#id10" title="永久链接至标题">¶</a></h2>
+<p>可以通过查看<code class="docutils literal notranslate"><span class="pre">$GOROOT/src/runtime/slice.go</span></code>源码，其中扩容相关代码如下：</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="nx">newcap</span> <span class="o">:=</span> <span class="nx">old</span><span class="p">.</span><span class="nx">cap</span>
+<span class="nx">doublecap</span> <span class="o">:=</span> <span class="nx">newcap</span> <span class="o">+</span> <span class="nx">newcap</span>
+<span class="k">if</span> <span class="nx">cap</span> <span class="p">&gt;</span> <span class="nx">doublecap</span> <span class="p">{</span>
+	<span class="nx">newcap</span> <span class="p">=</span> <span class="nx">cap</span>
+<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="nx">old</span><span class="p">.</span><span class="nx">len</span> <span class="p">&lt;</span> <span class="mi">1024</span> <span class="p">{</span>
+		<span class="nx">newcap</span> <span class="p">=</span> <span class="nx">doublecap</span>
+	<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+		<span class="c1">// Check 0 &lt; newcap to detect overflow</span>
+		<span class="c1">// and prevent an infinite loop.</span>
+		<span class="k">for</span> <span class="mi">0</span> <span class="p">&lt;</span> <span class="nx">newcap</span> <span class="o">&amp;&amp;</span> <span class="nx">newcap</span> <span class="p">&lt;</span> <span class="nx">cap</span> <span class="p">{</span>
+			<span class="nx">newcap</span> <span class="o">+=</span> <span class="nx">newcap</span> <span class="o">/</span> <span class="mi">4</span>
+		<span class="p">}</span>
+		<span class="c1">// Set newcap to the requested cap when</span>
+		<span class="c1">// the newcap calculation overflowed.</span>
+		<span class="k">if</span> <span class="nx">newcap</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="p">{</span>
+			<span class="nx">newcap</span> <span class="p">=</span> <span class="nx">cap</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>首先判断，如果新申请容量（cap）大于2倍的旧容量（old.cap），最终容量（newcap）就是新申请的容量（cap）。</p></li>
+<li><p>否则判断，如果旧切片的长度小于1024，则最终容量(newcap)就是旧容量(old.cap)的两倍，即（newcap=doublecap），</p></li>
+<li><p>否则判断，如果旧切片长度大于等于1024，则最终容量（newcap）从旧容量（old.cap）开始循环增加原来的1/4，即（newcap=old.cap,for {newcap += newcap/4}）直到最终容量（newcap）大于等于新申请的容量(cap)，即（newcap &gt;= cap）</p></li>
+<li><p>如果最终容量（cap）计算值溢出，则最终容量（cap）就是新申请容量（cap）。</p></li>
+</ul>
+<p><strong>注意</strong>：切片扩容还会根据切片中元素的类型不同而做不同的处理，比如<code class="docutils literal notranslate"><span class="pre">int</span></code>和<code class="docutils literal notranslate"><span class="pre">string</span></code>类型的处理方式就不一样。</p>
+</section>
+<section id="copy">
+<h2><span class="section-number">4.8. </span>切片复制copy()方法<a class="headerlink" href="#copy" title="永久链接至标题">¶</a></h2>
+<p>首先我们来看一个问题：</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">a</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">}</span>
+	<span class="nx">b</span> <span class="o">:=</span> <span class="nx">a</span>
+    
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">a</span><span class="p">)</span> <span class="c1">//[1 2 3 4 5]</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">b</span><span class="p">)</span> <span class="c1">//[1 2 3 4 5]</span>
+	<span class="nx">b</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="p">=</span> <span class="mi">1000</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">a</span><span class="p">)</span> <span class="c1">//[1000 2 3 4 5]</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">b</span><span class="p">)</span> <span class="c1">//[1000 2 3 4 5]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>由于 <strong>切片是引用类型</strong>，所以a和b其实都指向了同一块内存地址。修改b的同时a的值也会发生变化。</p>
+<p>Go语言内建的<code class="docutils literal notranslate"><span class="pre">copy()</span></code>函数可以迅速地将一个切片的数据复制到另外一个切片空间中，<code class="docutils literal notranslate"><span class="pre">copy()</span></code>函数的使用格式如下：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>copy<span class="o">(</span>destSlice, srcSlice <span class="o">[]</span>T<span class="o">)</span>
+</pre></div>
+</div>
+<p>其中：</p>
+<ul class="simple">
+<li><p>srcSlice: 数据来源切片</p></li>
+<li><p>destSlice: 目标切片</p></li>
+</ul>
+<p>举例：</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="c1">// copy()复制切片</span>
+	<span class="nx">a</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">}</span>
+	<span class="nx">c</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">int</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+	<span class="nb">copy</span><span class="p">(</span><span class="nx">c</span><span class="p">,</span> <span class="nx">a</span><span class="p">)</span>     <span class="c1">//使用copy()函数将切片a中的元素复制到切片c</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">a</span><span class="p">)</span> <span class="c1">//[1 2 3 4 5]</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">c</span><span class="p">)</span> <span class="c1">//[1 2 3 4 5]</span>
+	<span class="nx">c</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="p">=</span> <span class="mi">1000</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">a</span><span class="p">)</span> <span class="c1">//[1 2 3 4 5]</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">c</span><span class="p">)</span> <span class="c1">//[1000 2 3 4 5]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="id11">
+<h2><span class="section-number">4.9. </span>切片删除<a class="headerlink" href="#id11" title="永久链接至标题">¶</a></h2>
+<p>Go语言中并没有删除切片元素的专用方法，我们可以使用切片本身的特性来删除元素。 代码如下：</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="c1">// 从切片中删除元素</span>
+	<span class="nx">a</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="mi">30</span><span class="p">,</span> <span class="mi">31</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">33</span><span class="p">,</span> <span class="mi">34</span><span class="p">,</span> <span class="mi">35</span><span class="p">,</span> <span class="mi">36</span><span class="p">,</span> <span class="mi">37</span><span class="p">}</span>
+    
+	<span class="c1">// 要删除索引为2的元素 间接删除</span>
+	<span class="nx">a</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">a</span><span class="p">[:</span><span class="mi">2</span><span class="p">],</span> <span class="nx">a</span><span class="p">[</span><span class="mi">3</span><span class="p">:]</span><span class="o">...</span><span class="p">)</span>
+    
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">a</span><span class="p">)</span> <span class="c1">//[30 31 33 34 35 36 37]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>总结一下就是</strong></p>
+<ul class="simple">
+<li><p>要从切片a中删除索引为<code class="docutils literal notranslate"><span class="pre">index</span></code>的元素，操作方法是<code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">=</span> <span class="pre">append(a[:index],</span> <span class="pre">a[index+1:]...)</span></code></p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="w023_array.html" class="btn btn-neutral float-left" title="3. 面向对象之数组" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="w025_map.html" class="btn btn-neutral float-right" title="5. 面向对象之集合Map" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; 版权所有 2021, 公众号:Java半颗糖.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

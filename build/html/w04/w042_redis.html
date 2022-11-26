@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>2. Go 操作 Redis &mdash; Go 深入浅出 1.0.0 文档</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/translations.js"></script>
+        <script src="../_static/js/readmore.js"></script>
+        <script src="../_static/js/baidutongji.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="第五章：源码学习" href="../w05/index.html" />
+    <link rel="prev" title="1. Go 操作MySQL" href="w041_mysql.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> Go 深入浅出
+          </a>
+              <div class="version">
+                1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../preface.html">前言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../w01/index.html">第一章：基础知识</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../w02/index.html">第二章：面向对象</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../w03/index.html">第三章：并发编程</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">第四章：数据操作</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="w041_mysql.html">1. Go 操作MySQL</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">2. Go 操作 Redis</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#docker-redis">2.1. Docker 安装 Redis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#redis-client">2.2. 使用 redis-client</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#client">1.  安装 client</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id1">2. 使用 <code class="docutils literal notranslate"> <span class="pre">go-redis</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../w05/index.html">第五章：源码学习</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../w06/index.html">第六章：工程实践</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../wend/about.html">关于作者</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Go 深入浅出</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="index.html">第四章：数据操作</a> &raquo;</li>
+      <li><span class="section-number">2. </span>Go 操作 Redis</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/w04/w042_redis.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="go-redis">
+<h1><span class="section-number">2. </span>Go 操作 Redis<a class="headerlink" href="#go-redis" title="永久链接至标题">¶</a></h1>
+<section id="docker-redis">
+<h2><span class="section-number">2.1. </span>Docker 安装 Redis<a class="headerlink" href="#docker-redis" title="永久链接至标题">¶</a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1">## 查看可用版本类型</span>
+docker search redis
+
+<span class="c1">## 拉取最新镜像</span>
+docker pull redis
+
+<span class="c1">## 查看本地镜像</span>
+docker images
+
+<span class="c1">## 运行容器</span>
+$ docker run -itd --name redis-test -p <span class="m">6379</span>:6379 redis
+  
+<span class="c1">## 参数说明：</span>
+  -p <span class="m">6379</span><span class="o">[</span>服务器<span class="o">]</span>:6379<span class="o">[</span>容器<span class="o">]</span>：映射容器服务的 <span class="m">6379</span> 端口到宿主机的 <span class="m">6379</span> 端口。外部可以直接通过宿主机ip:6379 访问到 Redis 的服务。
+
+<span class="c1">## 通过 exec 命令进入 redis 容器</span>
+$ docker <span class="nb">exec</span> -it redis-test /bin/bash
+
+<span class="c1">## 打开redis客户端</span>
+$ redis-cli
+
+<span class="c1">## 查看容器的运行信息</span>
+docker ps
+</pre></div>
+</div>
+</section>
+<section id="redis-client">
+<h2><span class="section-number">2.2. </span>使用 redis-client<a class="headerlink" href="#redis-client" title="永久链接至标题">¶</a></h2>
+<section id="client">
+<h3>1.  安装 client<a class="headerlink" href="#client" title="永久链接至标题">¶</a></h3>
+<p>go语言操作<code class="docutils literal notranslate"><span class="pre">redis</span></code>有个包，一个是 <code class="docutils literal notranslate"><span class="pre">go-redis</span></code>，另一个是<code class="docutils literal notranslate"><span class="pre">redigo</span></code>,官方推荐第二种；</p>
+<ul class="simple">
+<li><p>go-redis：https://github.com/go-redis/redis</p></li>
+<li><p>redigo：https://github.com/gomodule/redigo</p></li>
+</ul>
+</section>
+<section id="id1">
+<h3>2. 使用 <code class="docutils literal notranslate"> <span class="pre">go-redis</span></code><a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h3>
+<p>安装</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="k">go</span> <span class="nx">get</span> <span class="o">-</span><span class="nx">u</span> <span class="nx">github</span><span class="p">.</span><span class="nx">com</span><span class="o">/</span><span class="k">go</span><span class="o">-</span><span class="nx">redis</span><span class="o">/</span><span class="nx">redis</span>
+</pre></div>
+</div>
+<p>案例</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+    <span class="s">&quot;fmt&quot;</span>
+    <span class="s">&quot;log&quot;</span>
+    <span class="s">&quot;math/rand&quot;</span>
+    <span class="s">&quot;sync&quot;</span>
+    <span class="s">&quot;time&quot;</span>
+
+    <span class="s">&quot;github.com/go-redis/redis&quot;</span>
+<span class="p">)</span>
+
+<span class="kd">var</span> <span class="nx">redisdb</span> <span class="o">*</span><span class="nx">redis</span><span class="p">.</span><span class="nx">Client</span>
+<span class="kd">var</span> <span class="nx">wg</span> <span class="nx">sync</span><span class="p">.</span><span class="nx">WaitGroup</span>
+
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">wg</span><span class="p">.</span><span class="nx">Add</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">go</span> <span class="nx">testRedisBase</span><span class="p">()</span>
+    <span class="nx">wg</span><span class="p">.</span><span class="nx">Wait</span><span class="p">()</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">testRedisBase</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">defer</span> <span class="nx">wg</span><span class="p">.</span><span class="nx">Done</span><span class="p">()</span>
+
+    <span class="c1">//连接服务器</span>
+    <span class="nx">redisdb</span> <span class="p">=</span> <span class="nx">redis</span><span class="p">.</span><span class="nx">NewClient</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">redis</span><span class="p">.</span><span class="nx">Options</span><span class="p">{</span>
+        <span class="nx">Addr</span><span class="p">:</span>     <span class="s">&quot;localhost:6379&quot;</span><span class="p">,</span> <span class="c1">// use default Addr</span>
+        <span class="nx">Password</span><span class="p">:</span> <span class="s">&quot;&quot;</span><span class="p">,</span>               <span class="c1">// no password set</span>
+        <span class="nx">DB</span><span class="p">:</span>       <span class="mi">0</span><span class="p">,</span>                <span class="c1">// use default DB</span>
+    <span class="p">})</span>
+
+    <span class="c1">//心跳</span>
+    <span class="nx">pong</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">redisdb</span><span class="p">.</span><span class="nx">Ping</span><span class="p">().</span><span class="nx">Result</span><span class="p">()</span>
+    <span class="nx">log</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">pong</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span> <span class="c1">// Output: PONG &lt;nil&gt;</span>
+
+    <span class="nx">ExampleClient_String</span><span class="p">()</span>
+    <span class="nx">ExampleClient_List</span><span class="p">()</span>
+    <span class="nx">ExampleClient_Hash</span><span class="p">()</span>
+    <span class="nx">ExampleClient_Set</span><span class="p">()</span>
+    <span class="nx">ExampleClient_SortSet</span><span class="p">()</span>
+    <span class="nx">ExampleClient_HyperLogLog</span><span class="p">()</span>
+    <span class="nx">ExampleClient_CMD</span><span class="p">()</span>
+    <span class="nx">ExampleClient_Scan</span><span class="p">()</span>
+    <span class="nx">ExampleClient_Tx</span><span class="p">()</span>
+    <span class="nx">ExampleClient_Script</span><span class="p">()</span>
+    <span class="nx">ExampleClient_PubSub</span><span class="p">()</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">ExampleClient_String</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">log</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;ExampleClient_String&quot;</span><span class="p">)</span>
+    <span class="k">defer</span> <span class="nx">log</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;ExampleClient_String&quot;</span><span class="p">)</span>
+
+    <span class="c1">//kv读写</span>
+    <span class="nx">err</span> <span class="o">:=</span> <span class="nx">redisdb</span><span class="p">.</span><span class="nx">Set</span><span class="p">(</span><span class="s">&quot;key&quot;</span><span class="p">,</span> <span class="s">&quot;value&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="o">*</span><span class="nx">time</span><span class="p">.</span><span class="nx">Second</span><span class="p">).</span><span class="nx">Err</span><span class="p">()</span>
+    <span class="nx">log</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+
+    <span class="c1">//获取过期时间</span>
+    <span class="nx">tm</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">redisdb</span><span class="p">.</span><span class="nx">TTL</span><span class="p">(</span><span class="s">&quot;key&quot;</span><span class="p">).</span><span class="nx">Result</span><span class="p">()</span>
+    <span class="nx">log</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">tm</span><span class="p">)</span>
+
+    <span class="nx">val</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">redisdb</span><span class="p">.</span><span class="nx">Get</span><span class="p">(</span><span class="s">&quot;key&quot;</span><span class="p">).</span><span class="nx">Result</span><span class="p">()</span>
+    <span class="nx">log</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">val</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+
+    <span class="nx">val2</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">redisdb</span><span class="p">.</span><span class="nx">Get</span><span class="p">(</span><span class="s">&quot;missing_key&quot;</span><span class="p">).</span><span class="nx">Result</span><span class="p">()</span>
+    <span class="k">if</span> <span class="nx">err</span> <span class="o">==</span> <span class="nx">redis</span><span class="p">.</span><span class="nx">Nil</span> <span class="p">{</span>
+        <span class="nx">log</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;missing_key does not exist&quot;</span><span class="p">)</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+        <span class="nx">log</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;missing_key&quot;</span><span class="p">,</span> <span class="nx">val2</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="c1">//不存在才设置 过期时间 nx ex</span>
+    <span class="nx">value</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">redisdb</span><span class="p">.</span><span class="nx">SetNX</span><span class="p">(</span><span class="s">&quot;counter&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="o">*</span><span class="nx">time</span><span class="p">.</span><span class="nx">Second</span><span class="p">).</span><span class="nx">Result</span><span class="p">()</span>
+    <span class="nx">log</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;setnx&quot;</span><span class="p">,</span> <span class="nx">value</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+
+    <span class="c1">//Incr</span>
+    <span class="nx">result</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">redisdb</span><span class="p">.</span><span class="nx">Incr</span><span class="p">(</span><span class="s">&quot;counter&quot;</span><span class="p">).</span><span class="nx">Result</span><span class="p">()</span>
+    <span class="nx">log</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;Incr&quot;</span><span class="p">,</span> <span class="nx">result</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">ExampleClient_List</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">log</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;ExampleClient_List&quot;</span><span class="p">)</span>
+    <span class="k">defer</span> <span class="nx">log</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;ExampleClient_List&quot;</span><span class="p">)</span>
+
+    <span class="c1">//添加</span>
+    <span class="nx">log</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">redisdb</span><span class="p">.</span><span class="nx">RPush</span><span class="p">(</span><span class="s">&quot;list_test&quot;</span><span class="p">,</span> <span class="s">&quot;message1&quot;</span><span class="p">).</span><span class="nx">Err</span><span class="p">())</span>
+    <span class="nx">log</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">redisdb</span><span class="p">.</span><span class="nx">RPush</span><span class="p">(</span><span class="s">&quot;list_test&quot;</span><span class="p">,</span> <span class="s">&quot;message2&quot;</span><span class="p">).</span><span class="nx">Err</span><span class="p">())</span>
+
+    <span class="c1">//设置</span>
+    <span class="nx">log</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">redisdb</span><span class="p">.</span><span class="nx">LSet</span><span class="p">(</span><span class="s">&quot;list_test&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="s">&quot;message set&quot;</span><span class="p">).</span><span class="nx">Err</span><span class="p">())</span>
+
+    <span class="c1">//remove</span>
+    <span class="nx">ret</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">redisdb</span><span class="p">.</span><span class="nx">LRem</span><span class="p">(</span><span class="s">&quot;list_test&quot;</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="s">&quot;message1&quot;</span><span class="p">).</span><span class="nx">Result</span><span class="p">()</span>
+    <span class="nx">log</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">ret</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+
+    <span class="nx">rLen</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">redisdb</span><span class="p">.</span><span class="nx">LLen</span><span class="p">(</span><span class="s">&quot;list_test&quot;</span><span class="p">).</span><span class="nx">Result</span><span class="p">()</span>
+    <span class="nx">log</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">rLen</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+
+    <span class="c1">//遍历</span>
+    <span class="nx">lists</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">redisdb</span><span class="p">.</span><span class="nx">LRange</span><span class="p">(</span><span class="s">&quot;list_test&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">rLen</span><span class="o">-</span><span class="mi">1</span><span class="p">).</span><span class="nx">Result</span><span class="p">()</span>
+    <span class="nx">log</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;LRange&quot;</span><span class="p">,</span> <span class="nx">lists</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+
+    <span class="c1">//pop没有时阻塞</span>
+    <span class="nx">result</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">redisdb</span><span class="p">.</span><span class="nx">BLPop</span><span class="p">(</span><span class="mi">1</span><span class="o">*</span><span class="nx">time</span><span class="p">.</span><span class="nx">Second</span><span class="p">,</span> <span class="s">&quot;list_test&quot;</span><span class="p">).</span><span class="nx">Result</span><span class="p">()</span>
+    <span class="nx">log</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;result:&quot;</span><span class="p">,</span> <span class="nx">result</span><span class="p">,</span> <span class="nx">err</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="nx">result</span><span class="p">))</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">ExampleClient_Hash</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">log</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;ExampleClient_Hash&quot;</span><span class="p">)</span>
+    <span class="k">defer</span> <span class="nx">log</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;ExampleClient_Hash&quot;</span><span class="p">)</span>
+
+    <span class="nx">datas</span> <span class="o">:=</span> <span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kd">interface</span><span class="p">{}{</span>
+        <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;LI LEI&quot;</span><span class="p">,</span>
+        <span class="s">&quot;sex&quot;</span><span class="p">:</span>  <span class="mi">1</span><span class="p">,</span>
+        <span class="s">&quot;age&quot;</span><span class="p">:</span>  <span class="mi">28</span><span class="p">,</span>
+        <span class="s">&quot;tel&quot;</span><span class="p">:</span>  <span class="mi">123445578</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="c1">//添加</span>
+    <span class="k">if</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">redisdb</span><span class="p">.</span><span class="nx">HMSet</span><span class="p">(</span><span class="s">&quot;hash_test&quot;</span><span class="p">,</span> <span class="nx">datas</span><span class="p">).</span><span class="nx">Err</span><span class="p">();</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+        <span class="nx">log</span><span class="p">.</span><span class="nx">Fatal</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="c1">//获取</span>
+    <span class="nx">rets</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">redisdb</span><span class="p">.</span><span class="nx">HMGet</span><span class="p">(</span><span class="s">&quot;hash_test&quot;</span><span class="p">,</span> <span class="s">&quot;name&quot;</span><span class="p">,</span> <span class="s">&quot;sex&quot;</span><span class="p">).</span><span class="nx">Result</span><span class="p">()</span>
+    <span class="nx">log</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;rets:&quot;</span><span class="p">,</span> <span class="nx">rets</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+
+    <span class="c1">//成员</span>
+    <span class="nx">retAll</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">redisdb</span><span class="p">.</span><span class="nx">HGetAll</span><span class="p">(</span><span class="s">&quot;hash_test&quot;</span><span class="p">).</span><span class="nx">Result</span><span class="p">()</span>
+    <span class="nx">log</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;retAll&quot;</span><span class="p">,</span> <span class="nx">retAll</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+
+    <span class="c1">//存在</span>
+    <span class="nx">bExist</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">redisdb</span><span class="p">.</span><span class="nx">HExists</span><span class="p">(</span><span class="s">&quot;hash_test&quot;</span><span class="p">,</span> <span class="s">&quot;tel&quot;</span><span class="p">).</span><span class="nx">Result</span><span class="p">()</span>
+    <span class="nx">log</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">bExist</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+
+    <span class="nx">bRet</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">redisdb</span><span class="p">.</span><span class="nx">HSetNX</span><span class="p">(</span><span class="s">&quot;hash_test&quot;</span><span class="p">,</span> <span class="s">&quot;id&quot;</span><span class="p">,</span> <span class="mi">100</span><span class="p">).</span><span class="nx">Result</span><span class="p">()</span>
+    <span class="nx">log</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">bRet</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+
+    <span class="c1">//删除</span>
+    <span class="nx">log</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">redisdb</span><span class="p">.</span><span class="nx">HDel</span><span class="p">(</span><span class="s">&quot;hash_test&quot;</span><span class="p">,</span> <span class="s">&quot;age&quot;</span><span class="p">).</span><span class="nx">Result</span><span class="p">())</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">ExampleClient_Set</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">log</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;ExampleClient_Set&quot;</span><span class="p">)</span>
+    <span class="k">defer</span> <span class="nx">log</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;ExampleClient_Set&quot;</span><span class="p">)</span>
+
+    <span class="c1">//添加</span>
+    <span class="nx">ret</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">redisdb</span><span class="p">.</span><span class="nx">SAdd</span><span class="p">(</span><span class="s">&quot;set_test&quot;</span><span class="p">,</span> <span class="s">&quot;11&quot;</span><span class="p">,</span> <span class="s">&quot;22&quot;</span><span class="p">,</span> <span class="s">&quot;33&quot;</span><span class="p">,</span> <span class="s">&quot;44&quot;</span><span class="p">).</span><span class="nx">Result</span><span class="p">()</span>
+    <span class="nx">log</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">ret</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+
+    <span class="c1">//数量</span>
+    <span class="nx">count</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">redisdb</span><span class="p">.</span><span class="nx">SCard</span><span class="p">(</span><span class="s">&quot;set_test&quot;</span><span class="p">).</span><span class="nx">Result</span><span class="p">()</span>
+    <span class="nx">log</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">count</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+
+    <span class="c1">//删除</span>
+    <span class="nx">ret</span><span class="p">,</span> <span class="nx">err</span> <span class="p">=</span> <span class="nx">redisdb</span><span class="p">.</span><span class="nx">SRem</span><span class="p">(</span><span class="s">&quot;set_test&quot;</span><span class="p">,</span> <span class="s">&quot;11&quot;</span><span class="p">,</span> <span class="s">&quot;22&quot;</span><span class="p">).</span><span class="nx">Result</span><span class="p">()</span>
+    <span class="nx">log</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">ret</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+
+    <span class="c1">//成员</span>
+    <span class="nx">members</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">redisdb</span><span class="p">.</span><span class="nx">SMembers</span><span class="p">(</span><span class="s">&quot;set_test&quot;</span><span class="p">).</span><span class="nx">Result</span><span class="p">()</span>
+    <span class="nx">log</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">members</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+
+    <span class="nx">bret</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">redisdb</span><span class="p">.</span><span class="nx">SIsMember</span><span class="p">(</span><span class="s">&quot;set_test&quot;</span><span class="p">,</span> <span class="s">&quot;33&quot;</span><span class="p">).</span><span class="nx">Result</span><span class="p">()</span>
+    <span class="nx">log</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">bret</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+
+    <span class="nx">redisdb</span><span class="p">.</span><span class="nx">SAdd</span><span class="p">(</span><span class="s">&quot;set_a&quot;</span><span class="p">,</span> <span class="s">&quot;11&quot;</span><span class="p">,</span> <span class="s">&quot;22&quot;</span><span class="p">,</span> <span class="s">&quot;33&quot;</span><span class="p">,</span> <span class="s">&quot;44&quot;</span><span class="p">)</span>
+    <span class="nx">redisdb</span><span class="p">.</span><span class="nx">SAdd</span><span class="p">(</span><span class="s">&quot;set_b&quot;</span><span class="p">,</span> <span class="s">&quot;11&quot;</span><span class="p">,</span> <span class="s">&quot;22&quot;</span><span class="p">,</span> <span class="s">&quot;33&quot;</span><span class="p">,</span> <span class="s">&quot;55&quot;</span><span class="p">,</span> <span class="s">&quot;66&quot;</span><span class="p">,</span> <span class="s">&quot;77&quot;</span><span class="p">)</span>
+    <span class="c1">//差集</span>
+    <span class="nx">diff</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">redisdb</span><span class="p">.</span><span class="nx">SDiff</span><span class="p">(</span><span class="s">&quot;set_a&quot;</span><span class="p">,</span> <span class="s">&quot;set_b&quot;</span><span class="p">).</span><span class="nx">Result</span><span class="p">()</span>
+    <span class="nx">log</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">diff</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+
+    <span class="c1">//交集</span>
+    <span class="nx">inter</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">redisdb</span><span class="p">.</span><span class="nx">SInter</span><span class="p">(</span><span class="s">&quot;set_a&quot;</span><span class="p">,</span> <span class="s">&quot;set_b&quot;</span><span class="p">).</span><span class="nx">Result</span><span class="p">()</span>
+    <span class="nx">log</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">inter</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+
+    <span class="c1">//并集</span>
+    <span class="nx">union</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">redisdb</span><span class="p">.</span><span class="nx">SUnion</span><span class="p">(</span><span class="s">&quot;set_a&quot;</span><span class="p">,</span> <span class="s">&quot;set_b&quot;</span><span class="p">).</span><span class="nx">Result</span><span class="p">()</span>
+    <span class="nx">log</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">union</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+
+    <span class="nx">ret</span><span class="p">,</span> <span class="nx">err</span> <span class="p">=</span> <span class="nx">redisdb</span><span class="p">.</span><span class="nx">SDiffStore</span><span class="p">(</span><span class="s">&quot;set_diff&quot;</span><span class="p">,</span> <span class="s">&quot;set_a&quot;</span><span class="p">,</span> <span class="s">&quot;set_b&quot;</span><span class="p">).</span><span class="nx">Result</span><span class="p">()</span>
+    <span class="nx">log</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">ret</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+
+    <span class="nx">rets</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">redisdb</span><span class="p">.</span><span class="nx">SMembers</span><span class="p">(</span><span class="s">&quot;set_diff&quot;</span><span class="p">).</span><span class="nx">Result</span><span class="p">()</span>
+    <span class="nx">log</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">rets</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">ExampleClient_SortSet</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">log</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;ExampleClient_SortSet&quot;</span><span class="p">)</span>
+    <span class="k">defer</span> <span class="nx">log</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;ExampleClient_SortSet&quot;</span><span class="p">)</span>
+
+    <span class="nx">addArgs</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="nx">redis</span><span class="p">.</span><span class="nx">Z</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+    <span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">1</span><span class="p">;</span> <span class="nx">i</span> <span class="p">&lt;</span> <span class="mi">100</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
+        <span class="nx">addArgs</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">addArgs</span><span class="p">,</span> <span class="nx">redis</span><span class="p">.</span><span class="nx">Z</span><span class="p">{</span><span class="nx">Score</span><span class="p">:</span> <span class="nb">float64</span><span class="p">(</span><span class="nx">i</span><span class="p">),</span> <span class="nx">Member</span><span class="p">:</span> <span class="nx">fmt</span><span class="p">.</span><span class="nx">Sprintf</span><span class="p">(</span><span class="s">&quot;a_%d&quot;</span><span class="p">,</span> <span class="nx">i</span><span class="p">)})</span>
+    <span class="p">}</span>
+    <span class="c1">//log.Println(addArgs)</span>
+
+    <span class="nx">Shuffle</span> <span class="o">:=</span> <span class="kd">func</span><span class="p">(</span><span class="nx">slice</span> <span class="p">[]</span><span class="nx">redis</span><span class="p">.</span><span class="nx">Z</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">r</span> <span class="o">:=</span> <span class="nx">rand</span><span class="p">.</span><span class="nx">New</span><span class="p">(</span><span class="nx">rand</span><span class="p">.</span><span class="nx">NewSource</span><span class="p">(</span><span class="nx">time</span><span class="p">.</span><span class="nx">Now</span><span class="p">().</span><span class="nx">Unix</span><span class="p">()))</span>
+        <span class="k">for</span> <span class="nb">len</span><span class="p">(</span><span class="nx">slice</span><span class="p">)</span> <span class="p">&gt;</span> <span class="mi">0</span> <span class="p">{</span>
+            <span class="nx">n</span> <span class="o">:=</span> <span class="nb">len</span><span class="p">(</span><span class="nx">slice</span><span class="p">)</span>
+            <span class="nx">randIndex</span> <span class="o">:=</span> <span class="nx">r</span><span class="p">.</span><span class="nx">Intn</span><span class="p">(</span><span class="nx">n</span><span class="p">)</span>
+            <span class="nx">slice</span><span class="p">[</span><span class="nx">n</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="nx">slice</span><span class="p">[</span><span class="nx">randIndex</span><span class="p">]</span> <span class="p">=</span> <span class="nx">slice</span><span class="p">[</span><span class="nx">randIndex</span><span class="p">],</span> <span class="nx">slice</span><span class="p">[</span><span class="nx">n</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="nx">slice</span> <span class="p">=</span> <span class="nx">slice</span><span class="p">[:</span><span class="nx">n</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="c1">//随机打乱</span>
+    <span class="nx">Shuffle</span><span class="p">(</span><span class="nx">addArgs</span><span class="p">)</span>
+
+    <span class="c1">//添加</span>
+    <span class="nx">ret</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">redisdb</span><span class="p">.</span><span class="nx">ZAddNX</span><span class="p">(</span><span class="s">&quot;sortset_test&quot;</span><span class="p">,</span> <span class="nx">addArgs</span><span class="o">...</span><span class="p">).</span><span class="nx">Result</span><span class="p">()</span>
+    <span class="nx">log</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">ret</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+
+    <span class="c1">//获取指定成员score</span>
+    <span class="nx">score</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">redisdb</span><span class="p">.</span><span class="nx">ZScore</span><span class="p">(</span><span class="s">&quot;sortset_test&quot;</span><span class="p">,</span> <span class="s">&quot;a_10&quot;</span><span class="p">).</span><span class="nx">Result</span><span class="p">()</span>
+    <span class="nx">log</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">score</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+
+    <span class="c1">//获取制定成员的索引</span>
+    <span class="nx">index</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">redisdb</span><span class="p">.</span><span class="nx">ZRank</span><span class="p">(</span><span class="s">&quot;sortset_test&quot;</span><span class="p">,</span> <span class="s">&quot;a_50&quot;</span><span class="p">).</span><span class="nx">Result</span><span class="p">()</span>
+    <span class="nx">log</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">index</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+
+    <span class="nx">count</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">redisdb</span><span class="p">.</span><span class="nx">SCard</span><span class="p">(</span><span class="s">&quot;sortset_test&quot;</span><span class="p">).</span><span class="nx">Result</span><span class="p">()</span>
+    <span class="nx">log</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">count</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+
+    <span class="c1">//返回有序集合指定区间内的成员</span>
+    <span class="nx">rets</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">redisdb</span><span class="p">.</span><span class="nx">ZRange</span><span class="p">(</span><span class="s">&quot;sortset_test&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">).</span><span class="nx">Result</span><span class="p">()</span>
+    <span class="nx">log</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">rets</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+
+    <span class="c1">//返回有序集合指定区间内的成员分数从高到低</span>
+    <span class="nx">rets</span><span class="p">,</span> <span class="nx">err</span> <span class="p">=</span> <span class="nx">redisdb</span><span class="p">.</span><span class="nx">ZRevRange</span><span class="p">(</span><span class="s">&quot;sortset_test&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">).</span><span class="nx">Result</span><span class="p">()</span>
+    <span class="nx">log</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">rets</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+
+    <span class="c1">//指定分数区间的成员列表</span>
+    <span class="nx">rets</span><span class="p">,</span> <span class="nx">err</span> <span class="p">=</span> <span class="nx">redisdb</span><span class="p">.</span><span class="nx">ZRangeByScore</span><span class="p">(</span><span class="s">&quot;sortset_test&quot;</span><span class="p">,</span> <span class="nx">redis</span><span class="p">.</span><span class="nx">ZRangeBy</span><span class="p">{</span><span class="nx">Min</span><span class="p">:</span> <span class="s">&quot;(30&quot;</span><span class="p">,</span> <span class="nx">Max</span><span class="p">:</span> <span class="s">&quot;(50&quot;</span><span class="p">,</span> <span class="nx">Offset</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="nx">Count</span><span class="p">:</span> <span class="mi">10</span><span class="p">}).</span><span class="nx">Result</span><span class="p">()</span>
+    <span class="nx">log</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">rets</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1">//用来做基数统计的算法，HyperLogLog 的优点是，在输入元素的数量或者体积非常非常大时，计算基数所需的空间总是固定 的、并且是很小的。</span>
+<span class="c1">//每个 HyperLogLog 键只需要花费 12 KB 内存，就可以计算接近 2^64 个不同元素的基 数</span>
+<span class="kd">func</span> <span class="nx">ExampleClient_HyperLogLog</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">log</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;ExampleClient_HyperLogLog&quot;</span><span class="p">)</span>
+    <span class="k">defer</span> <span class="nx">log</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;ExampleClient_HyperLogLog&quot;</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="p">&lt;</span> <span class="mi">10000</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
+        <span class="nx">redisdb</span><span class="p">.</span><span class="nx">PFAdd</span><span class="p">(</span><span class="s">&quot;pf_test_1&quot;</span><span class="p">,</span> <span class="nx">fmt</span><span class="p">.</span><span class="nx">Sprintf</span><span class="p">(</span><span class="s">&quot;pfkey%d&quot;</span><span class="p">,</span> <span class="nx">i</span><span class="p">))</span>
+    <span class="p">}</span>
+    <span class="nx">ret</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">redisdb</span><span class="p">.</span><span class="nx">PFCount</span><span class="p">(</span><span class="s">&quot;pf_test_1&quot;</span><span class="p">).</span><span class="nx">Result</span><span class="p">()</span>
+    <span class="nx">log</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">ret</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="p">&lt;</span> <span class="mi">10000</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
+        <span class="nx">redisdb</span><span class="p">.</span><span class="nx">PFAdd</span><span class="p">(</span><span class="s">&quot;pf_test_2&quot;</span><span class="p">,</span> <span class="nx">fmt</span><span class="p">.</span><span class="nx">Sprintf</span><span class="p">(</span><span class="s">&quot;pfkey%d&quot;</span><span class="p">,</span> <span class="nx">i</span><span class="p">))</span>
+    <span class="p">}</span>
+    <span class="nx">ret</span><span class="p">,</span> <span class="nx">err</span> <span class="p">=</span> <span class="nx">redisdb</span><span class="p">.</span><span class="nx">PFCount</span><span class="p">(</span><span class="s">&quot;pf_test_2&quot;</span><span class="p">).</span><span class="nx">Result</span><span class="p">()</span>
+    <span class="nx">log</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">ret</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+
+    <span class="nx">redisdb</span><span class="p">.</span><span class="nx">PFMerge</span><span class="p">(</span><span class="s">&quot;pf_test&quot;</span><span class="p">,</span> <span class="s">&quot;pf_test_2&quot;</span><span class="p">,</span> <span class="s">&quot;pf_test_1&quot;</span><span class="p">)</span>
+    <span class="nx">ret</span><span class="p">,</span> <span class="nx">err</span> <span class="p">=</span> <span class="nx">redisdb</span><span class="p">.</span><span class="nx">PFCount</span><span class="p">(</span><span class="s">&quot;pf_test&quot;</span><span class="p">).</span><span class="nx">Result</span><span class="p">()</span>
+    <span class="nx">log</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">ret</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">ExampleClient_PubSub</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">log</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;ExampleClient_PubSub&quot;</span><span class="p">)</span>
+    <span class="k">defer</span> <span class="nx">log</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;ExampleClient_PubSub&quot;</span><span class="p">)</span>
+    <span class="c1">//发布订阅</span>
+    <span class="nx">pubsub</span> <span class="o">:=</span> <span class="nx">redisdb</span><span class="p">.</span><span class="nx">Subscribe</span><span class="p">(</span><span class="s">&quot;subkey&quot;</span><span class="p">)</span>
+    <span class="nx">_</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">pubsub</span><span class="p">.</span><span class="nx">Receive</span><span class="p">()</span>
+    <span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+        <span class="nx">log</span><span class="p">.</span><span class="nx">Fatal</span><span class="p">(</span><span class="s">&quot;pubsub.Receive&quot;</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="nx">ch</span> <span class="o">:=</span> <span class="nx">pubsub</span><span class="p">.</span><span class="nx">Channel</span><span class="p">()</span>
+    <span class="nx">time</span><span class="p">.</span><span class="nx">AfterFunc</span><span class="p">(</span><span class="mi">1</span><span class="o">*</span><span class="nx">time</span><span class="p">.</span><span class="nx">Second</span><span class="p">,</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nx">log</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;Publish&quot;</span><span class="p">)</span>
+
+        <span class="nx">err</span> <span class="p">=</span> <span class="nx">redisdb</span><span class="p">.</span><span class="nx">Publish</span><span class="p">(</span><span class="s">&quot;subkey&quot;</span><span class="p">,</span> <span class="s">&quot;test publish 1&quot;</span><span class="p">).</span><span class="nx">Err</span><span class="p">()</span>
+        <span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+            <span class="nx">log</span><span class="p">.</span><span class="nx">Fatal</span><span class="p">(</span><span class="s">&quot;redisdb.Publish&quot;</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+        <span class="p">}</span>
+
+        <span class="nx">redisdb</span><span class="p">.</span><span class="nx">Publish</span><span class="p">(</span><span class="s">&quot;subkey&quot;</span><span class="p">,</span> <span class="s">&quot;test publish 2&quot;</span><span class="p">)</span>
+    <span class="p">})</span>
+    <span class="k">for</span> <span class="nx">msg</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">ch</span> <span class="p">{</span>
+        <span class="nx">log</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;recv channel:&quot;</span><span class="p">,</span> <span class="nx">msg</span><span class="p">.</span><span class="nx">Channel</span><span class="p">,</span> <span class="nx">msg</span><span class="p">.</span><span class="nx">Pattern</span><span class="p">,</span> <span class="nx">msg</span><span class="p">.</span><span class="nx">Payload</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">ExampleClient_CMD</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">log</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;ExampleClient_CMD&quot;</span><span class="p">)</span>
+    <span class="k">defer</span> <span class="nx">log</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;ExampleClient_CMD&quot;</span><span class="p">)</span>
+
+    <span class="c1">//执行自定义redis命令</span>
+    <span class="nx">Get</span> <span class="o">:=</span> <span class="kd">func</span><span class="p">(</span><span class="nx">rdb</span> <span class="o">*</span><span class="nx">redis</span><span class="p">.</span><span class="nx">Client</span><span class="p">,</span> <span class="nx">key</span> <span class="kt">string</span><span class="p">)</span> <span class="o">*</span><span class="nx">redis</span><span class="p">.</span><span class="nx">StringCmd</span> <span class="p">{</span>
+        <span class="nx">cmd</span> <span class="o">:=</span> <span class="nx">redis</span><span class="p">.</span><span class="nx">NewStringCmd</span><span class="p">(</span><span class="s">&quot;get&quot;</span><span class="p">,</span> <span class="nx">key</span><span class="p">)</span>
+        <span class="nx">redisdb</span><span class="p">.</span><span class="nx">Process</span><span class="p">(</span><span class="nx">cmd</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nx">cmd</span>
+    <span class="p">}</span>
+
+    <span class="nx">v</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">Get</span><span class="p">(</span><span class="nx">redisdb</span><span class="p">,</span> <span class="s">&quot;NewStringCmd&quot;</span><span class="p">).</span><span class="nx">Result</span><span class="p">()</span>
+    <span class="nx">log</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;NewStringCmd&quot;</span><span class="p">,</span> <span class="nx">v</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+
+    <span class="nx">v</span><span class="p">,</span> <span class="nx">err</span> <span class="p">=</span> <span class="nx">redisdb</span><span class="p">.</span><span class="nx">Do</span><span class="p">(</span><span class="s">&quot;get&quot;</span><span class="p">,</span> <span class="s">&quot;redisdb.do&quot;</span><span class="p">).</span><span class="nx">String</span><span class="p">()</span>
+    <span class="nx">log</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;redisdb.Do&quot;</span><span class="p">,</span> <span class="nx">v</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">ExampleClient_Scan</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">log</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;ExampleClient_Scan&quot;</span><span class="p">)</span>
+    <span class="k">defer</span> <span class="nx">log</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;ExampleClient_Scan&quot;</span><span class="p">)</span>
+
+    <span class="c1">//scan</span>
+    <span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">1</span><span class="p">;</span> <span class="nx">i</span> <span class="p">&lt;</span> <span class="mi">1000</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
+        <span class="nx">redisdb</span><span class="p">.</span><span class="nx">Set</span><span class="p">(</span><span class="nx">fmt</span><span class="p">.</span><span class="nx">Sprintf</span><span class="p">(</span><span class="s">&quot;skey_%d&quot;</span><span class="p">,</span> <span class="nx">i</span><span class="p">),</span> <span class="nx">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="nx">cusor</span> <span class="o">:=</span> <span class="nb">uint64</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">for</span> <span class="p">{</span>
+        <span class="nx">keys</span><span class="p">,</span> <span class="nx">retCusor</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">redisdb</span><span class="p">.</span><span class="nx">Scan</span><span class="p">(</span><span class="nx">cusor</span><span class="p">,</span> <span class="s">&quot;skey_*&quot;</span><span class="p">,</span> <span class="nb">int64</span><span class="p">(</span><span class="mi">100</span><span class="p">)).</span><span class="nx">Result</span><span class="p">()</span>
+        <span class="nx">log</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">keys</span><span class="p">,</span> <span class="nx">cusor</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+        <span class="nx">cusor</span> <span class="p">=</span> <span class="nx">retCusor</span>
+        <span class="k">if</span> <span class="nx">cusor</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">{</span>
+            <span class="k">break</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">ExampleClient_Tx</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">pipe</span> <span class="o">:=</span> <span class="nx">redisdb</span><span class="p">.</span><span class="nx">TxPipeline</span><span class="p">()</span>
+    <span class="nx">incr</span> <span class="o">:=</span> <span class="nx">pipe</span><span class="p">.</span><span class="nx">Incr</span><span class="p">(</span><span class="s">&quot;tx_pipeline_counter&quot;</span><span class="p">)</span>
+    <span class="nx">pipe</span><span class="p">.</span><span class="nx">Expire</span><span class="p">(</span><span class="s">&quot;tx_pipeline_counter&quot;</span><span class="p">,</span> <span class="nx">time</span><span class="p">.</span><span class="nx">Hour</span><span class="p">)</span>
+
+    <span class="c1">// Execute</span>
+    <span class="c1">//</span>
+    <span class="c1">//     MULTI</span>
+    <span class="c1">//     INCR pipeline_counter</span>
+    <span class="c1">//     EXPIRE pipeline_counts 3600</span>
+    <span class="c1">//     EXEC</span>
+    <span class="c1">//</span>
+    <span class="c1">// using one rdb-server roundtrip.</span>
+    <span class="nx">_</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">pipe</span><span class="p">.</span><span class="nx">Exec</span><span class="p">()</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">incr</span><span class="p">.</span><span class="nx">Val</span><span class="p">(),</span> <span class="nx">err</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">ExampleClient_Script</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">IncrByXX</span> <span class="o">:=</span> <span class="nx">redis</span><span class="p">.</span><span class="nx">NewScript</span><span class="p">(</span><span class="s">`</span>
+<span class="s">        if redis.call(&quot;GET&quot;, KEYS[1]) ~= false then</span>
+<span class="s">            return redis.call(&quot;INCRBY&quot;, KEYS[1], ARGV[1])</span>
+<span class="s">        end</span>
+<span class="s">        return false</span>
+<span class="s">    `</span><span class="p">)</span>
+
+    <span class="nx">n</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">IncrByXX</span><span class="p">.</span><span class="nx">Run</span><span class="p">(</span><span class="nx">redisdb</span><span class="p">,</span> <span class="p">[]</span><span class="kt">string</span><span class="p">{</span><span class="s">&quot;xx_counter&quot;</span><span class="p">},</span> <span class="mi">2</span><span class="p">).</span><span class="nx">Result</span><span class="p">()</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">n</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+
+    <span class="nx">err</span> <span class="p">=</span> <span class="nx">redisdb</span><span class="p">.</span><span class="nx">Set</span><span class="p">(</span><span class="s">&quot;xx_counter&quot;</span><span class="p">,</span> <span class="s">&quot;40&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">).</span><span class="nx">Err</span><span class="p">()</span>
+    <span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+        <span class="nb">panic</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="nx">n</span><span class="p">,</span> <span class="nx">err</span> <span class="p">=</span> <span class="nx">IncrByXX</span><span class="p">.</span><span class="nx">Run</span><span class="p">(</span><span class="nx">redisdb</span><span class="p">,</span> <span class="p">[]</span><span class="kt">string</span><span class="p">{</span><span class="s">&quot;xx_counter&quot;</span><span class="p">},</span> <span class="mi">2</span><span class="p">).</span><span class="nx">Result</span><span class="p">()</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">n</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<img src="https://upload-images.jianshu.io/upload_images/14807846-997c0e2eb218800a?imageMogr2/auto-orient/strip|imageView2/2/w/500/format/webp" alt="img" style="zoom: 67%;" /> </section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="w041_mysql.html" class="btn btn-neutral float-left" title="1. Go 操作MySQL" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../w05/index.html" class="btn btn-neutral float-right" title="第五章：源码学习" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; 版权所有 2021, 公众号:Java半颗糖.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

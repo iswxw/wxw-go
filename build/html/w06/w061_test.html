@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>1. 工程实践之测试 &mdash; Go 深入浅出 1.0.0 文档</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/translations.js"></script>
+        <script src="../_static/js/readmore.js"></script>
+        <script src="../_static/js/baidutongji.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="关于作者" href="../wend/about.html" />
+    <link rel="prev" title="第六章：工程实践" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> Go 深入浅出
+          </a>
+              <div class="version">
+                1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../preface.html">前言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../w01/index.html">第一章：基础知识</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../w02/index.html">第二章：面向对象</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../w03/index.html">第三章：并发编程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../w04/index.html">第四章：数据操作</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../w05/index.html">第五章：源码学习</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">第六章：工程实践</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">1. 工程实践之测试</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id2">1.1. 单元测试</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id3">1. 单元测试规则</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id4">2. 测试方法</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id5">3. 测试功能</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#id6">1.2. 基准测试</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id7">1. 基准测试规则</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id8">2. 测试方法</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id11">3. 基准测试原理</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id12">4. 基准测试功能</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#id13">1.3. 使用帮助</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id14">1. 常用命令</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id15">2. 使用文档</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../wend/about.html">关于作者</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Go 深入浅出</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="index.html">第六章：工程实践</a> &raquo;</li>
+      <li><span class="section-number">1. </span>工程实践之测试</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/w06/w061_test.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="id1">
+<h1><span class="section-number">1. </span>工程实践之测试<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h1>
+<section id="id2">
+<h2><span class="section-number">1.1. </span>单元测试<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h2>
+<p>Go语言拥有一套单元测试和性能测试系统，仅需要添加很少的代码就可以快速测试一段需求代码。</p>
+<p>单元测试（unit testing），是指对软件中的最小可测试单元进行检查和验证。</p>
+<section id="id3">
+<h3>1. 单元测试规则<a class="headerlink" href="#id3" title="永久链接至标题">¶</a></h3>
+<p>主要规则如下：</p>
+<ol class="simple">
+<li><p>单元测试函数的名字必须以Test开头，可选的后缀名必须以大写字母开头</p></li>
+<li><p>每个单元测试函数的参数必须为*testing.T，参数t用于报告测试是否失败以及日志信息。</p></li>
+</ol>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">func</span> <span class="nx">TestAdd</span><span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">){</span> <span class="o">...</span> <span class="p">}</span>
+<span class="kd">func</span> <span class="nx">TestSum</span><span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">){</span> <span class="o">...</span> <span class="p">}</span>
+<span class="kd">func</span> <span class="nx">TestLog</span><span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">){</span> <span class="o">...</span> <span class="p">}</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">testing.T参数</span></code>的拥有的方法如下：</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">func</span> <span class="p">(</span><span class="nx">c</span> <span class="o">*</span><span class="nx">T</span><span class="p">)</span> <span class="nx">Error</span><span class="p">(</span><span class="nx">args</span> <span class="o">...</span><span class="kd">interface</span><span class="p">{})</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">c</span> <span class="o">*</span><span class="nx">T</span><span class="p">)</span> <span class="nx">Errorf</span><span class="p">(</span><span class="nx">format</span> <span class="kt">string</span><span class="p">,</span> <span class="nx">args</span> <span class="o">...</span><span class="kd">interface</span><span class="p">{})</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">c</span> <span class="o">*</span><span class="nx">T</span><span class="p">)</span> <span class="nx">Fail</span><span class="p">()</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">c</span> <span class="o">*</span><span class="nx">T</span><span class="p">)</span> <span class="nx">FailNow</span><span class="p">()</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">c</span> <span class="o">*</span><span class="nx">T</span><span class="p">)</span> <span class="nx">Failed</span><span class="p">()</span> <span class="kt">bool</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">c</span> <span class="o">*</span><span class="nx">T</span><span class="p">)</span> <span class="nx">Fatal</span><span class="p">(</span><span class="nx">args</span> <span class="o">...</span><span class="kd">interface</span><span class="p">{})</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">c</span> <span class="o">*</span><span class="nx">T</span><span class="p">)</span> <span class="nx">Fatalf</span><span class="p">(</span><span class="nx">format</span> <span class="kt">string</span><span class="p">,</span> <span class="nx">args</span> <span class="o">...</span><span class="kd">interface</span><span class="p">{})</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">c</span> <span class="o">*</span><span class="nx">T</span><span class="p">)</span> <span class="nx">Log</span><span class="p">(</span><span class="nx">args</span> <span class="o">...</span><span class="kd">interface</span><span class="p">{})</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">c</span> <span class="o">*</span><span class="nx">T</span><span class="p">)</span> <span class="nx">Logf</span><span class="p">(</span><span class="nx">format</span> <span class="kt">string</span><span class="p">,</span> <span class="nx">args</span> <span class="o">...</span><span class="kd">interface</span><span class="p">{})</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">c</span> <span class="o">*</span><span class="nx">T</span><span class="p">)</span> <span class="nx">Name</span><span class="p">()</span> <span class="kt">string</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">T</span><span class="p">)</span> <span class="nx">Parallel</span><span class="p">()</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">T</span><span class="p">)</span> <span class="nx">Run</span><span class="p">(</span><span class="nx">name</span> <span class="kt">string</span><span class="p">,</span> <span class="nx">f</span> <span class="kd">func</span><span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">T</span><span class="p">))</span> <span class="kt">bool</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">c</span> <span class="o">*</span><span class="nx">T</span><span class="p">)</span> <span class="nx">Skip</span><span class="p">(</span><span class="nx">args</span> <span class="o">...</span><span class="kd">interface</span><span class="p">{})</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">c</span> <span class="o">*</span><span class="nx">T</span><span class="p">)</span> <span class="nx">SkipNow</span><span class="p">()</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">c</span> <span class="o">*</span><span class="nx">T</span><span class="p">)</span> <span class="nx">Skipf</span><span class="p">(</span><span class="nx">format</span> <span class="kt">string</span><span class="p">,</span> <span class="nx">args</span> <span class="o">...</span><span class="kd">interface</span><span class="p">{})</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">c</span> <span class="o">*</span><span class="nx">T</span><span class="p">)</span> <span class="nx">Skipped</span><span class="p">()</span> <span class="kt">bool</span>
+</pre></div>
+</div>
+</section>
+<section id="id4">
+<h3>2. 测试方法<a class="headerlink" href="#id4" title="永久链接至标题">¶</a></h3>
+<p>假设现在开发了1个单元（函数）， 该单元的功能是对string类型的变量进行split。</p>
+<p>主要的源代码：</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">unit.go</span></code></p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="s">&quot;strings&quot;</span>
+
+<span class="c1">//NewSplit 切割字符串</span>
+<span class="c1">//example:</span>
+<span class="c1">//abc,b=&gt;[ac]</span>
+<span class="kd">func</span> <span class="nx">NewSplit</span><span class="p">(</span><span class="nx">str</span><span class="p">,</span> <span class="nx">sep</span> <span class="kt">string</span><span class="p">)</span> <span class="p">(</span><span class="nx">des</span> <span class="p">[]</span><span class="kt">string</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">index</span> <span class="o">:=</span> <span class="nx">strings</span><span class="p">.</span><span class="nx">Index</span><span class="p">(</span><span class="nx">str</span><span class="p">,</span> <span class="nx">sep</span><span class="p">)</span>
+	<span class="k">for</span> <span class="nx">index</span> <span class="p">&gt;</span> <span class="o">-</span><span class="mi">1</span> <span class="p">{</span>
+		<span class="nx">sectionBefor</span> <span class="o">:=</span> <span class="nx">str</span><span class="p">[:</span><span class="nx">index</span><span class="p">]</span>
+		<span class="nx">des</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">des</span><span class="p">,</span> <span class="nx">sectionBefor</span><span class="p">)</span>
+		<span class="nx">str</span> <span class="p">=</span> <span class="nx">str</span><span class="p">[</span><span class="nx">index</span><span class="o">+</span><span class="mi">1</span><span class="p">:]</span>
+		<span class="nx">index</span> <span class="p">=</span> <span class="nx">strings</span><span class="p">.</span><span class="nx">Index</span><span class="p">(</span><span class="nx">str</span><span class="p">,</span> <span class="nx">sep</span><span class="p">)</span>
+	<span class="p">}</span>
+	<span class="c1">//最后1</span>
+	<span class="nx">des</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">des</span><span class="p">,</span> <span class="nx">str</span><span class="p">)</span>
+	<span class="k">return</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">unit_test.go</span></code></p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="c1">//测试用例1：以字符分割</span>
+<span class="kd">func</span> <span class="nx">TestSplit</span><span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">got</span> <span class="o">:=</span> <span class="nx">NewSplit</span><span class="p">(</span><span class="s">&quot;123N456&quot;</span><span class="p">,</span> <span class="s">&quot;N&quot;</span><span class="p">)</span>
+	<span class="nx">want</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">string</span><span class="p">{</span><span class="s">&quot;123&quot;</span><span class="p">,</span> <span class="s">&quot;456&quot;</span><span class="p">}</span>
+	<span class="c1">//DeepEqual比较底层数组</span>
+	<span class="k">if</span> <span class="p">!</span><span class="nx">reflect</span><span class="p">.</span><span class="nx">DeepEqual</span><span class="p">(</span><span class="nx">got</span><span class="p">,</span> <span class="nx">want</span><span class="p">)</span> <span class="p">{</span>
+		<span class="c1">//如果got和want不一致说明你写得代码有问题</span>
+		<span class="nx">t</span><span class="p">.</span><span class="nx">Errorf</span><span class="p">(</span><span class="s">&quot;The values of %v is not %v\n&quot;</span><span class="p">,</span> <span class="nx">got</span><span class="p">,</span> <span class="nx">want</span><span class="p">)</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">//测试用例2：以标点符号分割</span>
+<span class="kd">func</span> <span class="nx">TestPunctuationSplit</span><span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">got</span> <span class="o">:=</span> <span class="nx">NewSplit</span><span class="p">(</span><span class="s">&quot;a:b:c&quot;</span><span class="p">,</span> <span class="s">&quot;:&quot;</span><span class="p">)</span>
+	<span class="nx">want</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">string</span><span class="p">{</span><span class="s">&quot;a&quot;</span><span class="p">,</span> <span class="s">&quot;b&quot;</span><span class="p">,</span> <span class="s">&quot;c&quot;</span><span class="p">}</span>
+	<span class="k">if</span> <span class="p">!</span><span class="nx">reflect</span><span class="p">.</span><span class="nx">DeepEqual</span><span class="p">(</span><span class="nx">got</span><span class="p">,</span> <span class="nx">want</span><span class="p">)</span> <span class="p">{</span>
+		<span class="nx">t</span><span class="p">.</span><span class="nx">FailNow</span><span class="p">()</span><span class="c1">//出错就stop别往下测了！</span>
+	<span class="p">}</span>
+
+<span class="p">}</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<p>测试结果：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>C:<span class="se">\P</span>roject<span class="se">\w</span>xw-go<span class="se">\s</span>rc<span class="se">\c</span>om.wxw<span class="se">\p</span>roject_actual<span class="se">\a</span>ctual_test<span class="se">\u</span>nit_test&gt;go <span class="nb">test</span> -v
+<span class="o">===</span> RUN   TestSplit
+--- PASS: TestSplit <span class="o">(</span><span class="m">0</span>.00s<span class="o">)</span>
+<span class="o">===</span> RUN   TestPunctuationSplit
+--- PASS: TestPunctuationSplit <span class="o">(</span><span class="m">0</span>.00s<span class="o">)</span>
+PASS
+ok      src/com.wxw/project_actual/src/com.wxw/project_actual/actual_test/unit_test     <span class="m">0</span>.120s
+</pre></div>
+</div>
+<p>当然，我们可以继续优化测试代码！利用结构体组织测试数据把多个测试用例合到一起，在1个函数内对1组测试用例进行统一测试。</p>
+<p><strong>组测试</strong></p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kn">package</span> <span class="nx">splitString</span>
+ 
+<span class="kn">import</span> <span class="p">(</span>
+    <span class="s">&quot;reflect&quot;</span>
+    <span class="s">&quot;testing&quot;</span>
+<span class="p">)</span>
+ 
+<span class="c1">//测试组:在1个函数中写多个测试用例，切支持灵活扩展！</span>
+ 
+<span class="kd">type</span> <span class="nx">testCase</span> <span class="kd">struct</span> <span class="p">{</span>
+    <span class="nx">str</span>      <span class="kt">string</span>
+    <span class="nx">separate</span> <span class="kt">string</span>
+    <span class="nx">want</span>     <span class="p">[]</span><span class="kt">string</span>
+<span class="p">}</span>
+ 
+<span class="kd">var</span> <span class="nx">testGroup</span> <span class="p">=</span> <span class="p">[]</span><span class="nx">testCase</span><span class="p">{</span>
+    <span class="c1">//测试用例1:单个英文字母</span>
+    <span class="nx">testCase</span><span class="p">{</span>
+        <span class="nx">str</span><span class="p">:</span>      <span class="s">&quot;123N456&quot;</span><span class="p">,</span>
+        <span class="nx">separate</span><span class="p">:</span> <span class="s">&quot;N&quot;</span><span class="p">,</span>
+        <span class="nx">want</span><span class="p">:</span>     <span class="p">[]</span><span class="kt">string</span><span class="p">{</span><span class="s">&quot;123&quot;</span><span class="p">,</span> <span class="s">&quot;456&quot;</span><span class="p">},</span>
+    <span class="p">},</span>
+    <span class="c1">//测试用例2：符号</span>
+    <span class="nx">testCase</span><span class="p">{</span>
+        <span class="nx">str</span><span class="p">:</span>      <span class="s">&quot;a:b:c&quot;</span><span class="p">,</span>
+        <span class="nx">separate</span><span class="p">:</span> <span class="s">&quot;:&quot;</span><span class="p">,</span>
+        <span class="nx">want</span><span class="p">:</span>     <span class="p">[]</span><span class="kt">string</span><span class="p">{</span><span class="s">&quot;a&quot;</span><span class="p">,</span> <span class="s">&quot;b&quot;</span><span class="p">,</span> <span class="s">&quot;c&quot;</span><span class="p">},</span>
+    <span class="p">},</span>
+    <span class="c1">//测试用例3：多个英文字母</span>
+    <span class="nx">testCase</span><span class="p">{</span>
+        <span class="nx">str</span><span class="p">:</span>      <span class="s">&quot;hellowbsdjshdworld&quot;</span><span class="p">,</span>
+        <span class="nx">separate</span><span class="p">:</span> <span class="s">&quot;bsdjshd&quot;</span><span class="p">,</span>
+        <span class="nx">want</span><span class="p">:</span>     <span class="p">[]</span><span class="kt">string</span><span class="p">{</span><span class="s">&quot;hellow&quot;</span><span class="p">,</span> <span class="s">&quot;world&quot;</span><span class="p">},</span>
+    <span class="p">},</span>
+    <span class="c1">//测试用例4:单个汉字</span>
+    <span class="nx">testCase</span><span class="p">{</span>
+        <span class="nx">str</span><span class="p">:</span>      <span class="s">&quot;山西运煤车煤运西山&quot;</span><span class="p">,</span>
+        <span class="nx">separate</span><span class="p">:</span> <span class="s">&quot;山&quot;</span><span class="p">,</span>
+        <span class="nx">want</span><span class="p">:</span>     <span class="p">[]</span><span class="kt">string</span><span class="p">{</span><span class="s">&quot;西运煤车煤运西&quot;</span><span class="p">},</span>
+    <span class="p">},</span>
+ 
+    <span class="c1">//测试用例4：多个汉字</span>
+    <span class="nx">testCase</span><span class="p">{</span>
+        <span class="nx">str</span><span class="p">:</span>      <span class="s">&quot;京北北京之北&quot;</span><span class="p">,</span>
+        <span class="nx">separate</span><span class="p">:</span> <span class="s">&quot;北京&quot;</span><span class="p">,</span>
+        <span class="nx">want</span><span class="p">:</span>     <span class="p">[]</span><span class="kt">string</span><span class="p">{</span><span class="s">&quot;京北&quot;</span><span class="p">,</span> <span class="s">&quot;之北&quot;</span><span class="p">},</span>
+    <span class="p">},</span>
+<span class="p">}</span>
+ 
+<span class="kd">func</span> <span class="nx">TestSplit</span><span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">test</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">testGroup</span> <span class="p">{</span>
+        <span class="nx">got</span> <span class="o">:=</span> <span class="nx">Newsplit</span><span class="p">(</span><span class="nx">test</span><span class="p">.</span><span class="nx">str</span><span class="p">,</span> <span class="nx">test</span><span class="p">.</span><span class="nx">separate</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">!</span><span class="nx">reflect</span><span class="p">.</span><span class="nx">DeepEqual</span><span class="p">(</span><span class="nx">got</span><span class="p">,</span> <span class="nx">test</span><span class="p">.</span><span class="nx">want</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">t</span><span class="p">.</span><span class="nx">Fatalf</span><span class="p">(</span><span class="s">&quot;失败！got:%#v want:%#v\n&quot;</span><span class="p">,</span> <span class="nx">got</span><span class="p">,</span> <span class="nx">test</span><span class="p">.</span><span class="nx">want</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+ 
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>子测试</strong></p>
+<p>基于测试组对测试代码再次进行优化，利用使用t *testing.T参数的run方法去执行测试用例。</p>
+<p>这种方法可以针对测试组里的1个测试用例进行单独测试，所以也叫子测试。</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kn">package</span> <span class="nx">splitString</span>
+ 
+<span class="kn">import</span> <span class="p">(</span>
+    <span class="s">&quot;reflect&quot;</span>
+    <span class="s">&quot;testing&quot;</span>
+<span class="p">)</span>
+ 
+<span class="c1">//子测试</span>
+<span class="kd">type</span> <span class="nx">testCase</span> <span class="kd">struct</span> <span class="p">{</span>
+    <span class="nx">str</span>      <span class="kt">string</span>
+    <span class="nx">separate</span> <span class="kt">string</span>
+    <span class="nx">want</span>     <span class="p">[]</span><span class="kt">string</span>
+<span class="p">}</span>
+ 
+<span class="kd">var</span> <span class="nx">testGroup</span> <span class="p">=</span> <span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="nx">testCase</span><span class="p">{</span>
+    <span class="s">&quot;punctuation&quot;</span><span class="p">:</span> <span class="nx">testCase</span><span class="p">{</span>
+        <span class="nx">str</span><span class="p">:</span>      <span class="s">&quot;a:b:c&quot;</span><span class="p">,</span>
+        <span class="nx">separate</span><span class="p">:</span> <span class="s">&quot;:&quot;</span><span class="p">,</span>
+        <span class="nx">want</span><span class="p">:</span>     <span class="p">[]</span><span class="kt">string</span><span class="p">{</span><span class="s">&quot;a&quot;</span><span class="p">,</span> <span class="s">&quot;b&quot;</span><span class="p">,</span> <span class="s">&quot;c&quot;</span><span class="p">},</span>
+    <span class="p">},</span>
+    <span class="s">&quot;sigalLetter&quot;</span><span class="p">:</span> <span class="nx">testCase</span><span class="p">{</span>
+        <span class="nx">str</span><span class="p">:</span>      <span class="s">&quot;123N456&quot;</span><span class="p">,</span>
+        <span class="nx">separate</span><span class="p">:</span> <span class="s">&quot;N&quot;</span><span class="p">,</span>
+        <span class="nx">want</span><span class="p">:</span>     <span class="p">[]</span><span class="kt">string</span><span class="p">{</span><span class="s">&quot;123&quot;</span><span class="p">,</span> <span class="s">&quot;456&quot;</span><span class="p">},</span>
+    <span class="p">},</span>
+ 
+    <span class="s">&quot;MultipleLetter&quot;</span><span class="p">:</span> <span class="nx">testCase</span><span class="p">{</span>
+        <span class="nx">str</span><span class="p">:</span>      <span class="s">&quot;hellowbsdjshdworld&quot;</span><span class="p">,</span>
+        <span class="nx">separate</span><span class="p">:</span> <span class="s">&quot;bsdjshd&quot;</span><span class="p">,</span>
+        <span class="nx">want</span><span class="p">:</span>     <span class="p">[]</span><span class="kt">string</span><span class="p">{</span><span class="s">&quot;hellow&quot;</span><span class="p">,</span> <span class="s">&quot;world&quot;</span><span class="p">},</span>
+    <span class="p">},</span>
+    <span class="s">&quot;singalRune&quot;</span><span class="p">:</span> <span class="nx">testCase</span><span class="p">{</span>
+        <span class="nx">str</span><span class="p">:</span>      <span class="s">&quot;山西运煤车煤运西山&quot;</span><span class="p">,</span>
+        <span class="nx">separate</span><span class="p">:</span> <span class="s">&quot;山&quot;</span><span class="p">,</span>
+        <span class="nx">want</span><span class="p">:</span>     <span class="p">[]</span><span class="kt">string</span><span class="p">{</span><span class="s">&quot;西运煤车煤运西&quot;</span><span class="p">},</span>
+    <span class="p">},</span>
+    <span class="s">&quot;multiplRune&quot;</span><span class="p">:</span> <span class="nx">testCase</span><span class="p">{</span>
+        <span class="nx">str</span><span class="p">:</span>      <span class="s">&quot;京北北京之北&quot;</span><span class="p">,</span>
+        <span class="nx">separate</span><span class="p">:</span> <span class="s">&quot;北京&quot;</span><span class="p">,</span>
+        <span class="nx">want</span><span class="p">:</span>     <span class="p">[]</span><span class="kt">string</span><span class="p">{</span><span class="s">&quot;京北&quot;</span><span class="p">,</span> <span class="s">&quot;之北&quot;</span><span class="p">},</span>
+    <span class="p">},</span>
+<span class="p">}</span>
+ 
+<span class="c1">//测试用例函数</span>
+<span class="kd">func</span> <span class="nx">TestSplit</span><span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="nx">name</span><span class="p">,</span> <span class="nx">test</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">testGroup</span> <span class="p">{</span>
+        <span class="c1">//使用t参数的run方法</span>
+        <span class="nx">t</span><span class="p">.</span><span class="nx">Run</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="kd">func</span><span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">got</span> <span class="o">:=</span> <span class="nx">Newsplit</span><span class="p">(</span><span class="nx">test</span><span class="p">.</span><span class="nx">str</span><span class="p">,</span> <span class="nx">test</span><span class="p">.</span><span class="nx">separate</span><span class="p">)</span>
+            <span class="k">if</span> <span class="p">!</span><span class="nx">reflect</span><span class="p">.</span><span class="nx">DeepEqual</span><span class="p">(</span><span class="nx">got</span><span class="p">,</span> <span class="nx">test</span><span class="p">.</span><span class="nx">want</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nx">t</span><span class="p">.</span><span class="nx">Fatalf</span><span class="p">(</span><span class="s">&quot;失败！got:%#v want:%#v\n&quot;</span><span class="p">,</span> <span class="nx">got</span><span class="p">,</span> <span class="nx">test</span><span class="p">.</span><span class="nx">want</span><span class="p">)</span>
+            <span class="p">}</span>
+        <span class="p">})</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="id5">
+<h3>3. 测试功能<a class="headerlink" href="#id5" title="永久链接至标题">¶</a></h3>
+<p>测试覆盖率是你的代码被测试套件覆盖的百分比。</p>
+<p>通常我们使用的都是语句的覆盖率，也就是在测试中至少被运行一次的代码占总代码的比例。</p>
+<p>Go提供内置功能来检查你的代码覆盖率。我们可以使用 <code class="docutils literal notranslate"> <span class="pre">go</span> <span class="pre">test</span> <span class="pre">-cover</span></code></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>// 把测试覆盖率的详细信息输出到文件
+go <span class="nb">test</span> -cover -coverprofile<span class="o">=</span>test_report.out
+
+// 把测试报告输出到文件，就是为了分析测试结果，go内置的工具支持以HTML的方式打开测试报告文件！
+go tool cover -html<span class="o">=</span>test_report.out
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>下图中每个用绿色标记的语句块表示被覆盖了，而红色的表示没有被覆盖。</p></li>
+</ul>
+<img src="https://img2020.cnblogs.com/blog/1122865/202005/1122865-20200510162023356-1656223051.png" alt="img" style="zoom: 67%;" />   <ul>
+<li><p>覆盖率测试</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>D:<span class="se">\g</span>oproject<span class="se">\s</span>rc<span class="se">\L</span>earningTest<span class="se">\s</span>plitString&gt; go <span class="nb">test</span> -cover
+PASS
+coverage: <span class="m">100</span>.0% of statements
+ok      LearningTest/splitString        <span class="m">0</span>.042s
+
+D:<span class="se">\g</span>oproject<span class="se">\s</span>rc<span class="se">\L</span>earningTest<span class="se">\s</span>plitString&gt;
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+</section>
+<section id="id6">
+<h2><span class="section-number">1.2. </span>基准测试<a class="headerlink" href="#id6" title="永久链接至标题">¶</a></h2>
+<p>在Go语言中，提供了测试函数性能（CPU和Memory）的测试方法，基准测试。</p>
+<p>基准测试（<code class="docutils literal notranslate"><span class="pre">Benchmark</span> <span class="pre">Test</span></code>）主要用来测试CPU和内存的效率问题，来评估被测代码的性能。测试人员可以根据这些性能指标的反馈，来优化我们的代码，进而提高性能问题。</p>
+<p>本节主要来介绍，基准测试的使用方法和性能指标的分析。</p>
+<section id="id7">
+<h3>1. 基准测试规则<a class="headerlink" href="#id7" title="永久链接至标题">¶</a></h3>
+<p>主要规则如下：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="m">1</span>.基准测试的代码文件必须以_test.go结尾。
+<span class="m">2</span>.基准测试的函数必须以Benchmark开头。
+<span class="m">3</span>.基准测试函数必须接受一个指向testing.B类型的指针作为唯一参数。
+<span class="m">4</span>.在测试执行之前，需要调用b.ResetTimer（重置计时器）来重置时间，以便过滤掉测试之前代码所消耗的时间。
+<span class="m">5</span>.测试代码需要写在for循环中，并且循环中的最大值是b.N。
+</pre></div>
+</div>
+</section>
+<section id="id8">
+<h3>2. 测试方法<a class="headerlink" href="#id8" title="永久链接至标题">¶</a></h3>
+<section id="id9">
+<h4>2.1 测试代码<a class="headerlink" href="#id9" title="永久链接至标题">¶</a></h4>
+<p>文件结构为： benchmark.go, benchmark_test.go</p>
+<img src="https://static.studygolang.com/191014/92319c5203d5a0ca7d0acf65bb918d14.png" alt="benchmark" style="zoom: 50%;" /> <ul>
+<li><p>benchmark.go</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="s">&quot;fmt&quot;</span>
+
+<span class="c1">// 基准测试 源代码</span>
+
+<span class="c1">// 测试方法 case_1</span>
+<span class="kd">func</span> <span class="nx">HandleType</span><span class="p">(</span><span class="nx">flag</span> <span class="kt">int</span><span class="p">)</span> <span class="kt">string</span> <span class="p">{</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;HandleType: %v&quot;</span><span class="p">,</span><span class="nx">flag</span><span class="p">)</span>
+	<span class="k">switch</span> <span class="nx">flag</span> <span class="p">{</span>
+	<span class="k">case</span> <span class="mi">0</span><span class="p">:</span>
+		<span class="k">return</span> <span class="s">&quot;Add&quot;</span>
+	<span class="k">case</span> <span class="mi">1</span><span class="p">:</span>
+		<span class="k">return</span> <span class="s">&quot;Sub&quot;</span>
+	<span class="k">case</span> <span class="mi">2</span><span class="p">:</span>
+		<span class="k">return</span> <span class="s">&quot;Multiply&quot;</span>
+	<span class="k">case</span> <span class="mi">3</span><span class="p">:</span>
+		<span class="k">return</span> <span class="s">&quot;Division&quot;</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="s">&quot;NotExist&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</li>
+<li><p>benchmark_test.go</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+	<span class="s">&quot;fmt&quot;</span>
+	<span class="s">&quot;testing&quot;</span>
+<span class="p">)</span>
+
+<span class="c1">// 基准测试 测试代码 case_1</span>
+<span class="kd">func</span> <span class="nx">BenchmarkHandleType</span><span class="p">(</span><span class="nx">b</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">B</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">flag</span> <span class="o">:=</span> <span class="mi">1</span>
+	<span class="nx">b</span><span class="p">.</span><span class="nx">ResetTimer</span><span class="p">()</span>
+	<span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="p">&lt;</span> <span class="nx">b</span><span class="p">.</span><span class="nx">N</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
+		<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;BenchMark Test:&quot;</span><span class="p">,</span> <span class="nx">HandleType</span><span class="p">(</span><span class="nx">flag</span><span class="p">))</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+<section id="id10">
+<h4>2.2 运行基准测试<a class="headerlink" href="#id10" title="永久链接至标题">¶</a></h4>
+<p><strong>使用命令</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ go <span class="nb">test</span> -bench<span class="o">=</span>. -benchtime<span class="o">=</span>5s -benchmem -run<span class="o">=</span>none
+
+参数介绍
+
+-bench<span class="o">=</span>. ：表示的是运行所有的基准测试，. 表示全部。
+-benchtime<span class="o">=</span>5s:表示的是运行时间为5s，默认的时间是1s。
+-benchmem:表示显示memory的指标。
+-run<span class="o">=</span>none:表示过滤掉单元测试，不去跑UT的cases。
+</pre></div>
+</div>
+<p><strong>输出结果</strong></p>
+<img src="https://static.studygolang.com/191014/867f9df11e1a8319c6cad3ea2679b380.png" alt="result" style="zoom:50%;" /> <ul class="simple">
+<li><p>下面是实际值</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>HandleType: 1BenchMark Test: Sub
+HandleType: 1BenchMark Test: Sub
+   <span class="m">52947</span>             <span class="m">98138</span> ns/op              <span class="m">96</span> B/op          <span class="m">3</span> allocs/op
+PASS
+ok      src/com.wxw/project_actual/src/com.wxw/project_actual/actual_test/benchmark_test        <span class="m">6</span>.476s
+</pre></div>
+</div>
+<p><strong>输出结果分析</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>goos: darwin：表示的是操作系统是darwin。
+goarch: amd64：表示目标平台的体系架构是amd64。
+BenchmarkHandleWithType-4：BenchmarkHandleWithType表示运行的函数名称； 4表示的是，运行时对应的GOMAXPROCS的值。
+<span class="m">10000000000</span>：表示的是b.N的在5s内的值。
+<span class="m">0</span>.28 ns/op：表示执行一次这个函数，消耗的时间是0.28ns。
+<span class="m">0</span> B/op：表示每次执行操作，分配0B的内存。
+<span class="m">0</span> allocs/op：表示执行一次这个函数，分配内存的次数为1次。
+</pre></div>
+</div>
+</section>
+</section>
+<section id="id11">
+<h3>3. 基准测试原理<a class="headerlink" href="#id11" title="永久链接至标题">¶</a></h3>
+<p>基准测试框架对一个测试用例的默认测试时间是 1 秒。开始测试时，当以 Benchmark 开头的基准测试用例函数返回时还不到 1 秒，那么 testing.B 中的 N 值将按 1、2、5、10、20、50……递增，同时以递增后的值重新调用基准测试用例函数。</p>
+</section>
+<section id="id12">
+<h3>4. 基准测试功能<a class="headerlink" href="#id12" title="永久链接至标题">¶</a></h3>
+<ul>
+<li><p>自定义测试时间 <code class="docutils literal notranslate"> <span class="pre">benchtime</span></code></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ go <span class="nb">test</span> -v -bench<span class="o">=</span>. -benchtime<span class="o">=</span>5s benchmark_test.go
+goos: linux
+goarch: amd64
+Benchmark_Add-4           <span class="m">10000000000</span>                 <span class="m">0</span>.33 ns/op
+PASS
+ok          command-line-arguments        <span class="m">3</span>.380s
+</pre></div>
+</div>
+</li>
+<li><p>测试内存 <code class="docutils literal notranslate"> <span class="pre">benchmem</span></code></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ go <span class="nb">test</span> -v -bench<span class="o">=</span>Alloc -benchmem benchmark_test.go
+goos: linux
+goarch: amd64
+Benchmark_Alloc-4 <span class="m">20000000</span> <span class="m">109</span> ns/op <span class="m">16</span> B/op <span class="m">2</span> allocs/op
+PASS
+ok          command-line-arguments        <span class="m">2</span>.311s
+</pre></div>
+</div>
+</li>
+<li><p>控制计时器</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">func</span> <span class="nx">Benchmark_Add_TimerControl</span><span class="p">(</span><span class="nx">b</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">B</span><span class="p">)</span> <span class="p">{</span>
+
+    <span class="c1">// 重置计时器</span>
+    <span class="nx">b</span><span class="p">.</span><span class="nx">ResetTimer</span><span class="p">()</span>
+
+    <span class="c1">// 停止计时器</span>
+    <span class="nx">b</span><span class="p">.</span><span class="nx">StopTimer</span><span class="p">()</span>
+
+    <span class="c1">// 开始计时器</span>
+    <span class="nx">b</span><span class="p">.</span><span class="nx">StartTimer</span><span class="p">()</span>
+
+    <span class="kd">var</span> <span class="nx">n</span> <span class="kt">int</span>
+    <span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="p">&lt;</span> <span class="nx">b</span><span class="p">.</span><span class="nx">N</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
+        <span class="nx">n</span><span class="o">++</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+</section>
+<section id="id13">
+<h2><span class="section-number">1.3. </span>使用帮助<a class="headerlink" href="#id13" title="永久链接至标题">¶</a></h2>
+<section id="id14">
+<h3>1. 常用命令<a class="headerlink" href="#id14" title="永久链接至标题">¶</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>这里介绍几个常用的参数：
+
+-bench regexp 执行相应的 benchmarks，例如 -bench<span class="o">=</span>.；
+-cover 开启测试覆盖率；
+-run regexp 只运行 regexp 匹配的函数，例如 -run<span class="o">=</span>Array 那么就执行包含有 Array 开头的函数；
+-v 显示测试的详细命令。
+</pre></div>
+</div>
+</section>
+<section id="id15">
+<h3>2. 使用文档<a class="headerlink" href="#id15" title="永久链接至标题">¶</a></h3>
+<p>根据测试维度可以把包内以<code class="docutils literal notranslate"><span class="pre">_test.go结尾的测试</span></code>文件中的函数划分为以下3种：</p>
+<p>| 类型     | 格式                  | 作用                                     |
+| ——– | ——————— | —————————————- |
+| 测试函数 | 函数名前缀为Test      | 测试程序的一些逻辑行为是否正确           |
+| 基准函数 | 函数名前缀为Benchmark | 测试函数的性能（执行时间、内存申请情况） |
+| 示例函数 | 函数名前缀为Example   | 为文档提供示例文档                       |</p>
+<ul class="simple">
+<li><p>**单元测试函数（**unit testing）：是指对软件中的最小可测试单元进行检查和验证。对于单元测试中单元的含义，一般来说，要根据实际情况去判定其具体含义，如C语言中单元指一个函数，Java里单元指一个类，图形化的软件中可以指一个窗口或一个菜单等。总的来说，单元就是人为规定的最小的被测功能模块。</p></li>
+<li><p>**基准测试函数：**测试程序执行时间复杂度、空间复杂度</p></li>
+<li><p>**示例函数：**为调用该功能代码的人提供演示</p></li>
+</ul>
+<p><strong>具体指令</strong></p>
+<ul>
+<li><p><code class="docutils literal notranslate"> <span class="pre">go</span> <span class="pre">help</span> <span class="pre">test</span></code></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>go <span class="nb">help</span> <span class="nb">test</span>
+
+usage: go <span class="nb">test</span> <span class="o">[</span>build/test flags<span class="o">]</span> <span class="o">[</span>packages<span class="o">]</span> <span class="o">[</span>build/test flags <span class="p">&amp;</span> <span class="nb">test</span> binary flags<span class="o">]</span>
+
+<span class="s1">&#39;Go test&#39;</span> automates testing the packages named by the import paths.
+It prints a summary of the <span class="nb">test</span> results <span class="k">in</span> the format:
+
+        ok   archive/tar   <span class="m">0</span>.011s
+        FAIL archive/zip   <span class="m">0</span>.022s
+        ok   compress/gzip <span class="m">0</span>.033s
+        ...
+
+followed by detailed output <span class="k">for</span> each failed package.
+
+<span class="s1">&#39;Go test&#39;</span> recompiles each package along with any files with names matching
+the file pattern <span class="s2">&quot;*_test.go&quot;</span>.
+These additional files can contain <span class="nb">test</span> functions, benchmark functions, and
+example functions. See <span class="s1">&#39;go help testfunc&#39;</span> <span class="k">for</span> more.
+Each listed package causes the execution of a separate <span class="nb">test</span> binary.
+Files whose names begin with <span class="s2">&quot;_&quot;</span> <span class="o">(</span>including <span class="s2">&quot;_test.go&quot;</span><span class="o">)</span> or <span class="s2">&quot;.&quot;</span> are ignored.
+
+Test files that <span class="nb">declare</span> a package with the suffix <span class="s2">&quot;_test&quot;</span> will be compiled as a
+separate package, and <span class="k">then</span> linked and run with the main <span class="nb">test</span> binary.
+
+The go tool will ignore a directory named <span class="s2">&quot;testdata&quot;</span>, making it available
+to hold ancillary data needed by the tests.
+
+As part of building a <span class="nb">test</span> binary, go <span class="nb">test</span> runs go vet on the package
+and its <span class="nb">test</span> <span class="nb">source</span> files to identify significant problems. If go vet
+finds any problems, go <span class="nb">test</span> reports those and does not run the <span class="nb">test</span>
+binary. Only a high-confidence subset of the default go vet checks are
+used. That subset is: <span class="s1">&#39;atomic&#39;</span>, <span class="s1">&#39;bool&#39;</span>, <span class="s1">&#39;buildtags&#39;</span>, <span class="s1">&#39;errorsas&#39;</span>,
+<span class="s1">&#39;ifaceassert&#39;</span>, <span class="s1">&#39;nilfunc&#39;</span>, <span class="s1">&#39;printf&#39;</span>, and <span class="s1">&#39;stringintconv&#39;</span>. You can see
+the documentation <span class="k">for</span> these and other vet tests via <span class="s2">&quot;go doc cmd/vet&quot;</span>.
+To disable the running of go vet, use the -vet<span class="o">=</span>off flag.
+
+All <span class="nb">test</span> output and summary lines are printed to the go command<span class="s1">&#39;s</span>
+<span class="s1">standard output, even if the test printed them to its own standard</span>
+<span class="s1">error. (The go command&#39;</span>s standard error is reserved <span class="k">for</span> printing
+errors building the tests.<span class="o">)</span>
+
+Go <span class="nb">test</span> runs <span class="k">in</span> two different modes:
+
+The first, called <span class="nb">local</span> directory mode, occurs when go <span class="nb">test</span> is
+invoked with no package arguments <span class="o">(</span><span class="k">for</span> example, <span class="s1">&#39;go test&#39;</span> or <span class="s1">&#39;go</span>
+<span class="s1">test -v&#39;</span><span class="o">)</span>. In this mode, go <span class="nb">test</span> compiles the package sources and
+tests found <span class="k">in</span> the current directory and <span class="k">then</span> runs the resulting
+<span class="nb">test</span> binary. In this mode, caching <span class="o">(</span>discussed below<span class="o">)</span> is disabled.
+After the package <span class="nb">test</span> finishes, go <span class="nb">test</span> prints a summary line
+showing the <span class="nb">test</span> status <span class="o">(</span><span class="s1">&#39;ok&#39;</span> or <span class="s1">&#39;FAIL&#39;</span><span class="o">)</span>, package name, and elapsed
+time.
+
+The second, called package list mode, occurs when go <span class="nb">test</span> is invoked
+with explicit package arguments <span class="o">(</span><span class="k">for</span> example <span class="s1">&#39;go test math&#39;</span>, <span class="s1">&#39;go</span>
+<span class="s1">test ./...&#39;</span>, and even <span class="s1">&#39;go test .&#39;</span><span class="o">)</span>. In this mode, go <span class="nb">test</span> compiles
+and tests each of the packages listed on the <span class="nb">command</span> line. If a
+package <span class="nb">test</span> passes, go <span class="nb">test</span> prints only the final <span class="s1">&#39;ok&#39;</span> summary
+line. If a package <span class="nb">test</span> fails, go <span class="nb">test</span> prints the full <span class="nb">test</span> output.
+If invoked with the -bench or -v flag, go <span class="nb">test</span> prints the full
+output even <span class="k">for</span> passing package tests, <span class="k">in</span> order to display the
+requested benchmark results or verbose logging. After the package
+tests <span class="k">for</span> all of the listed packages finish, and their output is
+printed, go <span class="nb">test</span> prints a final <span class="s1">&#39;FAIL&#39;</span> status <span class="k">if</span> any package <span class="nb">test</span>
+has failed.
+
+In package list mode only, go <span class="nb">test</span> caches successful package <span class="nb">test</span>
+results to avoid unnecessary repeated running of tests. When the
+result of a <span class="nb">test</span> can be recovered from the cache, go <span class="nb">test</span> will
+redisplay the previous output instead of running the <span class="nb">test</span> binary
+again. When this happens, go <span class="nb">test</span> prints <span class="s1">&#39;(cached)&#39;</span> <span class="k">in</span> place of the
+elapsed <span class="nb">time</span> <span class="k">in</span> the summary line.
+
+The rule <span class="k">for</span> a match <span class="k">in</span> the cache is that the run involves the same
+<span class="nb">test</span> binary and the flags on the <span class="nb">command</span> line come entirely from a
+restricted <span class="nb">set</span> of <span class="s1">&#39;cacheable&#39;</span> <span class="nb">test</span> flags, defined as -benchtime, -cpu,
+-list, -parallel, -run, -short, and -v. If a run of go <span class="nb">test</span> has any <span class="nb">test</span>
+or non-test flags outside this set, the result is not cached. To
+disable <span class="nb">test</span> caching, use any <span class="nb">test</span> flag or argument other than the
+cacheable flags. The idiomatic way to disable <span class="nb">test</span> caching explicitly
+is to use -count<span class="o">=</span><span class="m">1</span>. Tests that open files within the package<span class="s1">&#39;s source</span>
+<span class="s1">root (usually $GOPATH) or that consult environment variables only</span>
+<span class="s1">match future runs in which the files and environment variables are unchanged.</span>
+<span class="s1">A cached test result is treated as executing in no time at all,</span>
+<span class="s1">so a successful package test result will be cached and reused</span>
+<span class="s1">regardless of -timeout setting.</span>
+
+<span class="s1">In addition to the build flags, the flags handled by &#39;</span>go test<span class="s1">&#39; itself are:</span>
+
+<span class="s1">        -args</span>
+<span class="s1">            Pass the remainder of the command line (everything after -args)</span>
+<span class="s1">            to the test binary, uninterpreted and unchanged.</span>
+<span class="s1">            Because this flag consumes the remainder of the command line,</span>
+<span class="s1">            the package list (if present) must appear before this flag.</span>
+
+<span class="s1">        -c</span>
+<span class="s1">            Compile the test binary to pkg.test but do not run it</span>
+<span class="s1">            (where pkg is the last element of the package&#39;</span>s import path<span class="o">)</span>.
+            The file name can be changed with the -o flag.
+
+        -exec xprog
+            Run the <span class="nb">test</span> binary using xprog. The behavior is the same as
+            <span class="k">in</span> <span class="s1">&#39;go run&#39;</span>. See <span class="s1">&#39;go help run&#39;</span> <span class="k">for</span> details.
+
+        -i
+            Install packages that are dependencies of the test.
+            Do not run the test.
+            The -i flag is deprecated. Compiled packages are cached automatically.
+
+        -json
+            Convert <span class="nb">test</span> output to JSON suitable <span class="k">for</span> automated processing.
+            See <span class="s1">&#39;go doc test2json&#39;</span> <span class="k">for</span> the encoding details.
+
+        -o file
+            Compile the <span class="nb">test</span> binary to the named file.
+            The <span class="nb">test</span> still runs <span class="o">(</span>unless -c or -i is specified<span class="o">)</span>.
+
+The <span class="nb">test</span> binary also accepts flags that control execution of the test<span class="p">;</span> these
+flags are also accessible by <span class="s1">&#39;go test&#39;</span>. See <span class="s1">&#39;go help testflag&#39;</span> <span class="k">for</span> details.
+
+For more about build flags, see <span class="s1">&#39;go help build&#39;</span>.
+For more about specifying packages, see <span class="s1">&#39;go help packages&#39;</span>.
+
+See also: go build, go vet.
+</pre></div>
+</div>
+</li>
+<li><p><code class="docutils literal notranslate"> <span class="pre">go</span> <span class="pre">help</span> <span class="pre">testfunc</span></code></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>The <span class="s1">&#39;go test&#39;</span> <span class="nb">command</span> expects to find test, benchmark, and example functions
+<span class="k">in</span> the <span class="s2">&quot;*_test.go&quot;</span> files corresponding to the package under test.
+
+A <span class="nb">test</span> <span class="k">function</span> is one named TestXxx <span class="o">(</span>where Xxx does not start with a
+lower <span class="k">case</span> letter<span class="o">)</span> and should have the signature,
+
+        func TestXxx<span class="o">(</span>t *testing.T<span class="o">)</span> <span class="o">{</span> ... <span class="o">}</span>
+
+A benchmark <span class="k">function</span> is one named BenchmarkXxx and should have the signature,
+
+        func BenchmarkXxx<span class="o">(</span>b *testing.B<span class="o">)</span> <span class="o">{</span> ... <span class="o">}</span>
+
+An example <span class="k">function</span> is similar to a <span class="nb">test</span> <span class="k">function</span> but, instead of using
+*testing.T to report success or failure, prints output to os.Stdout.
+If the last comment <span class="k">in</span> the <span class="k">function</span> starts with <span class="s2">&quot;Output:&quot;</span> <span class="k">then</span> the output
+is compared exactly against the comment <span class="o">(</span>see examples below<span class="o">)</span>. If the last
+comment begins with <span class="s2">&quot;Unordered output:&quot;</span> <span class="k">then</span> the output is compared to the
+comment, however the order of the lines is ignored. An example with no such
+comment is compiled but not executed. An example with no text after
+<span class="s2">&quot;Output:&quot;</span> is compiled, executed, and expected to produce no output.
+
+Godoc displays the body of ExampleXxx to demonstrate the use
+of the <span class="k">function</span>, constant, or variable Xxx. An example of a method M with
+receiver <span class="nb">type</span> T or *T is named ExampleT_M. There may be multiple examples
+<span class="k">for</span> a given <span class="k">function</span>, constant, or variable, distinguished by a trailing _xxx,
+where xxx is a suffix not beginning with an upper <span class="k">case</span> letter.
+
+Here is an example of an example:
+
+        func ExamplePrintln<span class="o">()</span> <span class="o">{</span>
+                Println<span class="o">(</span><span class="s2">&quot;The output of\nthis example.&quot;</span><span class="o">)</span>
+                // Output: The output of
+                // this example.
+        <span class="o">}</span>
+
+Here is another example where the ordering of the output is ignored:
+
+        func ExamplePerm<span class="o">()</span> <span class="o">{</span>
+                <span class="k">for</span> _, value :<span class="o">=</span> range Perm<span class="o">(</span><span class="m">4</span><span class="o">)</span> <span class="o">{</span>
+                        fmt.Println<span class="o">(</span>value<span class="o">)</span>
+                <span class="o">}</span>
+
+                // Unordered output: <span class="m">4</span>
+                // <span class="m">2</span>
+                // <span class="m">1</span>
+                // <span class="m">3</span>
+                // <span class="m">0</span>
+        <span class="o">}</span>
+
+The entire <span class="nb">test</span> file is presented as the example when it contains a single
+example <span class="k">function</span>, at least one other <span class="k">function</span>, type, variable, or constant
+declaration, and no <span class="nb">test</span> or benchmark functions.
+
+See the documentation of the testing package <span class="k">for</span> more information.
+</pre></div>
+</div>
+</li>
+</ul>
+<p>相关文章</p>
+<ol class="simple">
+<li><p>https://studygolang.com/articles/23960</p></li>
+<li><p>http://c.biancheng.net/view/124.html</p></li>
+<li><p>https://www.cnblogs.com/sss4/p/12859027.html</p></li>
+</ol>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="第六章：工程实践" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../wend/about.html" class="btn btn-neutral float-right" title="关于作者" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; 版权所有 2021, 公众号:Java半颗糖.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

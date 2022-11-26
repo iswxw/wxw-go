@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>1. package/sync &mdash; Go 深入浅出 1.0.0 文档</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/translations.js"></script>
+        <script src="../_static/js/readmore.js"></script>
+        <script src="../_static/js/baidutongji.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="2. pkg/context" href="w052_context.html" />
+    <link rel="prev" title="第五章：源码学习" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> Go 深入浅出
+          </a>
+              <div class="version">
+                1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../preface.html">前言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../w01/index.html">第一章：基础知识</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../w02/index.html">第二章：面向对象</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../w03/index.html">第三章：并发编程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../w04/index.html">第四章：数据操作</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">第五章：源码学习</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">1. package/sync</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id1">1.1. 概览</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sync-waitgroup">1.2. sync.WaitGroup</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id2">1. 场景引入</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id3">2. 注意事项</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="w052_context.html">2. pkg/context</a></li>
+<li class="toctree-l2"><a class="reference internal" href="w053_json.html">3. package/encoding/json</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../w06/index.html">第六章：工程实践</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../wend/about.html">关于作者</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Go 深入浅出</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="index.html">第五章：源码学习</a> &raquo;</li>
+      <li><span class="section-number">1. </span>package/sync</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/w05/w051_sync.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="package-sync">
+<h1><span class="section-number">1. </span>package/sync<a class="headerlink" href="#package-sync" title="永久链接至标题">¶</a></h1>
+<blockquote>
+<div><p>来源：https://golang.google.cn/pkg/sync</p>
+</div></blockquote>
+<section id="id1">
+<h2><span class="section-number">1.1. </span>概览<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h2>
+<p>包同步提供了基本的同步原语，例如互斥锁。除了Once 和WaitGroup 类型之外，大多数类型都供低级库例程使用。更高级别的同步最好通过通道和通信来完成。</p>
+<p>不应复制包含在此包中定义的类型的值。</p>
+</section>
+<section id="sync-waitgroup">
+<h2><span class="section-number">1.2. </span>sync.WaitGroup<a class="headerlink" href="#sync-waitgroup" title="永久链接至标题">¶</a></h2>
+<blockquote>
+<div><p>导航：https://golang.google.cn/pkg/sync/#WaitGroup</p>
+</div></blockquote>
+<section id="id2">
+<h3>1. 场景引入<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h3>
+<p>经常会看到以下代码：</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+    <span class="s">&quot;fmt&quot;</span>
+    <span class="s">&quot;time&quot;</span>
+<span class="p">)</span>
+
+<span class="kd">func</span> <span class="nx">main</span><span class="p">(){</span>
+    <span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="p">&lt;</span> <span class="mi">100</span> <span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">{</span>
+        <span class="k">go</span> <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">i</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="nx">time</span><span class="p">.</span><span class="nx">Sleep</span><span class="p">(</span><span class="nx">time</span><span class="p">.</span><span class="nx">Second</span><span class="p">)</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>主线程为了等待goroutine都运行完毕，不得不在程序的末尾使用<code class="docutils literal notranslate"><span class="pre">time.Sleep()</span></code> 来睡眠一段时间，等待其他线程充分运行。</p>
+<p>对于简单的代码，100个for循环可以在1秒之内运行完毕，<code class="docutils literal notranslate"><span class="pre">time.Sleep()</span></code> 也可以达到想要的效果。</p>
+<p>但是对于实际生活的大多数场景来说，1秒是不够的，并且大部分时候我们都无法预知for循环内代码运行时间的长短。</p>
+<p>这时候就不能使用<code class="docutils literal notranslate"><span class="pre">time.Sleep()</span></code> 来完成等待操作了。</p>
+<p>可以考虑使用管道来完成上述操作：</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">c</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">bool</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+    <span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="p">&lt;</span> <span class="mi">100</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
+        <span class="k">go</span> <span class="kd">func</span><span class="p">(</span><span class="nx">i</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">i</span><span class="p">)</span>
+            <span class="nx">c</span> <span class="o">&lt;-</span> <span class="kc">true</span>
+        <span class="p">}(</span><span class="nx">i</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="p">&lt;</span> <span class="mi">100</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
+        <span class="o">&lt;-</span><span class="nx">c</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>首先可以肯定的是使用管道是能达到我们的目的的，而且不但能达到目的，还能十分完美的达到目的。</p>
+<p>但是管道在这里显得有些大材小用，因为它被设计出来不仅仅只是在这里用作简单的同步处理，在这里使用管道实际上是不合适的。而且假设我们有一万、十万甚至更多的<code class="docutils literal notranslate"><span class="pre">for</span></code>循环，也要申请同样数量大小的管道出来，对内存也是不小的开销。</p>
+<p>对于这种情况，go语言中有一个其他的工具<code class="docutils literal notranslate"><span class="pre">sync.WaitGroup</span></code> 能更加方便的帮助我们达到这个目的。</p>
+<p><code class="docutils literal notranslate"><span class="pre">WaitGroup</span></code> 对象内部有一个计数器，最初从0开始，它有三个方法：<code class="docutils literal notranslate"><span class="pre">Add(),</span> <span class="pre">Done(),</span> <span class="pre">Wait()</span></code> 用来控制计数器的数量。</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Add(n)</span></code> 把计数器设置为<code class="docutils literal notranslate"><span class="pre">n</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Done()</span></code> 每次把计数器<code class="docutils literal notranslate"><span class="pre">-1</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">wait()</span></code> 会阻塞代码的运行，直到计数器地值减为<code class="docutils literal notranslate"><span class="pre">0</span></code>。</p></li>
+</ul>
+<p>使用<code class="docutils literal notranslate"><span class="pre">WaitGroup</span></code> 将上述代码可以修改为：</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">wg</span> <span class="o">:=</span> <span class="nx">sync</span><span class="p">.</span><span class="nx">WaitGroup</span><span class="p">{}</span>
+    <span class="nx">wg</span><span class="p">.</span><span class="nx">Add</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+    <span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="p">&lt;</span> <span class="mi">100</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
+        <span class="k">go</span> <span class="kd">func</span><span class="p">(</span><span class="nx">i</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">i</span><span class="p">)</span>
+            <span class="nx">wg</span><span class="p">.</span><span class="nx">Done</span><span class="p">()</span>
+        <span class="p">}(</span><span class="nx">i</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="nx">wg</span><span class="p">.</span><span class="nx">Wait</span><span class="p">()</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>这里首先把<code class="docutils literal notranslate"><span class="pre">wg</span></code> 计数设置为<code class="docutils literal notranslate"><span class="pre">100</span></code>， 每个<code class="docutils literal notranslate"><span class="pre">for</span></code>循环运行完毕都把计数器减一，主函数中使用<code class="docutils literal notranslate"><span class="pre">Wait()</span></code> 一直阻塞，直到<code class="docutils literal notranslate"><span class="pre">wg</span></code>为零——也就是所有的<code class="docutils literal notranslate"><span class="pre">100</span></code>个<code class="docutils literal notranslate"><span class="pre">for</span></code>循环都运行完毕。相对于使用管道来说，<code class="docutils literal notranslate"><span class="pre">WaitGroup</span></code> 轻巧了许多。</p>
+</section>
+<section id="id3">
+<h3>2. 注意事项<a class="headerlink" href="#id3" title="永久链接至标题">¶</a></h3>
+<ul class="simple">
+<li><p>计数器不能为负值</p></li>
+<li><p>WaitGroup 对象不是一个引用类型</p></li>
+</ul>
+<p>（1）<strong>计数器不能为负值</strong></p>
+<p>我们不能使用<code class="docutils literal notranslate"><span class="pre">Add()</span></code> 给<code class="docutils literal notranslate"><span class="pre">wg</span></code> 设置一个负值，否则代码将会报错：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>panic: sync: negative WaitGroup counter
+
+goroutine <span class="m">1</span> <span class="o">[</span>running<span class="o">]</span>:
+sync.<span class="o">(</span>*WaitGroup<span class="o">)</span>.Add<span class="o">(</span>0x0, 0x0<span class="o">)</span>
+	D:/Installed/go1.17.1/src/sync/waitgroup.go:74 +0x105
+main.main<span class="o">()</span>
+	D:/Project/wxw-go/src/com.wxw/basic_grammar/14_waitgroup/demo01.go:15 +0x36
+</pre></div>
+</div>
+<p>同样使用<code class="docutils literal notranslate"><span class="pre">Done()</span></code> 也要特别注意不要把计数器设置成负数了。</p>
+<p>（2）<strong>WaitGroup 对象不是一个引用类型</strong></p>
+<p>WaitGroup对象不是一个引用类型，在通过函数传值的时候需要使用地址：</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">wg</span> <span class="o">:=</span> <span class="nx">sync</span><span class="p">.</span><span class="nx">WaitGroup</span><span class="p">{}</span>
+    
+    <span class="nx">wg</span><span class="p">.</span><span class="nx">Add</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+    <span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="p">&lt;</span> <span class="mi">100</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
+        <span class="k">go</span> <span class="nx">f</span><span class="p">(</span><span class="nx">i</span><span class="p">,</span> <span class="o">&amp;</span><span class="nx">wg</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="nx">wg</span><span class="p">.</span><span class="nx">Wait</span><span class="p">()</span>
+<span class="p">}</span>
+
+
+<span class="c1">// 一定要通过指针传值，不然进程会进入死锁状态</span>
+<span class="kd">func</span> <span class="nx">f</span><span class="p">(</span><span class="nx">i</span> <span class="kt">int</span><span class="p">,</span> <span class="nx">wg</span> <span class="o">*</span><span class="nx">sync</span><span class="p">.</span><span class="nx">WaitGroup</span><span class="p">)</span> <span class="p">{</span> 
+    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">i</span><span class="p">)</span>
+    <span class="nx">wg</span><span class="p">.</span><span class="nx">Done</span><span class="p">()</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="第五章：源码学习" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="w052_context.html" class="btn btn-neutral float-right" title="2. pkg/context" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; 版权所有 2021, 公众号:Java半颗糖.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

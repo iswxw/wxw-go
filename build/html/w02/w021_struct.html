@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>1. 面向对象之结构体 &mdash; Go 深入浅出 1.0.0 文档</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/translations.js"></script>
+        <script src="../_static/js/readmore.js"></script>
+        <script src="../_static/js/baidutongji.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="2. 面向对象之接口" href="w022_interface.html" />
+    <link rel="prev" title="第二章：面向对象" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> Go 深入浅出
+          </a>
+              <div class="version">
+                1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../preface.html">前言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../w01/index.html">第一章：基础知识</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">第二章：面向对象</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">1. 面向对象之结构体</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id2">1.1. 定义</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id3">1.2. 实例化</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id4">1.3. 初始化</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id5">1.4. 构造函数</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id6">1.5. 自定义方法</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id7">1.6. 任意类型添加方法</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id8">1.7. 结构体匿名字段</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id9">1.8. 嵌套结构体</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id10">1.9. 结构体的继承</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id11">1.10. 结构体字段的可见性</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#json">1.11. 结构体与JSON序列化</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tag">1.12. 结构体标签（Tag）</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#slicemap">1.13. 结构体中使用Slice和Map</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id12">1.14. 空结构体</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id13">1. 普通的理解</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id14">2. 空结构体的妙用</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="w022_interface.html">2. 面向对象之接口</a></li>
+<li class="toctree-l2"><a class="reference internal" href="w023_array.html">3. 面向对象之数组</a></li>
+<li class="toctree-l2"><a class="reference internal" href="w024_slice.html">4. 面向对象之切片Slice</a></li>
+<li class="toctree-l2"><a class="reference internal" href="w025_map.html">5. 面向对象之集合Map</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../w03/index.html">第三章：并发编程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../w04/index.html">第四章：数据操作</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../w05/index.html">第五章：源码学习</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../w06/index.html">第六章：工程实践</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../wend/about.html">关于作者</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Go 深入浅出</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="index.html">第二章：面向对象</a> &raquo;</li>
+      <li><span class="section-number">1. </span>面向对象之结构体</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/w02/w021_struct.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <p>对于面向对象编程的支持Go 语言设计得非常简洁而优雅。简洁之处在于，Go语言并没有沿 袭传统面向对象编程中的诸多概念，比如继承、虚函数、构造函数和析构函数、隐藏的this指 针等。优雅之处在于，Go语言对面向对象编程的支持是语言类型系统中的天然组成部分。整个 类型系统通过接口串联，浑然一体。我们在本章中将一一解释这些特性。</p>
+<section id="id1">
+<h1><span class="section-number">1. </span>面向对象之结构体<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h1>
+<p>Go语言的结构体（struct）和其他语言的类（class）有同等的地位，但Go语言放弃了包括继 承在内的大量面向对象特性，只保留了组合（composition）这个最基础的特性。</p>
+<p>例如，我们要定义一个矩形类型：</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="c1">// Rect 定义一个结构体</span>
+<span class="kd">type</span> <span class="nx">Rect</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">x</span><span class="p">,</span> <span class="nx">y</span>          <span class="kt">float64</span>
+	<span class="nx">width</span><span class="p">,</span> <span class="nx">height</span> <span class="kt">float64</span>
+<span class="p">}</span>
+
+<span class="c1">// Area 定义一个成员方法</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">r</span> <span class="o">*</span><span class="nx">Rect</span><span class="p">)</span> <span class="nx">Area</span><span class="p">()</span> <span class="kt">float64</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="nx">r</span><span class="p">.</span><span class="nx">x</span> <span class="o">*</span> <span class="nx">r</span><span class="p">.</span><span class="nx">height</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<section id="id2">
+<h2><span class="section-number">1.1. </span>定义<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h2>
+<p>使用<code class="docutils literal notranslate"><span class="pre">type</span></code>和<code class="docutils literal notranslate"><span class="pre">struct</span></code>关键字来定义结构体，具体代码格式如下：</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span>type 类型名 struct {
+    字段名 字段类型
+    字段名 字段类型
+    …
+}
+</pre></div>
+</div>
+<p>其中：</p>
+<ul class="simple">
+<li><p>类型名：标识自定义结构体的名称，在同一个包内不能重复。</p></li>
+<li><p>字段名：表示结构体字段名。结构体中的字段名必须唯一。</p></li>
+<li><p>字段类型：表示结构体字段的具体类型。</p></li>
+</ul>
+<p>举个例子，我们定义一个<code class="docutils literal notranslate"><span class="pre">Person</span></code>（人）结构体，代码如下</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">type</span> <span class="nx">person</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">name</span> <span class="kt">string</span>
+	<span class="nx">city</span> <span class="kt">string</span>
+	<span class="nx">age</span>  <span class="kt">int8</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>同样类型的字段也可以写在一行，</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">type</span> <span class="nx">person1</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">name</span><span class="p">,</span> <span class="nx">city</span> <span class="kt">string</span>
+	<span class="nx">age</span>        <span class="kt">int8</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>这样我们就拥有了一个<code class="docutils literal notranslate"><span class="pre">person</span></code>的自定义类型，它有<code class="docutils literal notranslate"><span class="pre">name</span></code>、<code class="docutils literal notranslate"><span class="pre">city</span></code>、<code class="docutils literal notranslate"><span class="pre">age</span></code>三个字段，分别表示姓名、城市和年龄。这样我们使用这个<code class="docutils literal notranslate"><span class="pre">person</span></code>结构体就能够很方便的在程序中表示和存储人信息了。</p>
+</section>
+<section id="id3">
+<h2><span class="section-number">1.2. </span>实例化<a class="headerlink" href="#id3" title="永久链接至标题">¶</a></h2>
+<p>只有当结构体实例化时，才会真正地分配内存。也就是必须实例化后才能使用结构体的字段。</p>
+<p>结构体本身也是一种类型，我们可以像声明内置类型一样使用<code class="docutils literal notranslate"><span class="pre">var</span></code>关键字声明结构体类型。</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">var</span> <span class="nx">结构体实例</span> <span class="nx">结构体类型</span>
+</pre></div>
+</div>
+<ul>
+<li><p><strong>基本实例化</strong></p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="s">&quot;fmt&quot;</span>
+
+<span class="c1">// person 定义一个结构体</span>
+<span class="kd">type</span> <span class="nx">person</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">name</span> <span class="kt">string</span>
+	<span class="nx">city</span> <span class="kt">string</span>
+	<span class="nx">age</span>  <span class="kt">int8</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="kd">var</span> <span class="nx">p1</span> <span class="nx">person</span>
+	<span class="nx">p1</span><span class="p">.</span><span class="nx">name</span> <span class="p">=</span> <span class="s">&quot;张三&quot;</span>
+	<span class="nx">p1</span><span class="p">.</span><span class="nx">city</span> <span class="p">=</span> <span class="s">&quot;北京&quot;</span>
+	<span class="nx">p1</span><span class="p">.</span><span class="nx">age</span> <span class="p">=</span> <span class="mi">12</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;p1=%v\n&quot;</span><span class="p">,</span> <span class="nx">p1</span><span class="p">)</span>  <span class="c1">//p1={张三 北京 12}</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;p1=%#v\n&quot;</span><span class="p">,</span> <span class="nx">p1</span><span class="p">)</span> <span class="c1">//p1=main.person{name:&quot;张三&quot;, city:&quot;北京&quot;, age:12}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>我们通过<code class="docutils literal notranslate"><span class="pre">.</span></code>来访问结构体的字段（成员变量）,例如<code class="docutils literal notranslate"><span class="pre">p1.name</span></code>和<code class="docutils literal notranslate"><span class="pre">p1.age</span></code>等。</p>
+</li>
+<li><p><strong>匿名结构体</strong></p>
+<p>在定义一些临时数据结构等场景下还可以使用匿名结构体。</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+    <span class="s">&quot;fmt&quot;</span>
+<span class="p">)</span>
+
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">user</span> <span class="kd">struct</span><span class="p">{</span><span class="nx">Name</span> <span class="kt">string</span><span class="p">;</span> <span class="nx">Age</span> <span class="kt">int</span><span class="p">}</span>
+    <span class="nx">user</span><span class="p">.</span><span class="nx">Name</span> <span class="p">=</span> <span class="s">&quot;小王子&quot;</span>
+    <span class="nx">user</span><span class="p">.</span><span class="nx">Age</span> <span class="p">=</span> <span class="mi">18</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;%#v\n&quot;</span><span class="p">,</span> <span class="nx">user</span><span class="p">)</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>创建指针类型的结构体</strong></p>
+<p>我们还可以通过使用<code class="docutils literal notranslate"><span class="pre">new</span></code>关键字对结构体进行实例化，得到的是结构体的地址。 格式如下：</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">var</span> <span class="nx">p2</span> <span class="p">=</span> <span class="nb">new</span><span class="p">(</span><span class="nx">person</span><span class="p">)</span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;%T\n&quot;</span><span class="p">,</span> <span class="nx">p2</span><span class="p">)</span>     <span class="c1">//*main.person</span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;p2=%#v\n&quot;</span><span class="p">,</span> <span class="nx">p2</span><span class="p">)</span> <span class="c1">//p2=&amp;main.person{name:&quot;&quot;, city:&quot;&quot;, age:0}</span>
+</pre></div>
+</div>
+<p>从打印的结果中我们可以看出<code class="docutils literal notranslate"><span class="pre">p2</span></code>是一个结构体指针。</p>
+<p>需要注意的是在Go语言中支持对结构体指针直接使用<code class="docutils literal notranslate"><span class="pre">.</span></code>来访问结构体的成员。</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">var</span> <span class="nx">p2</span> <span class="p">=</span> <span class="nb">new</span><span class="p">(</span><span class="nx">person</span><span class="p">)</span>
+<span class="nx">p2</span><span class="p">.</span><span class="nx">name</span> <span class="p">=</span> <span class="s">&quot;小王子&quot;</span>
+<span class="nx">p2</span><span class="p">.</span><span class="nx">age</span> <span class="p">=</span> <span class="mi">28</span>
+<span class="nx">p2</span><span class="p">.</span><span class="nx">city</span> <span class="p">=</span> <span class="s">&quot;上海&quot;</span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;p2=%#v\n&quot;</span><span class="p">,</span> <span class="nx">p2</span><span class="p">)</span> <span class="c1">//p2=&amp;main.person{name:&quot;小王子&quot;, city:&quot;上海&quot;, age:28}</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>取结构体地址实例化</strong></p>
+<p>使用<code class="docutils literal notranslate"><span class="pre">&amp;</span></code>对结构体进行取地址操作相当于对该结构体类型进行了一次<code class="docutils literal notranslate"><span class="pre">new</span></code>实例化操作。</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="nx">p3</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">person</span><span class="p">{}</span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;%T\n&quot;</span><span class="p">,</span> <span class="nx">p3</span><span class="p">)</span>     <span class="c1">//*main.person</span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;p3=%#v\n&quot;</span><span class="p">,</span> <span class="nx">p3</span><span class="p">)</span> <span class="c1">//p3=&amp;main.person{name:&quot;&quot;, city:&quot;&quot;, age:0}</span>
+<span class="nx">p3</span><span class="p">.</span><span class="nx">name</span> <span class="p">=</span> <span class="s">&quot;半颗糖&quot;</span>
+<span class="nx">p3</span><span class="p">.</span><span class="nx">age</span> <span class="p">=</span> <span class="mi">30</span>
+<span class="nx">p3</span><span class="p">.</span><span class="nx">city</span> <span class="p">=</span> <span class="s">&quot;成都&quot;</span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;p3=%#v\n&quot;</span><span class="p">,</span> <span class="nx">p3</span><span class="p">)</span> <span class="c1">//p3=&amp;main.person{name:&quot;半颗糖&quot;, city:&quot;成都&quot;, age:30}</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">p3.name</span> <span class="pre">=</span> <span class="pre">&quot;半颗糖&quot;</span></code>其实在底层是<code class="docutils literal notranslate"><span class="pre">(*p3).name</span> <span class="pre">=</span> <span class="pre">&quot;半颗糖&quot;</span></code>，这是Go语言帮我们实现的语法糖。</p>
+</li>
+</ul>
+</section>
+<section id="id4">
+<h2><span class="section-number">1.3. </span>初始化<a class="headerlink" href="#id4" title="永久链接至标题">¶</a></h2>
+<p>初始化主要分为两种：</p>
+<ul class="simple">
+<li><p>使用键值对初始化</p></li>
+<li><p>使用值得列表初始化</p></li>
+</ul>
+<p>没有初始化的结构体，其成员变量都是对应其类型的零值。</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="s">&quot;fmt&quot;</span>
+
+<span class="kd">type</span> <span class="nx">person1</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">name</span> <span class="kt">string</span>
+	<span class="nx">age</span> <span class="kt">int64</span>
+	<span class="nx">sex</span> <span class="kt">bool</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="kd">var</span> <span class="nx">p1</span>  <span class="nx">person1</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;p1 = %#v\n&quot;</span><span class="p">,</span><span class="nx">p1</span><span class="p">)</span>
+	<span class="c1">// p1 = main.person1{name:&quot;&quot;, age:0, sex:false}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<ul>
+<li><p><strong>使用键值对初始化</strong></p>
+<p>使用键值对对结构体进行初始化时，键对应结构体的字段，值对应该字段的初始值。</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="nx">p5</span> <span class="o">:=</span> <span class="nx">person</span><span class="p">{</span>
+	<span class="nx">name</span><span class="p">:</span> <span class="s">&quot;小王子&quot;</span><span class="p">,</span>
+	<span class="nx">city</span><span class="p">:</span> <span class="s">&quot;北京&quot;</span><span class="p">,</span>
+	<span class="nx">age</span><span class="p">:</span>  <span class="mi">18</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;p5=%#v\n&quot;</span><span class="p">,</span> <span class="nx">p5</span><span class="p">)</span> <span class="c1">//p5=main.person{name:&quot;小王子&quot;, city:&quot;北京&quot;, age:18}</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>使用值的列表初始化</strong></p>
+<p>初始化结构体的时候可以简写，也就是初始化的时候不写键，直接写值：</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="nx">p8</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">person</span><span class="p">{</span>
+	<span class="s">&quot;沙河娜扎&quot;</span><span class="p">,</span>
+	<span class="s">&quot;北京&quot;</span><span class="p">,</span>
+	<span class="mi">28</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;p8=%#v\n&quot;</span><span class="p">,</span> <span class="nx">p8</span><span class="p">)</span> <span class="c1">//p8=&amp;main.person{name:&quot;沙河娜扎&quot;, city:&quot;北京&quot;, age:28}</span>
+</pre></div>
+</div>
+<p>使用这种格式初始化时，需要注意：</p>
+<ol class="simple">
+<li><p>必须初始化结构体的所有字段。</p></li>
+<li><p>初始值的填充顺序必须与字段在结构体中的声明顺序一致。</p></li>
+<li><p>该方式不能和键值初始化方式混用。</p></li>
+</ol>
+</li>
+</ul>
+</section>
+<section id="id5">
+<h2><span class="section-number">1.4. </span>构造函数<a class="headerlink" href="#id5" title="永久链接至标题">¶</a></h2>
+<p>Go语言的结构体没有构造函数，我们可以自己实现。 例如，下方的代码就实现了一个<code class="docutils literal notranslate"><span class="pre">person</span></code>的构造函数。 因为<code class="docutils literal notranslate"><span class="pre">struct</span></code>是值类型，如果结构体比较复杂的话，值拷贝性能开销会比较大，所以该构造函数返回的是结构体指针类型。</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">func</span> <span class="nx">newPerson</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">city</span> <span class="kt">string</span><span class="p">,</span> <span class="nx">age</span> <span class="kt">int8</span><span class="p">)</span> <span class="o">*</span><span class="nx">person</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">person</span><span class="p">{</span><span class="nx">name</span><span class="p">:</span> <span class="nx">name</span><span class="p">,</span><span class="nx">city</span><span class="p">:</span> <span class="nx">city</span><span class="p">,</span><span class="nx">age</span><span class="p">:</span>  <span class="nx">age</span><span class="p">,}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>调用构造函数</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="nx">p9</span> <span class="o">:=</span> <span class="nx">newPerson</span><span class="p">(</span><span class="s">&quot;张三&quot;</span><span class="p">,</span> <span class="s">&quot;沙河&quot;</span><span class="p">,</span> <span class="mi">90</span><span class="p">)</span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;%#v\n&quot;</span><span class="p">,</span> <span class="nx">p9</span><span class="p">)</span> <span class="c1">//&amp;main.person{name:&quot;张三&quot;, city:&quot;沙河&quot;, age:90}</span>
+</pre></div>
+</div>
+</section>
+<section id="id6">
+<h2><span class="section-number">1.5. </span>自定义方法<a class="headerlink" href="#id6" title="永久链接至标题">¶</a></h2>
+<p>Go语言中的<code class="docutils literal notranslate"><span class="pre">方法（Method）</span></code>是一种作用于特定类型变量的函数。这种特定类型变量叫做<code class="docutils literal notranslate"><span class="pre">接收者（Receiver）</span></code>。接收者的概念就类似于其他语言中的<code class="docutils literal notranslate"><span class="pre">this</span></code>或者 <code class="docutils literal notranslate"><span class="pre">self</span></code>。</p>
+<p>方法的定义格式如下：</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">func</span> <span class="p">(</span><span class="nx">接收者变量</span> <span class="nx">接收者类型</span><span class="p">)</span> <span class="nx">方法名</span><span class="p">(</span><span class="nx">参数列表</span><span class="p">)</span> <span class="p">(</span><span class="nx">返回参数</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">函数体</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>其中，</p>
+<ul class="simple">
+<li><p>接收者变量：接收者中的参数变量名在命名时，官方建议使用接收者类型名称首字母的小写，而不是<code class="docutils literal notranslate"><span class="pre">self</span></code>、<code class="docutils literal notranslate"><span class="pre">this</span></code>之类的命名。例如，<code class="docutils literal notranslate"><span class="pre">Person</span></code>类型的接收者变量应该命名为 <code class="docutils literal notranslate"><span class="pre">p</span></code>，<code class="docutils literal notranslate"><span class="pre">Connector</span></code>类型的接收者变量应该命名为<code class="docutils literal notranslate"><span class="pre">c</span></code>等。</p></li>
+<li><p>接收者类型：接收者类型和参数类似，可以是指针类型和非指针类型。</p></li>
+<li><p>方法名、参数列表、返回参数：具体格式与函数定义相同。</p></li>
+</ul>
+<p>举例：</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="s">&quot;fmt&quot;</span>
+
+<span class="c1">// Person 结构体</span>
+<span class="kd">type</span> <span class="nx">Person</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">name</span> <span class="kt">string</span>
+	<span class="nx">age</span> <span class="kt">int64</span>
+<span class="p">}</span>
+
+<span class="c1">// NewPerson 构造函数</span>
+<span class="kd">func</span> <span class="nx">NewPerson</span><span class="p">(</span><span class="nx">name</span> <span class="kt">string</span><span class="p">,</span> <span class="nx">age</span> <span class="kt">int64</span><span class="p">)</span> <span class="o">*</span><span class="nx">Person</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">Person</span><span class="p">{</span><span class="nx">name</span><span class="p">:</span> <span class="nx">name</span><span class="p">,</span><span class="nx">age</span><span class="p">:</span> <span class="nx">age</span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// Dream Person 做梦的方法</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">p</span> <span class="nx">Person</span><span class="p">)</span> <span class="nx">Dream</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;%s 的梦想是学好Go语言！\n&quot;</span><span class="p">,</span><span class="nx">p</span><span class="p">.</span><span class="nx">name</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">p1</span> <span class="o">:=</span> <span class="nx">NewPerson</span><span class="p">(</span><span class="s">&quot;半颗糖&quot;</span><span class="p">,</span><span class="mi">18</span><span class="p">)</span>
+	<span class="nx">p1</span><span class="p">.</span><span class="nx">Dream</span><span class="p">()</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>方法与函数的区别是，函数不属于任何类型，方法属于特定的类型，而主要类型是：</p>
+<ul class="simple">
+<li><p>指针类型的方法</p></li>
+<li><p>值类型的方法</p></li>
+</ul>
+<p><strong>1. 指针类型的方法</strong></p>
+<p>指针类型方法的结构体的指针组成，由于指针的特性，调用方法时修改接收者指针的任意成员变量，在方法结束后，修改都是有效的。这种方式就十分接近于其他语言中面向对象中的<code class="docutils literal notranslate"><span class="pre">this</span></code>或者<code class="docutils literal notranslate"><span class="pre">self</span></code>。 例如我们为<code class="docutils literal notranslate"><span class="pre">Person</span></code>添加一个<code class="docutils literal notranslate"><span class="pre">SetAge</span></code>方法，来修改实例变量的年龄。</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="c1">// SetAge 设置p的年龄</span>
+<span class="c1">// 使用指针接收者</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">p</span> <span class="o">*</span><span class="nx">Person</span><span class="p">)</span> <span class="nx">SetAge</span><span class="p">(</span><span class="nx">newAge</span> <span class="kt">int8</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">p</span><span class="p">.</span><span class="nx">age</span> <span class="p">=</span> <span class="nx">newAge</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>调用该方法时：</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">p1</span> <span class="o">:=</span> <span class="nx">NewPerson</span><span class="p">(</span><span class="s">&quot;半颗糖&quot;</span><span class="p">,</span> <span class="mi">25</span><span class="p">)</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">p1</span><span class="p">.</span><span class="nx">age</span><span class="p">)</span> <span class="c1">// 25</span>
+	<span class="nx">p1</span><span class="p">.</span><span class="nx">SetAge</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">p1</span><span class="p">.</span><span class="nx">age</span><span class="p">)</span> <span class="c1">// 30</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>2. 值类型得方法</strong></p>
+<p>当方法作用于值类型接收者时，Go语言会在代码运行时将接收者的值复制一份。在值类型接收者的方法中可以获取接收者的成员值，但修改操作只是针对副本，无法修改接收者变量本身。</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="c1">// SetAge2 设置p的年龄</span>
+<span class="c1">// 使用值接收者</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">p</span> <span class="nx">Person</span><span class="p">)</span> <span class="nx">SetAge2</span><span class="p">(</span><span class="nx">newAge</span> <span class="kt">int8</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">p</span><span class="p">.</span><span class="nx">age</span> <span class="p">=</span> <span class="nx">newAge</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">p1</span> <span class="o">:=</span> <span class="nx">NewPerson</span><span class="p">(</span><span class="s">&quot;半颗糖&quot;</span><span class="p">,</span> <span class="mi">25</span><span class="p">)</span>
+	<span class="nx">p1</span><span class="p">.</span><span class="nx">Dream</span><span class="p">()</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">p1</span><span class="p">.</span><span class="nx">age</span><span class="p">)</span> <span class="c1">// 25</span>
+	<span class="nx">p1</span><span class="p">.</span><span class="nx">SetAge2</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span> <span class="c1">// (*p1).SetAge2(30)</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">p1</span><span class="p">.</span><span class="nx">age</span><span class="p">)</span> <span class="c1">// 25</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>那么什么时候应该使用指针类型方法呢？</strong></p>
+<ol class="simple">
+<li><p>需要修改接收者中的值</p></li>
+<li><p>接收者是拷贝代价比较大的大对象</p></li>
+<li><p>保证一致性，如果有某个方法使用了指针接收者，那么其他的方法也应该使用指针接收者。</p></li>
+</ol>
+</section>
+<section id="id7">
+<h2><span class="section-number">1.6. </span>任意类型添加方法<a class="headerlink" href="#id7" title="永久链接至标题">¶</a></h2>
+<p>在Go语言中，接收者的类型可以是任何类型，不仅仅是结构体，任何类型都可以拥有方法。 举个例子，我们基于内置的<code class="docutils literal notranslate"><span class="pre">int</span></code>类型使用type关键字可以定义新的自定义类型，然后为我们的自定义类型添加方法。</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="c1">//MyInt 将int定义为自定义MyInt类型</span>
+<span class="kd">type</span> <span class="nx">MyInt</span> <span class="kt">int</span>
+
+<span class="c1">//SayHello 为MyInt添加一个SayHello的方法</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">m</span> <span class="nx">MyInt</span><span class="p">)</span> <span class="nx">SayHello</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;Hello, 我是一个int。&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="kd">var</span> <span class="nx">m1</span> <span class="nx">MyInt</span>
+	<span class="nx">m1</span><span class="p">.</span><span class="nx">SayHello</span><span class="p">()</span> <span class="c1">//Hello, 我是一个int。</span>
+	<span class="nx">m1</span> <span class="p">=</span> <span class="mi">100</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;%#v  %T\n&quot;</span><span class="p">,</span> <span class="nx">m1</span><span class="p">,</span> <span class="nx">m1</span><span class="p">)</span> <span class="c1">//100  main.MyInt</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>注意事项：</strong> 非本地类型不能定义方法，也就是说我们不能给别的包的类型定义方法。</p>
+</section>
+<section id="id8">
+<h2><span class="section-number">1.7. </span>结构体匿名字段<a class="headerlink" href="#id8" title="永久链接至标题">¶</a></h2>
+<p>结构体允许其成员字段在声明时没有字段名而只有类型，这种没有名字的字段就称为匿名字段。</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="c1">//Person 结构体Person类型</span>
+<span class="kd">type</span> <span class="nx">Person</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="kt">string</span>
+	<span class="kt">int</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">p1</span> <span class="o">:=</span> <span class="nx">Person</span><span class="p">{</span>
+		<span class="s">&quot;小王子&quot;</span><span class="p">,</span>
+		<span class="mi">18</span><span class="p">,</span>
+	<span class="p">}</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;%#v\n&quot;</span><span class="p">,</span> <span class="nx">p1</span><span class="p">)</span>        <span class="c1">//main.Person{string:&quot;北京&quot;, int:18}</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">p1</span><span class="p">.</span><span class="kt">string</span><span class="p">,</span> <span class="nx">p1</span><span class="p">.</span><span class="kt">int</span><span class="p">)</span> <span class="c1">//北京 18</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>**注意：**这里匿名字段的说法并不代表没有字段名，而是默认会采用类型名作为字段名，结构体要求字段名称必须唯一，因此一个结构体中同种类型的匿名字段只能有一个。</p>
+</section>
+<section id="id9">
+<h2><span class="section-number">1.8. </span>嵌套结构体<a class="headerlink" href="#id9" title="永久链接至标题">¶</a></h2>
+<p>一个结构体中可以嵌套包含另一个结构体或结构体指针，就像下面的示例代码那样。</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="s">&quot;fmt&quot;</span>
+
+<span class="c1">// Address 地址结构体</span>
+<span class="kd">type</span> <span class="nx">Address</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">Province</span> <span class="kt">string</span>
+	<span class="nx">City</span> <span class="kt">string</span>
+<span class="p">}</span>
+
+<span class="c1">// User 用户结构体</span>
+<span class="kd">type</span> <span class="nx">User</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">Name</span> <span class="kt">string</span>
+	<span class="nx">Gender</span> <span class="kt">string</span>
+	<span class="nx">Address</span> <span class="nx">Address</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">user1</span> <span class="o">:=</span><span class="nx">User</span><span class="p">{</span>
+		<span class="nx">Name</span><span class="p">:</span> <span class="s">&quot;半颗糖&quot;</span><span class="p">,</span>
+		<span class="nx">Gender</span><span class="p">:</span> <span class="s">&quot;男&quot;</span><span class="p">,</span>
+		<span class="nx">Address</span><span class="p">:</span> <span class="nx">Address</span><span class="p">{</span>
+			<span class="nx">Province</span><span class="p">:</span> <span class="s">&quot;北京&quot;</span><span class="p">,</span>
+			<span class="nx">City</span><span class="p">:</span> <span class="s">&quot;北京&quot;</span><span class="p">,</span>
+		<span class="p">},</span>
+	<span class="p">}</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;user1=%#v\n&quot;</span><span class="p">,</span> <span class="nx">user1</span><span class="p">)</span>
+	<span class="c1">// user1=main.User{Name:&quot;半颗糖&quot;, Gender:&quot;男&quot;, Address:main.Address{Province:&quot;北京&quot;, City:&quot;北京&quot;}}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<ul>
+<li><p><strong>嵌套匿名字段</strong></p>
+<p>上面user结构体中嵌套的<code class="docutils literal notranslate"><span class="pre">Address</span></code>结构体也可以采用匿名字段的方式，例如：</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="c1">//Address 地址结构体</span>
+<span class="kd">type</span> <span class="nx">Address</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">Province</span> <span class="kt">string</span>
+	<span class="nx">City</span>     <span class="kt">string</span>
+<span class="p">}</span>
+
+<span class="c1">//User 用户结构体</span>
+<span class="kd">type</span> <span class="nx">User</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">Name</span>    <span class="kt">string</span>
+	<span class="nx">Gender</span>  <span class="kt">string</span>
+	<span class="nx">Address</span> <span class="c1">//匿名字段</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="kd">var</span> <span class="nx">user2</span> <span class="nx">User</span>
+	<span class="nx">user2</span><span class="p">.</span><span class="nx">Name</span> <span class="p">=</span> <span class="s">&quot;半颗糖&quot;</span>
+	<span class="nx">user2</span><span class="p">.</span><span class="nx">Gender</span> <span class="p">=</span> <span class="s">&quot;男&quot;</span>
+	<span class="nx">user2</span><span class="p">.</span><span class="nx">Address</span><span class="p">.</span><span class="nx">Province</span> <span class="p">=</span> <span class="s">&quot;山东&quot;</span>    <span class="c1">// 匿名字段默认使用类型名作为字段名</span>
+	<span class="nx">user2</span><span class="p">.</span><span class="nx">City</span> <span class="p">=</span> <span class="s">&quot;威海&quot;</span>                <span class="c1">// 匿名字段可以省略</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;user2=%#v\n&quot;</span><span class="p">,</span> <span class="nx">user2</span><span class="p">)</span> <span class="c1">//user2=main.User{Name:&quot;小王子&quot;, Gender:&quot;男&quot;, Address:main.Address{Province:&quot;山东&quot;, City:&quot;威海&quot;}}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>当访问结构体成员时会先在结构体中查找该字段，找不到再去嵌套的匿名字段中查找。</p>
+</li>
+<li><p><strong>嵌套结构体的字段名冲突</strong></p>
+<p>嵌套结构体内部可能存在相同的字段名。在这种情况下为了避免歧义需要通过指定具体的内嵌结构体字段名。</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="c1">//Address 地址结构体</span>
+<span class="kd">type</span> <span class="nx">Address</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">Province</span>   <span class="kt">string</span>
+	<span class="nx">City</span>       <span class="kt">string</span>
+	<span class="nx">CreateTime</span> <span class="kt">string</span>
+<span class="p">}</span>
+
+<span class="c1">//Email 邮箱结构体</span>
+<span class="kd">type</span> <span class="nx">Email</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">Account</span>    <span class="kt">string</span>
+	<span class="nx">CreateTime</span> <span class="kt">string</span>
+<span class="p">}</span>
+
+<span class="c1">//User 用户结构体</span>
+<span class="kd">type</span> <span class="nx">User</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">Name</span>   <span class="kt">string</span>
+	<span class="nx">Gender</span> <span class="kt">string</span>
+	<span class="nx">Address</span>
+	<span class="nx">Email</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="kd">var</span> <span class="nx">user3</span> <span class="nx">User</span>
+	<span class="nx">user3</span><span class="p">.</span><span class="nx">Name</span> <span class="p">=</span> <span class="s">&quot;沙河娜扎&quot;</span>
+	<span class="nx">user3</span><span class="p">.</span><span class="nx">Gender</span> <span class="p">=</span> <span class="s">&quot;男&quot;</span>
+	<span class="c1">// user3.CreateTime = &quot;2019&quot; //ambiguous selector user3.CreateTime</span>
+	<span class="nx">user3</span><span class="p">.</span><span class="nx">Address</span><span class="p">.</span><span class="nx">CreateTime</span> <span class="p">=</span> <span class="s">&quot;2000&quot;</span> <span class="c1">//指定Address结构体中的CreateTime</span>
+	<span class="nx">user3</span><span class="p">.</span><span class="nx">Email</span><span class="p">.</span><span class="nx">CreateTime</span> <span class="p">=</span> <span class="s">&quot;2000&quot;</span>   <span class="c1">//指定Email结构体中的CreateTime</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+<section id="id10">
+<h2><span class="section-number">1.9. </span>结构体的继承<a class="headerlink" href="#id10" title="永久链接至标题">¶</a></h2>
+<p>Go语言中使用结构体也可以实现其他编程语言中面向对象的继承。</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="s">&quot;fmt&quot;</span>
+
+<span class="c1">// Animal 结构体</span>
+<span class="kd">type</span> <span class="nx">Animal</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">name</span> <span class="kt">string</span>
+<span class="p">}</span>
+
+<span class="c1">// 指针类型的方法</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">a</span> <span class="o">*</span><span class="nx">Animal</span><span class="p">)</span> <span class="nx">move</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;%s 会动！\n&quot;</span><span class="p">,</span><span class="nx">a</span><span class="p">.</span><span class="nx">name</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1">// Dog 结构体</span>
+<span class="kd">type</span> <span class="nx">Dog</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">Feet</span> <span class="kt">int8</span>
+	<span class="o">*</span><span class="nx">Animal</span> <span class="c1">// 通过嵌套匿名结构体实现继承</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">d</span> <span class="o">*</span><span class="nx">Dog</span><span class="p">)</span> <span class="nx">wang</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;%s 会汪汪叫 \n&quot;</span><span class="p">,</span><span class="nx">d</span><span class="p">.</span><span class="nx">name</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">d1</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">Dog</span><span class="p">{</span>
+		<span class="nx">Feet</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+		<span class="nx">Animal</span><span class="p">:</span> <span class="o">&amp;</span><span class="nx">Animal</span><span class="p">{</span> <span class="c1">//注意嵌套的是结构体指针</span>
+			<span class="nx">name</span><span class="p">:</span> <span class="s">&quot;乐乐&quot;</span><span class="p">,</span>
+		<span class="p">},</span>
+	<span class="p">}</span>
+	<span class="nx">d1</span><span class="p">.</span><span class="nx">wang</span><span class="p">()</span> <span class="c1">//乐乐会汪汪汪~</span>
+	<span class="nx">d1</span><span class="p">.</span><span class="nx">move</span><span class="p">()</span> <span class="c1">//乐乐会动！</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="id11">
+<h2><span class="section-number">1.10. </span>结构体字段的可见性<a class="headerlink" href="#id11" title="永久链接至标题">¶</a></h2>
+<p>结构体中字段：</p>
+<ul class="simple">
+<li><p><strong>大写</strong> 开头表示可公开访问</p></li>
+<li><p><strong>小写</strong> 表示私有（仅在定义当前结构体的包中可访问）。</p></li>
+</ul>
+</section>
+<section id="json">
+<h2><span class="section-number">1.11. </span>结构体与JSON序列化<a class="headerlink" href="#json" title="永久链接至标题">¶</a></h2>
+<p>JSON(JavaScript Object Notation) 是一种轻量级的数据交换格式。易于人阅读和编写。同时也易于机器解析和生成。JSON键值对是用来保存JS对象的一种方式，键/值对组合中的键名写在前面并用双引号<code class="docutils literal notranslate"><span class="pre">&quot;&quot;</span></code>包裹，使用冒号<code class="docutils literal notranslate"><span class="pre">:</span></code>分隔，然后紧接着值；多个键值之间使用英文<code class="docutils literal notranslate"><span class="pre">,</span></code>分隔。</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+	<span class="s">&quot;encoding/json&quot;</span>
+	<span class="s">&quot;fmt&quot;</span>
+<span class="p">)</span>
+
+<span class="c1">// Student 学生</span>
+<span class="kd">type</span> <span class="nx">Student</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">ID</span> <span class="kt">int</span>
+	<span class="nx">Gender</span> <span class="kt">string</span>
+	<span class="nx">Name</span> <span class="kt">string</span>
+<span class="p">}</span>
+
+<span class="c1">// Class 班级</span>
+<span class="kd">type</span> <span class="nx">Class</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">Title</span> <span class="kt">string</span>
+	<span class="nx">Students</span> <span class="p">[]</span><span class="o">*</span><span class="nx">Student</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">c</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">Class</span><span class="p">{</span>
+		<span class="nx">Title</span><span class="p">:</span> <span class="s">&quot;101&quot;</span><span class="p">,</span>
+		<span class="nx">Students</span><span class="p">:</span> <span class="nb">make</span><span class="p">([]</span><span class="o">*</span><span class="nx">Student</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">200</span><span class="p">),</span>
+	<span class="p">}</span>
+	<span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="p">&lt;</span> <span class="mi">10</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
+		<span class="nx">stu</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">Student</span><span class="p">{</span>
+			<span class="nx">Name</span><span class="p">:</span> <span class="nx">fmt</span><span class="p">.</span><span class="nx">Sprintf</span><span class="p">(</span><span class="s">&quot;stu%02d&quot;</span><span class="p">,</span><span class="nx">i</span><span class="p">),</span>
+			<span class="nx">Gender</span><span class="p">:</span> <span class="s">&quot;男&quot;</span><span class="p">,</span>
+			<span class="nx">ID</span><span class="p">:</span> <span class="nx">i</span><span class="p">,</span>
+		<span class="p">}</span>
+		<span class="nx">c</span><span class="p">.</span><span class="nx">Students</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">c</span><span class="p">.</span><span class="nx">Students</span><span class="p">,</span><span class="nx">stu</span><span class="p">)</span>
+	<span class="p">}</span>
+
+	<span class="c1">// JSON序列化，结构体 ——&gt; JSON格式字符串</span>
+	<span class="nx">data</span><span class="p">,</span><span class="nx">err</span> <span class="o">:=</span> <span class="nx">json</span><span class="p">.</span><span class="nx">Marshal</span><span class="p">(</span><span class="nx">c</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;json marshal failed!&quot;</span><span class="p">)</span>
+		<span class="k">return</span>
+	<span class="p">}</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;json = %s\n&quot;</span><span class="p">,</span><span class="nx">data</span><span class="p">)</span>
+
+	<span class="c1">//JSON反序列化：JSON格式的字符串--&gt;结构体</span>
+	<span class="nx">str</span> <span class="o">:=</span> <span class="s">`{&quot;Title&quot;:&quot;101&quot;,&quot;Students&quot;:[{&quot;ID&quot;:0,&quot;Gender&quot;:&quot;男&quot;,&quot;Name&quot;:&quot;stu00&quot;},{&quot;ID&quot;:1,&quot;Gender&quot;:&quot;男&quot;,&quot;Name&quot;:&quot;stu01&quot;}</span>
+<span class="s">	{&quot;ID&quot;:2,&quot;Gender&quot;:&quot;男&quot;,&quot;Name&quot;:&quot;stu02&quot;},{&quot;ID&quot;:3,&quot;Gender&quot;:&quot;男&quot;,&quot;Name&quot;:&quot;stu03&quot;},{&quot;ID&quot;:4,&quot;Gender&quot;:&quot;男&quot;,&quot;Name&quot;:&quot;stu04&quot;},</span>
+<span class="s">	{&quot;ID&quot;:5,&quot;Gender&quot;:&quot;男&quot;,&quot;Name&quot;:&quot;stu05&quot;},{&quot;ID&quot;:6,&quot;Gender&quot;:&quot;男&quot;,&quot;Name&quot;:&quot;stu06&quot;},{&quot;ID&quot;:7,&quot;Gender&quot;:&quot;男&quot;,&quot;Name&quot;:&quot;stu07&quot;},</span>
+<span class="s">	{&quot;ID&quot;:8,&quot;Gender&quot;:&quot;男&quot;,&quot;Name&quot;:&quot;stu08&quot;},{&quot;ID&quot;:9,&quot;Gender&quot;:&quot;男&quot;,&quot;Name&quot;:&quot;stu09&quot;}]}`</span>
+	<span class="nx">c1</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">Class</span><span class="p">{}</span>
+	<span class="nx">err</span> <span class="p">=</span> <span class="nx">json</span><span class="p">.</span><span class="nx">Unmarshal</span><span class="p">([]</span><span class="nb">byte</span><span class="p">(</span><span class="nx">str</span><span class="p">),</span> <span class="nx">c1</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;json unmarshal failed!&quot;</span><span class="p">)</span>
+		<span class="k">return</span>
+	<span class="p">}</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;%#v\n&quot;</span><span class="p">,</span> <span class="nx">c1</span><span class="p">)</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="tag">
+<h2><span class="section-number">1.12. </span>结构体标签（Tag）<a class="headerlink" href="#tag" title="永久链接至标题">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">Tag</span></code>是结构体的元信息，可以在运行的时候通过反射的机制读取出来。 <code class="docutils literal notranslate"><span class="pre">Tag</span></code>在结构体字段的后方定义，由一对<strong>反引号</strong>包裹起来，具体的格式如下：</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="s">`key1:&quot;value1&quot; key2:&quot;value2&quot;`</span>
+</pre></div>
+</div>
+<p>结构体tag由一个或多个键值对组成。键与值使用冒号分隔，值用双引号括起来。同一个结构体字段可以设置多个键值对tag，不同的键值对之间使用空格分隔。</p>
+<p><strong>注意事项：</strong></p>
+<ol class="simple">
+<li><p>为结构体编写<code class="docutils literal notranslate"><span class="pre">Tag</span></code>时，必须严格遵守键值对的规则。</p></li>
+<li><p>结构体标签的解析代码的容错能力很差，一旦格式写错，编译和运行时都不会提示任何错误，通过反射也无法正确取值。例如不要在key和value之间添加空格。</p></li>
+</ol>
+<p>例如：我们为<code class="docutils literal notranslate"><span class="pre">Student</span></code>结构体的每个字段定义json序列化时使用的Tag：</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+	<span class="s">&quot;encoding/json&quot;</span>
+	<span class="s">&quot;fmt&quot;</span>
+<span class="p">)</span>
+
+<span class="c1">// Teacher 学生</span>
+<span class="kd">type</span> <span class="nx">Teacher</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">ID</span>     <span class="kt">int</span>    <span class="s">`json:&quot;id&quot;`</span> <span class="c1">//通过指定tag实现json序列化该字段时的key</span>
+	<span class="nx">Gender</span> <span class="kt">string</span> <span class="c1">//json序列化是默认使用字段名作为key</span>
+	<span class="nx">name</span>   <span class="kt">string</span> <span class="c1">//私有不能被json包访问</span>
+
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">s1</span> <span class="o">:=</span> <span class="nx">Teacher</span><span class="p">{</span>
+		<span class="nx">ID</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+		<span class="nx">Gender</span><span class="p">:</span> <span class="s">&quot;男&quot;</span><span class="p">,</span>
+		<span class="nx">name</span><span class="p">:</span> <span class="s">&quot;半颗糖&quot;</span><span class="p">,</span>
+	<span class="p">}</span>
+	<span class="c1">// 序列化</span>
+	<span class="nx">data</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">json</span><span class="p">.</span><span class="nx">Marshal</span><span class="p">(</span><span class="nx">s1</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;json marshal failed!&quot;</span><span class="p">)</span>
+		<span class="k">return</span>
+	<span class="p">}</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;json str:%s\n&quot;</span><span class="p">,</span> <span class="nx">data</span><span class="p">)</span> <span class="c1">//json str:{&quot;id&quot;:1,&quot;Gender&quot;:&quot;男&quot;}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="slicemap">
+<h2><span class="section-number">1.13. </span>结构体中使用Slice和Map<a class="headerlink" href="#slicemap" title="永久链接至标题">¶</a></h2>
+<p>因为slice和map这两种数据类型都包含了指向底层数据的指针，因此我们在需要复制它们时要特别注意。我们来看下面的例子：</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="s">&quot;fmt&quot;</span>
+
+<span class="kd">type</span> <span class="nx">Person1</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">name</span>   <span class="kt">string</span>
+	<span class="nx">age</span>    <span class="kt">int8</span>
+	<span class="nx">dreams</span> <span class="p">[]</span><span class="kt">string</span>
+<span class="p">}</span>
+
+<span class="c1">// SetDreams 通过指针定义方法</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">p</span> <span class="o">*</span><span class="nx">Person1</span><span class="p">)</span> <span class="nx">SetDreams</span><span class="p">(</span><span class="nx">dreams</span> <span class="p">[]</span><span class="kt">string</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">p</span><span class="p">.</span><span class="nx">dreams</span> <span class="p">=</span> <span class="nx">dreams</span>
+<span class="p">}</span>
+
+<span class="c1">// SetDreams1 正确的做法是在方法中使用传入的slice的拷贝进行结构体赋值。</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">p1</span> <span class="o">*</span><span class="nx">Person1</span><span class="p">)</span> <span class="nx">SetDreams1</span><span class="p">(</span><span class="nx">dreams1</span> <span class="p">[]</span><span class="kt">string</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">p1</span><span class="p">.</span><span class="nx">dreams</span> <span class="p">=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">string</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="nx">dreams1</span><span class="p">))</span>
+	<span class="nb">copy</span><span class="p">(</span><span class="nx">p1</span><span class="p">.</span><span class="nx">dreams</span><span class="p">,</span> <span class="nx">dreams1</span><span class="p">)</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">p1</span> <span class="o">:=</span> <span class="nx">Person1</span><span class="p">{</span><span class="nx">name</span><span class="p">:</span> <span class="s">&quot;半颗糖&quot;</span><span class="p">,</span> <span class="nx">age</span><span class="p">:</span> <span class="mi">18</span><span class="p">}</span>
+	<span class="nx">data</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">string</span><span class="p">{</span><span class="s">&quot;吃饭&quot;</span><span class="p">,</span> <span class="s">&quot;睡觉&quot;</span><span class="p">,</span> <span class="s">&quot;打豆豆&quot;</span><span class="p">}</span>
+	<span class="nx">p1</span><span class="p">.</span><span class="nx">SetDreams</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span>
+
+	<span class="c1">// 你真的想要修改 p1.dreams 吗？</span>
+	<span class="nx">data</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">=</span> <span class="s">&quot;不睡觉&quot;</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">p1</span><span class="p">.</span><span class="nx">dreams</span><span class="p">)</span>  <span class="c1">// ?</span>
+
+    <span class="nx">p1</span><span class="p">.</span><span class="nx">SetDreams1</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span>
+	<span class="nx">data</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">=</span> <span class="s">&quot;睡觉1&quot;</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">p1</span><span class="p">.</span><span class="nx">dreams</span><span class="p">)</span> <span class="c1">//</span>
+
+<span class="p">}</span>
+<span class="o">----</span>
+<span class="p">[</span><span class="nx">吃饭</span> <span class="nx">不睡觉</span> <span class="nx">打豆豆</span><span class="p">]</span>
+<span class="p">[</span><span class="nx">吃饭</span> <span class="nx">不睡觉</span> <span class="nx">打豆豆</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>同样的问题也存在于返回值slice和map的情况，在实际编码过程中一定要注意这个问题。</p>
+</section>
+<section id="id12">
+<h2><span class="section-number">1.14. </span>空结构体<a class="headerlink" href="#id12" title="永久链接至标题">¶</a></h2>
+<section id="id13">
+<h3>1. 普通的理解<a class="headerlink" href="#id13" title="永久链接至标题">¶</a></h3>
+<p>在结构体中，可以包裹一系列与对象相关的属性，但若该对象没有属性呢？那它就是一个空结构体。</p>
+<p>特点：</p>
+<ul class="simple">
+<li><p>不占用内存</p></li>
+<li><p>地址不变</p></li>
+</ul>
+<p>空结构体，和正常的结构体一样，可以接收方法函数。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">type</span> <span class="n">Lamp</span> <span class="n">struct</span><span class="p">{}</span>
+
+<span class="n">func</span> <span class="p">(</span><span class="n">l</span> <span class="n">Lamp</span><span class="p">)</span> <span class="n">On</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">println</span><span class="p">(</span><span class="s2">&quot;On&quot;</span><span class="p">)</span>
+
+<span class="p">}</span>
+<span class="n">func</span> <span class="p">(</span><span class="n">l</span> <span class="n">Lamp</span><span class="p">)</span> <span class="n">Off</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">println</span><span class="p">(</span><span class="s2">&quot;Off&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="id14">
+<h3>2. 空结构体的妙用<a class="headerlink" href="#id14" title="永久链接至标题">¶</a></h3>
+<p>空结构体的表象特征，就是没有任何属性，而从更深层次的角度来说，空结构体是一个不占用空间的对象。</p>
+<p>空结构体 <code class="docutils literal notranslate"><span class="pre">struct{</span> <span class="pre">}</span></code> 为什么会存在的核心理由就是为了<strong>节省内存</strong>。当你需要一个结构体，但是却丝毫不关系里面的内容，那么就可以考虑空结构体。golang 核心的几个复合结构 <code class="docutils literal notranslate"><span class="pre">map</span></code> ，<code class="docutils literal notranslate"><span class="pre">chan</span></code> ，<code class="docutils literal notranslate"><span class="pre">slice</span></code> 都能结合 <code class="docutils literal notranslate"><span class="pre">struct{}</span></code> 使用。</p>
+<p><strong><code class="docutils literal notranslate"><span class="pre">map</span></code> &amp; `struct{}</strong></p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="c1">// 创建 map</span>
+<span class="nx">m</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">map</span><span class="p">[</span><span class="kt">int</span><span class="p">]</span><span class="kd">struct</span><span class="p">{})</span>
+<span class="c1">// 赋值</span>
+<span class="nx">m</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">=</span> <span class="kd">struct</span><span class="p">{}{}</span>
+<span class="c1">// 判断 key 键存不存在</span>
+<span class="nx">_</span><span class="p">,</span> <span class="nx">ok</span> <span class="o">:=</span> <span class="nx">m</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>一般 <code class="docutils literal notranslate"><span class="pre">map</span></code> 和 <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">{}</span></code> 的结合使用场景是：只关心 key，不关注值。比如查询 key 是否存在就可以用这个数据结构，通过 <code class="docutils literal notranslate"><span class="pre">ok</span></code> 的值来判断这个键是否存在，<code class="docutils literal notranslate"><span class="pre">map</span></code> 的查询复杂度是 O(1) 的，查询很快。</p>
+<p>你当然可以用 <code class="docutils literal notranslate"><span class="pre">map[int]bool</span></code> 这种类型来代替，功能也一样能实现，很多人考虑使用 <code class="docutils literal notranslate"><span class="pre">map[int]struct{}</span></code> 这种使用方式真的就是为了省点内存，当然大部分情况下，这种节省是不足道哉的，所以究竟要不要这样使用还是要看具体场景。</p>
+<p><strong><code class="docutils literal notranslate"><span class="pre">chan</span></code> &amp; <code class="docutils literal notranslate"><span class="pre">struct{}</span></code></strong></p>
+<p><code class="docutils literal notranslate"><span class="pre">channel</span></code> 和 <code class="docutils literal notranslate"><span class="pre">struct{}</span></code> 结合是一个最经典的场景，<code class="docutils literal notranslate"><span class="pre">struct{}</span></code> 通常作为一个信号来传输，并不关注其中内容。</p>
+<ul class="simple">
+<li><p>chan 本质的数据结构是一个管理结构加上一个 ringbuffer ，如果 <code class="docutils literal notranslate"><span class="pre">struct{}</span></code> 作为元素的话，ringbuffer 就是 0 分配的。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">chan</span></code> 和 <code class="docutils literal notranslate"><span class="pre">struct{}</span></code> 结合基本只有一种用法，就是<strong>信号传递</strong>，空结构体本身携带不了值，所以也只有这一种用法啦，一般来说，配合 no buffer 的 channel 使用。</p></li>
+</ul>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="c1">// 创建一个信号通道</span>
+<span class="nx">waitc</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kd">struct</span><span class="p">{})</span>
+
+<span class="c1">// ...</span>
+<span class="nx">goroutine</span> <span class="mi">1</span><span class="p">:</span>
+    <span class="c1">// 发送信号: 投递元素</span>
+    <span class="nx">waitc</span> <span class="o">&lt;-</span> <span class="kd">struct</span><span class="p">{}</span>
+    <span class="c1">// 发送信号: 关闭</span>
+    <span class="nb">close</span><span class="p">(</span><span class="nx">waitc</span><span class="p">)</span>
+
+<span class="nx">goroutine</span> <span class="mi">2</span><span class="p">:</span>
+    <span class="k">select</span> <span class="p">{</span>
+    <span class="c1">// 收到信号，做出对应的动作</span>
+    <span class="k">case</span> <span class="o">&lt;-</span><span class="nx">waitc</span><span class="p">:</span>
+    <span class="p">}</span>
+</pre></div>
+</div>
+<p>这种场景我们思考下，是否一定是非 <code class="docutils literal notranslate"><span class="pre">struct{}</span></code> 不可？其实不是，而且也不多这几个字节的内存，所以这种情况真的就只是不关心 <code class="docutils literal notranslate"><span class="pre">chan</span></code> 的元素值而已，所以才用的 <code class="docutils literal notranslate"><span class="pre">struct{}</span></code>。</p>
+<p><strong>总结</strong></p>
+<ol class="simple">
+<li><p>空结构体也是结构体，只是 size 为 0 的类型而已；</p></li>
+<li><p>所有的空结构体都有一个共同的地址：<code class="docutils literal notranslate"><span class="pre">zerobase</span></code> 的地址；</p></li>
+<li><p>空结构体可以作为 receiver ，receiver 是空结构体作为值的时候，编译器其实直接忽略了第一个参数的传递，编译器在编译期间就能确认生成对应的代码；</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">map</span></code> 和 <code class="docutils literal notranslate"><span class="pre">struct{}</span></code> 结合使用常常用来节省一点点内存，使用的场景一般用来判断 key 存在于 <code class="docutils literal notranslate"><span class="pre">map</span></code>；</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">chan</span></code> 和 <code class="docutils literal notranslate"><span class="pre">struct{}</span></code> 结合使用是一般用于信号同步的场景，用意并不是节省内存，而是我们真的并不关心 chan 元素的值；</p></li>
+</ol>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="第二章：面向对象" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="w022_interface.html" class="btn btn-neutral float-right" title="2. 面向对象之接口" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; 版权所有 2021, 公众号:Java半颗糖.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>3. 基础知识之函数 &mdash; Go 深入浅出 1.0.0 文档</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/translations.js"></script>
+        <script src="../_static/js/readmore.js"></script>
+        <script src="../_static/js/baidutongji.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="第二章：面向对象" href="../w02/index.html" />
+    <link rel="prev" title="2. 基础知识之异常处理" href="w012_exception.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> Go 深入浅出
+          </a>
+              <div class="version">
+                1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../preface.html">前言</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">第一章：基础知识</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="w011_process.html">1. 基础知识之流程控制</a></li>
+<li class="toctree-l2"><a class="reference internal" href="w012_exception.html">2. 基础知识之异常处理</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">3. 基础知识之函数</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id2">3.1. 函数初识</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id3">1. 定义</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id4">2. 函数调用</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id5">3. 参数</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id6">4. 返回值</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#id7">3.2. 函数进阶</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id8">1. 变量作用域</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id9">2. 函数类型与变量</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#id12">3.3. 高阶函数</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id13">1. 函数作为参数</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id14">2. 函数作为返回值</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#id15">3.4. 匿名函数和闭包</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id16">1. 匿名函数</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id17">2. 闭包</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#id18">3.5. 内置函数</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#make">1. make</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#new">2. new</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../w02/index.html">第二章：面向对象</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../w03/index.html">第三章：并发编程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../w04/index.html">第四章：数据操作</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../w05/index.html">第五章：源码学习</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../w06/index.html">第六章：工程实践</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../wend/about.html">关于作者</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Go 深入浅出</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="index.html">第一章：基础知识</a> &raquo;</li>
+      <li><span class="section-number">3. </span>基础知识之函数</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/w01/w013_function.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="id1">
+<h1><span class="section-number">3. </span>基础知识之函数<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h1>
+<p>函数是组织好的、可重复使用的、用于执行指定任务的代码块。本文介绍了Go语言中函数的相关内容。</p>
+<section id="id2">
+<h2><span class="section-number">3.1. </span>函数初识<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h2>
+<p>Go语言中支持函数、匿名函数和闭包，并且函数在Go语言中属于“一等公民”。</p>
+<section id="id3">
+<h3>1. 定义<a class="headerlink" href="#id3" title="永久链接至标题">¶</a></h3>
+<p>Go语言中定义函数使用<code class="docutils literal notranslate"><span class="pre">func</span></code>关键字，具体格式如下：</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">func</span> <span class="nx">函数名</span><span class="p">(</span><span class="nx">参数</span><span class="p">)(</span><span class="nx">返回值</span><span class="p">){</span>
+    <span class="nx">函数体</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>其中：</p>
+<ul class="simple">
+<li><p>函数名：由字母、数字、下划线组成。但函数名的第一个字母不能是数字。在同一个包内，函数名也称不能重名（包的概念详见后文）。</p></li>
+<li><p>参数：参数由参数变量和参数变量的类型组成，多个参数之间使用<code class="docutils literal notranslate"><span class="pre">,</span></code>分隔。</p></li>
+<li><p>返回值：返回值由返回值变量和其变量类型组成，也可以只写返回值的类型，多个返回值必须用<code class="docutils literal notranslate"><span class="pre">()</span></code>包裹，并用<code class="docutils literal notranslate"><span class="pre">,</span></code>分隔。</p></li>
+<li><p>函数体：实现指定功能的代码块。</p></li>
+</ul>
+<p>我们先来定义一个求两个数之和的函数：</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">func</span> <span class="nx">intSum</span><span class="p">(</span><span class="nx">x</span> <span class="kt">int</span><span class="p">,</span> <span class="nx">y</span> <span class="kt">int</span><span class="p">)</span> <span class="kt">int</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="nx">x</span> <span class="o">+</span> <span class="nx">y</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>函数的参数和返回值都是可选的，例如我们可以实现一个既不需要参数也没有返回值的函数：</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">func</span> <span class="nx">sayHello</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;Hello 沙河&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="id4">
+<h3>2. 函数调用<a class="headerlink" href="#id4" title="永久链接至标题">¶</a></h3>
+<p>定义了函数之后，我们可以通过<code class="docutils literal notranslate"><span class="pre">函数名()</span></code>的方式调用函数。 例如我们调用上面定义的两个函数，代码如下：</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">sayHello</span><span class="p">()</span>
+	<span class="nx">ret</span> <span class="o">:=</span> <span class="nx">intSum</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">ret</span><span class="p">)</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>注意，调用有返回值的函数时，可以不接收其返回值。</p>
+</section>
+<section id="id5">
+<h3>3. 参数<a class="headerlink" href="#id5" title="永久链接至标题">¶</a></h3>
+<p><strong>类型简写</strong></p>
+<p>函数的参数中如果相邻变量的类型相同，则可以省略类型，例如：</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">func</span> <span class="nx">intSum</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span> <span class="kt">int</span><span class="p">)</span> <span class="kt">int</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="nx">x</span> <span class="o">+</span> <span class="nx">y</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>上面的代码中，<code class="docutils literal notranslate"><span class="pre">intSum</span></code>函数有两个参数，这两个参数的类型均为<code class="docutils literal notranslate"><span class="pre">int</span></code>，因此可以省略<code class="docutils literal notranslate"><span class="pre">x</span></code>的类型，因为<code class="docutils literal notranslate"><span class="pre">y</span></code>后面有类型说明，<code class="docutils literal notranslate"><span class="pre">x</span></code>参数也是该类型。</p>
+<p><strong>可变参数</strong></p>
+<p>可变参数是指函数的参数数量不固定。Go语言中的可变参数通过在参数名后加<code class="docutils literal notranslate"><span class="pre">...</span></code>来标识。</p>
+<p>注意：可变参数通常要作为函数的最后一个参数。</p>
+<p>举个例子：</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">func</span> <span class="nx">intSum2</span><span class="p">(</span><span class="nx">x</span> <span class="o">...</span><span class="kt">int</span><span class="p">)</span> <span class="kt">int</span> <span class="p">{</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="c1">//x是一个切片</span>
+	<span class="nx">sum</span> <span class="o">:=</span> <span class="mi">0</span>
+	<span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">v</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">x</span> <span class="p">{</span>
+		<span class="nx">sum</span> <span class="p">=</span> <span class="nx">sum</span> <span class="o">+</span> <span class="nx">v</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="nx">sum</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>调用上面的函数：</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="nx">ret1</span> <span class="o">:=</span> <span class="nx">intSum2</span><span class="p">()</span>
+<span class="nx">ret2</span> <span class="o">:=</span> <span class="nx">intSum2</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="nx">ret3</span> <span class="o">:=</span> <span class="nx">intSum2</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+<span class="nx">ret4</span> <span class="o">:=</span> <span class="nx">intSum2</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">ret1</span><span class="p">,</span> <span class="nx">ret2</span><span class="p">,</span> <span class="nx">ret3</span><span class="p">,</span> <span class="nx">ret4</span><span class="p">)</span> <span class="c1">//0 10 30 60</span>
+</pre></div>
+</div>
+<p>固定参数搭配可变参数使用时，可变参数要放在固定参数的后面，示例代码如下：</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">func</span> <span class="nx">intSum3</span><span class="p">(</span><span class="nx">x</span> <span class="kt">int</span><span class="p">,</span> <span class="nx">y</span> <span class="o">...</span><span class="kt">int</span><span class="p">)</span> <span class="kt">int</span> <span class="p">{</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">)</span>
+	<span class="nx">sum</span> <span class="o">:=</span> <span class="nx">x</span>
+	<span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">v</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">y</span> <span class="p">{</span>
+		<span class="nx">sum</span> <span class="p">=</span> <span class="nx">sum</span> <span class="o">+</span> <span class="nx">v</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="nx">sum</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>调用上述函数：</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="nx">ret5</span> <span class="o">:=</span> <span class="nx">intSum3</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+<span class="nx">ret6</span> <span class="o">:=</span> <span class="nx">intSum3</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="nx">ret7</span> <span class="o">:=</span> <span class="nx">intSum3</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+<span class="nx">ret8</span> <span class="o">:=</span> <span class="nx">intSum3</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">ret5</span><span class="p">,</span> <span class="nx">ret6</span><span class="p">,</span> <span class="nx">ret7</span><span class="p">,</span> <span class="nx">ret8</span><span class="p">)</span> <span class="c1">//100 110 130 160</span>
+</pre></div>
+</div>
+<p>本质上，函数的可变参数是通过切片来实现的。</p>
+</section>
+<section id="id6">
+<h3>4. 返回值<a class="headerlink" href="#id6" title="永久链接至标题">¶</a></h3>
+<p>Go语言中通过<code class="docutils literal notranslate"><span class="pre">return</span></code>关键字向外输出返回值。</p>
+<p><strong>多返回值</strong></p>
+<p>Go语言中函数支持多返回值，函数如果有多个返回值时必须用<code class="docutils literal notranslate"><span class="pre">()</span></code>将所有返回值包裹起来。</p>
+<p>举个例子：</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">func</span> <span class="nx">calc</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span> <span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">sum</span> <span class="o">:=</span> <span class="nx">x</span> <span class="o">+</span> <span class="nx">y</span>
+	<span class="nx">sub</span> <span class="o">:=</span> <span class="nx">x</span> <span class="o">-</span> <span class="nx">y</span>
+	<span class="k">return</span> <span class="nx">sum</span><span class="p">,</span> <span class="nx">sub</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>返回值命名</strong></p>
+<p>函数定义时可以给返回值命名，并在函数体中直接使用这些变量，最后通过<code class="docutils literal notranslate"><span class="pre">return</span></code>关键字返回。</p>
+<p>例如：</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">func</span> <span class="nx">calc</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span> <span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="nx">sum</span><span class="p">,</span> <span class="nx">sub</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">sum</span> <span class="p">=</span> <span class="nx">x</span> <span class="o">+</span> <span class="nx">y</span>
+	<span class="nx">sub</span> <span class="p">=</span> <span class="nx">x</span> <span class="o">-</span> <span class="nx">y</span>
+	<span class="k">return</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>返回值补充</strong></p>
+<p>当我们的一个函数返回值类型为slice时，nil可以看做是一个有效的slice，没必要显示返回一个长度为0的切片。</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">func</span> <span class="nx">someFunc</span><span class="p">(</span><span class="nx">x</span> <span class="kt">string</span><span class="p">)</span> <span class="p">[]</span><span class="kt">int</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="nx">x</span> <span class="o">==</span> <span class="s">&quot;&quot;</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="kc">nil</span> <span class="c1">// 没必要返回[]int{}</span>
+	<span class="p">}</span>
+	<span class="o">...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="id7">
+<h2><span class="section-number">3.2. </span>函数进阶<a class="headerlink" href="#id7" title="永久链接至标题">¶</a></h2>
+<section id="id8">
+<h3>1. 变量作用域<a class="headerlink" href="#id8" title="永久链接至标题">¶</a></h3>
+<p><strong>全局变量</strong></p>
+<p>全局变量是定义在函数外部的变量，它在程序整个运行周期内都有效。 在函数中可以访问到全局变量。</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="s">&quot;fmt&quot;</span>
+
+<span class="c1">//定义全局变量num</span>
+<span class="kd">var</span> <span class="nx">num</span> <span class="kt">int64</span> <span class="p">=</span> <span class="mi">10</span>
+
+<span class="kd">func</span> <span class="nx">testGlobalVar</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;num=%d\n&quot;</span><span class="p">,</span> <span class="nx">num</span><span class="p">)</span> <span class="c1">//函数中可以访问全局变量num</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">testGlobalVar</span><span class="p">()</span> <span class="c1">//num=10</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>局部变量</strong></p>
+<p>局部变量又分为两种：</p>
+<ul class="simple">
+<li><p>函数内定义的变量无法在该函数外使用，例如下面的示例代码main函数中无法使用testLocalVar函数中定义的变量x：</p></li>
+</ul>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">func</span> <span class="nx">testLocalVar</span><span class="p">()</span> <span class="p">{</span>
+	<span class="c1">//定义一个函数局部变量x,仅在该函数内生效</span>
+	<span class="kd">var</span> <span class="nx">x</span> <span class="kt">int64</span> <span class="p">=</span> <span class="mi">100</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;x=%d\n&quot;</span><span class="p">,</span> <span class="nx">x</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">testLocalVar</span><span class="p">()</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="c1">// 此时无法使用变量x</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>如果局部变量和全局变量重名，优先访问局部变量。</p></li>
+</ul>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="s">&quot;fmt&quot;</span>
+
+<span class="c1">//定义全局变量num</span>
+<span class="kd">var</span> <span class="nx">num</span> <span class="kt">int64</span> <span class="p">=</span> <span class="mi">10</span>
+
+<span class="kd">func</span> <span class="nx">testNum</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">num</span> <span class="o">:=</span> <span class="mi">100</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;num=%d\n&quot;</span><span class="p">,</span> <span class="nx">num</span><span class="p">)</span> <span class="c1">// 函数中优先使用局部变量</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">testNum</span><span class="p">()</span> <span class="c1">// num=100</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>接下来我们来看一下语句块定义的变量，通常我们会在if条件判断、for循环、switch语句上使用这种定义变量的方式。</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">func</span> <span class="nx">testLocalVar2</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">)</span> <span class="c1">//函数的参数也是只在本函数中生效</span>
+	<span class="k">if</span> <span class="nx">x</span> <span class="p">&gt;</span> <span class="mi">0</span> <span class="p">{</span>
+		<span class="nx">z</span> <span class="o">:=</span> <span class="mi">100</span> <span class="c1">//变量z只在if语句块生效</span>
+		<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">z</span><span class="p">)</span>
+	<span class="p">}</span>
+	<span class="c1">//fmt.Println(z)//此处无法使用变量z</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>还有我们之前讲过的for循环语句中定义的变量，也是只在for语句块中生效：</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">func</span> <span class="nx">testLocalVar3</span><span class="p">()</span> <span class="p">{</span>
+	<span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="p">&lt;</span> <span class="mi">10</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
+		<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">i</span><span class="p">)</span> <span class="c1">//变量i只在当前for语句块中生效</span>
+	<span class="p">}</span>
+	<span class="c1">//fmt.Println(i) //此处无法使用变量i</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="id9">
+<h3>2. 函数类型与变量<a class="headerlink" href="#id9" title="永久链接至标题">¶</a></h3>
+<section id="id10">
+<h4>2.1 定义函数类型<a class="headerlink" href="#id10" title="永久链接至标题">¶</a></h4>
+<p>我们可以使用<code class="docutils literal notranslate"><span class="pre">type</span></code>关键字来定义一个函数类型，具体格式如下：</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">type</span> <span class="nx">calculation</span> <span class="kd">func</span><span class="p">(</span><span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="p">)</span> <span class="kt">int</span>
+</pre></div>
+</div>
+<p>上面语句定义了一个<code class="docutils literal notranslate"><span class="pre">calculation</span></code>类型，它是一种函数类型，这种函数接收两个int类型的参数并且返回一个int类型的返回值。</p>
+<p>简单来说，凡是满足这个条件的函数都是calculation类型的函数，例如下面的add和sub是calculation类型。</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">func</span> <span class="nx">add</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span> <span class="kt">int</span><span class="p">)</span> <span class="kt">int</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="nx">x</span> <span class="o">+</span> <span class="nx">y</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">sub</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span> <span class="kt">int</span><span class="p">)</span> <span class="kt">int</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="nx">x</span> <span class="o">-</span> <span class="nx">y</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>add和sub都能赋值给calculation类型的变量。</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">var</span> <span class="nx">c</span> <span class="nx">calculation</span>
+<span class="nx">c</span> <span class="p">=</span> <span class="nx">add</span>
+</pre></div>
+</div>
+</section>
+<section id="id11">
+<h4>2.2 函数类型变量<a class="headerlink" href="#id11" title="永久链接至标题">¶</a></h4>
+<p>我们可以声明函数类型的变量并且为该变量赋值：</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="kd">var</span> <span class="nx">c</span> <span class="nx">calculation</span>               <span class="c1">// 声明一个calculation类型的变量c</span>
+	<span class="nx">c</span> <span class="p">=</span> <span class="nx">add</span>                         <span class="c1">// 把add赋值给c</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;type of c:%T\n&quot;</span><span class="p">,</span> <span class="nx">c</span><span class="p">)</span> <span class="c1">// type of c:main.calculation</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">c</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>            <span class="c1">// 像调用add一样调用c</span>
+
+	<span class="nx">f</span> <span class="o">:=</span> <span class="nx">add</span>                        <span class="c1">// 将函数add赋值给变量f1</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;type of f:%T\n&quot;</span><span class="p">,</span> <span class="nx">f</span><span class="p">)</span> <span class="c1">// type of f:func(int, int) int</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">f</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">))</span>          <span class="c1">// 像调用add一样调用f</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+<section id="id12">
+<h2><span class="section-number">3.3. </span>高阶函数<a class="headerlink" href="#id12" title="永久链接至标题">¶</a></h2>
+<p>高阶函数分为函数作为参数和函数作为返回值两部分。</p>
+<section id="id13">
+<h3>1. 函数作为参数<a class="headerlink" href="#id13" title="永久链接至标题">¶</a></h3>
+<p>函数可以作为参数：</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">func</span> <span class="nx">add</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span> <span class="kt">int</span><span class="p">)</span> <span class="kt">int</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="nx">x</span> <span class="o">+</span> <span class="nx">y</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">calc</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span> <span class="kt">int</span><span class="p">,</span> <span class="nx">op</span> <span class="kd">func</span><span class="p">(</span><span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="p">)</span> <span class="kt">int</span><span class="p">)</span> <span class="kt">int</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="nx">op</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">)</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">ret2</span> <span class="o">:=</span> <span class="nx">calc</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="nx">add</span><span class="p">)</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">ret2</span><span class="p">)</span> <span class="c1">//30</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="id14">
+<h3>2. 函数作为返回值<a class="headerlink" href="#id14" title="永久链接至标题">¶</a></h3>
+<p>函数也可以作为返回值：</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">func</span> <span class="nx">do</span><span class="p">(</span><span class="nx">s</span> <span class="kt">string</span><span class="p">)</span> <span class="p">(</span><span class="kd">func</span><span class="p">(</span><span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="p">)</span> <span class="kt">int</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">switch</span> <span class="nx">s</span> <span class="p">{</span>
+	<span class="k">case</span> <span class="s">&quot;+&quot;</span><span class="p">:</span>
+		<span class="k">return</span> <span class="nx">add</span><span class="p">,</span> <span class="kc">nil</span>
+	<span class="k">case</span> <span class="s">&quot;-&quot;</span><span class="p">:</span>
+		<span class="k">return</span> <span class="nx">sub</span><span class="p">,</span> <span class="kc">nil</span>
+	<span class="k">default</span><span class="p">:</span>
+		<span class="nx">err</span> <span class="o">:=</span> <span class="nx">errors</span><span class="p">.</span><span class="nx">New</span><span class="p">(</span><span class="s">&quot;无法识别的操作符&quot;</span><span class="p">)</span>
+		<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="id15">
+<h2><span class="section-number">3.4. </span>匿名函数和闭包<a class="headerlink" href="#id15" title="永久链接至标题">¶</a></h2>
+<section id="id16">
+<h3>1. 匿名函数<a class="headerlink" href="#id16" title="永久链接至标题">¶</a></h3>
+<p>函数当然还可以作为返回值，但是在Go语言中函数内部不能再像之前那样定义函数了，只能定义匿名函数。</p>
+<p><strong>匿名函数就是没有函数名的函数</strong> ，匿名函数的定义格式如下：</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">func</span><span class="p">(</span><span class="nx">参数</span><span class="p">)(</span><span class="nx">返回值</span><span class="p">){</span>
+    <span class="nx">函数体</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>匿名函数因为没有函数名，所以没办法像普通函数那样调用，所以匿名函数需要保存到某个变量或者作为立即执行函数:</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="c1">// 将匿名函数保存到变量</span>
+	<span class="nx">add</span> <span class="o">:=</span> <span class="kd">func</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+		<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">x</span> <span class="o">+</span> <span class="nx">y</span><span class="p">)</span>
+	<span class="p">}</span>
+	<span class="nx">add</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span> <span class="c1">// 通过变量调用匿名函数</span>
+
+	<span class="c1">//自执行函数：匿名函数定义完加()直接执行</span>
+	<span class="kd">func</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+		<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">x</span> <span class="o">+</span> <span class="nx">y</span><span class="p">)</span>
+	<span class="p">}(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>匿名函数多用于实现回调函数和闭包。</p>
+</section>
+<section id="id17">
+<h3>2. 闭包<a class="headerlink" href="#id17" title="永久链接至标题">¶</a></h3>
+<p>闭包指的是一个函数和与其相关的引用环境组合而成的实体。简单来说，<code class="docutils literal notranslate"><span class="pre">闭包=函数+引用环境</span></code>。 首先我们来看一个例子：</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">func</span> <span class="nx">adder</span><span class="p">()</span> <span class="kd">func</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="kt">int</span> <span class="p">{</span>
+	<span class="kd">var</span> <span class="nx">x</span> <span class="kt">int</span>
+	<span class="k">return</span> <span class="kd">func</span><span class="p">(</span><span class="nx">y</span> <span class="kt">int</span><span class="p">)</span> <span class="kt">int</span> <span class="p">{</span>
+		<span class="nx">x</span> <span class="o">+=</span> <span class="nx">y</span>
+		<span class="k">return</span> <span class="nx">x</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="kd">var</span> <span class="nx">f</span> <span class="p">=</span> <span class="nx">adder</span><span class="p">()</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">f</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span> <span class="c1">//10</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">f</span><span class="p">(</span><span class="mi">20</span><span class="p">))</span> <span class="c1">//30</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">f</span><span class="p">(</span><span class="mi">30</span><span class="p">))</span> <span class="c1">//60</span>
+
+	<span class="nx">f1</span> <span class="o">:=</span> <span class="nx">adder</span><span class="p">()</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">f1</span><span class="p">(</span><span class="mi">40</span><span class="p">))</span> <span class="c1">//40</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">f1</span><span class="p">(</span><span class="mi">50</span><span class="p">))</span> <span class="c1">//90</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>变量<code class="docutils literal notranslate"><span class="pre">f</span></code>是一个函数并且它引用了其外部作用域中的<code class="docutils literal notranslate"><span class="pre">x</span></code>变量，此时<code class="docutils literal notranslate"><span class="pre">f</span></code>就是一个闭包。 在<code class="docutils literal notranslate"><span class="pre">f</span></code>的生命周期内，变量<code class="docutils literal notranslate"><span class="pre">x</span></code>也一直有效。 闭包进阶示例1：</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">func</span> <span class="nx">adder2</span><span class="p">(</span><span class="nx">x</span> <span class="kt">int</span><span class="p">)</span> <span class="kd">func</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="kt">int</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="kd">func</span><span class="p">(</span><span class="nx">y</span> <span class="kt">int</span><span class="p">)</span> <span class="kt">int</span> <span class="p">{</span>
+		<span class="nx">x</span> <span class="o">+=</span> <span class="nx">y</span>
+		<span class="k">return</span> <span class="nx">x</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="kd">var</span> <span class="nx">f</span> <span class="p">=</span> <span class="nx">adder2</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">f</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span> <span class="c1">//20</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">f</span><span class="p">(</span><span class="mi">20</span><span class="p">))</span> <span class="c1">//40</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">f</span><span class="p">(</span><span class="mi">30</span><span class="p">))</span> <span class="c1">//70</span>
+
+	<span class="nx">f1</span> <span class="o">:=</span> <span class="nx">adder2</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">f1</span><span class="p">(</span><span class="mi">40</span><span class="p">))</span> <span class="c1">//60</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">f1</span><span class="p">(</span><span class="mi">50</span><span class="p">))</span> <span class="c1">//110</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>闭包进阶示例2：</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">func</span> <span class="nx">makeSuffixFunc</span><span class="p">(</span><span class="nx">suffix</span> <span class="kt">string</span><span class="p">)</span> <span class="kd">func</span><span class="p">(</span><span class="kt">string</span><span class="p">)</span> <span class="kt">string</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="kd">func</span><span class="p">(</span><span class="nx">name</span> <span class="kt">string</span><span class="p">)</span> <span class="kt">string</span> <span class="p">{</span>
+		<span class="k">if</span> <span class="p">!</span><span class="nx">strings</span><span class="p">.</span><span class="nx">HasSuffix</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">suffix</span><span class="p">)</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="nx">name</span> <span class="o">+</span> <span class="nx">suffix</span>
+		<span class="p">}</span>
+		<span class="k">return</span> <span class="nx">name</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">jpgFunc</span> <span class="o">:=</span> <span class="nx">makeSuffixFunc</span><span class="p">(</span><span class="s">&quot;.jpg&quot;</span><span class="p">)</span>
+	<span class="nx">txtFunc</span> <span class="o">:=</span> <span class="nx">makeSuffixFunc</span><span class="p">(</span><span class="s">&quot;.txt&quot;</span><span class="p">)</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">jpgFunc</span><span class="p">(</span><span class="s">&quot;test&quot;</span><span class="p">))</span> <span class="c1">//test.jpg</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">txtFunc</span><span class="p">(</span><span class="s">&quot;test&quot;</span><span class="p">))</span> <span class="c1">//test.txt</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>闭包进阶示例3：</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">func</span> <span class="nx">calc</span><span class="p">(</span><span class="nx">base</span> <span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="kd">func</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="kt">int</span><span class="p">,</span> <span class="kd">func</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">add</span> <span class="o">:=</span> <span class="kd">func</span><span class="p">(</span><span class="nx">i</span> <span class="kt">int</span><span class="p">)</span> <span class="kt">int</span> <span class="p">{</span>
+		<span class="nx">base</span> <span class="o">+=</span> <span class="nx">i</span>
+		<span class="k">return</span> <span class="nx">base</span>
+	<span class="p">}</span>
+
+	<span class="nx">sub</span> <span class="o">:=</span> <span class="kd">func</span><span class="p">(</span><span class="nx">i</span> <span class="kt">int</span><span class="p">)</span> <span class="kt">int</span> <span class="p">{</span>
+		<span class="nx">base</span> <span class="o">-=</span> <span class="nx">i</span>
+		<span class="k">return</span> <span class="nx">base</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="nx">add</span><span class="p">,</span> <span class="nx">sub</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">f1</span><span class="p">,</span> <span class="nx">f2</span> <span class="o">:=</span> <span class="nx">calc</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">f1</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="nx">f2</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span> <span class="c1">//11 9</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">f1</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="nx">f2</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span> <span class="c1">//12 8</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">f1</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span> <span class="nx">f2</span><span class="p">(</span><span class="mi">6</span><span class="p">))</span> <span class="c1">//13 7</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>闭包其实并不复杂，只要牢记<code class="docutils literal notranslate"><span class="pre">闭包=函数+引用环境</span></code>。</p>
+</section>
+</section>
+<section id="id18">
+<h2><span class="section-number">3.5. </span>内置函数<a class="headerlink" href="#id18" title="永久链接至标题">¶</a></h2>
+<ul class="simple">
+<li><p>来源地址：https://golang.google.cn/pkg/builtin/</p></li>
+</ul>
+<p>|    内置函数    | 介绍                                                         |
+| :————: | :———————————————————– |
+|     close      | 主要用来关闭channel                                          |
+|      len       | 用来求长度，比如string、array、slice、map、channel           |
+|      new       | 用来分配内存，主要用来分配值类型，比如int、struct。返回的是指针 |
+|      make      | 用来分配内存，主要用来分配引用类型，比如chan、map、slice     |
+|     append     | 用来追加元素到数组、slice中                                  |
+| panic和recover | 用来做错误处理                                               |</p>
+<section id="make">
+<h3>1. make<a class="headerlink" href="#make" title="永久链接至标题">¶</a></h3>
+<p>make 也是用于内存分配的，但是和 new 不同，它只用于 chan、map 以及 slice 的内存创建，而且它返回的类型就是这三个类型本身，而不是他们的指针类型，因为这三种类型就是引用类型，所以就没有必要返回他们的指针了。</p>
+<p>在Go语言中，make 函数的描述如下：</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="c1">// The make built-in function allocates and initializes an object of type</span>
+<span class="c1">// slice, map, or chan (only). Like new, the first argument is a type, not a</span>
+<span class="c1">// value. Unlike new, make&#39;s return type is the same as the type of its</span>
+<span class="c1">// argument, not a pointer to it. The specification of the result depends on</span>
+<span class="c1">// the type:</span>
+<span class="c1">// Slice: The size specifies the length. The capacity of the slice is</span>
+<span class="c1">// equal to its length. A second integer argument may be provided to</span>
+<span class="c1">// specify a different capacity; it must be no smaller than the</span>
+<span class="c1">// length, so make([]int, 0, 10) allocates a slice of length 0 and</span>
+<span class="c1">// capacity 10.</span>
+<span class="c1">// Map: An empty map is allocated with enough space to hold the</span>
+<span class="c1">// specified number of elements. The size may be omitted, in which case</span>
+<span class="c1">// a small starting size is allocated.</span>
+<span class="c1">// Channel: The channel&#39;s buffer is initialized with the specified</span>
+<span class="c1">// buffer capacity. If zero, or the size is omitted, the channel is</span>
+<span class="c1">// unbuffered.</span>
+<span class="kd">func</span> <span class="nb">make</span><span class="p">(</span><span class="nx">t</span> <span class="nx">Type</span><span class="p">,</span> <span class="nx">size</span> <span class="o">...</span><span class="nx">IntegerType</span><span class="p">)</span> <span class="nx">Type</span>
+</pre></div>
+</div>
+<p>通过上面的代码可以看出 make 函数的 t 参数必须是 chan（通道）、map（字典）、slice（切片）中的一个，并且返回值也是类型本身。</p>
+<p><strong>注意</strong> ：make 函数只用于 map，slice 和 channel，并且不返回指针。如果想要获得一个显式的指针，可以使用 new 函数进行分配，或者显式地使用一个变量的地址。</p>
+<p>Go语言中的 new 和 make 主要区别如下：</p>
+<ul class="simple">
+<li><p>make 只能用来分配及初始化类型为 slice、map、chan 的数据。new 可以分配任意类型的数据；</p></li>
+<li><p>new 分配返回的是指针，即类型 *Type。make 返回引用，即 Type；</p></li>
+<li><p>new 分配的空间被清零。make 分配空间后，会进行初始化；</p></li>
+</ul>
+<p><strong>（1）创建数组切片</strong></p>
+<p>Go语言提供的内置函数make()可以用于灵活地创建数组切片。</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="c1">// 创建一个初始元素个数为5的数组切片，元素初始值为0：</span>
+<span class="nx">mySlice1</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">int</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+
+<span class="c1">// 创建一个初始元素个数为5的数组切片，元素初始值为0，并预留10个元素的存储空间：</span>
+<span class="nx">mySlice2</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">int</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span> 
+</pre></div>
+</div>
+<p><strong>（2）创建map</strong></p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="c1">//  创建了一个键类型为string、值类型为PersonInfo的map</span>
+<span class="nx">myMap</span> <span class="p">=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span> <span class="nx">PersonInfo</span><span class="p">)</span>
+
+<span class="c1">// 也可以选择是否在创建时指定该map的初始存储能力，创建了一个初始存储能力为100的map.</span>
+<span class="nx">myMap</span> <span class="p">=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span> <span class="nx">PersonInfo</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span> 
+
+<span class="c1">// 创建并初始化map的代码.</span>
+<span class="nx">myMap</span> <span class="p">=</span> <span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span> <span class="nx">PersonInfo</span><span class="p">{</span> 
+    <span class="s">&quot;1234&quot;</span><span class="p">:</span> <span class="nx">PersonInfo</span><span class="p">{</span><span class="s">&quot;1&quot;</span><span class="p">,</span> <span class="s">&quot;Jack&quot;</span><span class="p">,</span> <span class="s">&quot;Room 101,...&quot;</span><span class="p">},</span>
+<span class="p">}</span> 
+</pre></div>
+</div>
+<p><strong>（3）通道（<code class="docutils literal notranslate"> <span class="pre">chan</span></code>）</strong></p>
+<p>通道的缓冲区被初始化为指定的缓冲容量。如果为零，或省略大小，则通道为无缓冲。</p>
+</section>
+<section id="new">
+<h3>2. new<a class="headerlink" href="#new" title="永久链接至标题">¶</a></h3>
+<p>new 函数只接受一个参数，这个参数是一个类型，并且返回一个指向该类型内存地址的指针。同时 new 函数会把分配的内存置为零，也就是类型的零值。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">func</span> <span class="n">new</span><span class="p">(</span><span class="n">Type</span><span class="p">)</span> <span class="o">*</span><span class="n">Type</span>
+</pre></div>
+</div>
+<p>【示例】使用 new 函数为变量分配内存空间。</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">var</span> <span class="nx">sum</span> <span class="o">*</span><span class="kt">int</span>
+<span class="nx">sum</span> <span class="p">=</span> <span class="nb">new</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="c1">//分配空间</span>
+<span class="o">*</span><span class="nx">sum</span> <span class="p">=</span> <span class="mi">98</span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="o">*</span><span class="nx">sum</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>当然，new 函数不仅仅能够为系统默认的数据类型，分配空间，自定义类型也可以使用 new 函数来分配空间，如下所示：</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">type</span> <span class="nx">Student</span> <span class="kd">struct</span> <span class="p">{</span>
+<span class="nx">name</span> <span class="kt">string</span>
+<span class="nx">age</span> <span class="kt">int</span>
+<span class="p">}</span>
+<span class="kd">var</span> <span class="nx">s</span> <span class="o">*</span><span class="nx">Student</span>
+<span class="nx">s</span> <span class="p">=</span> <span class="nb">new</span><span class="p">(</span><span class="nx">Student</span><span class="p">)</span> <span class="c1">//分配空间</span>
+<span class="nx">s</span><span class="p">.</span><span class="nx">name</span> <span class="p">=</span><span class="s">&quot;dequan&quot;</span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">s</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>这里如果我们不使用 new 函数为自定义类型分配空间（将第 7 行注释），就会报错：</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="nx">panic</span><span class="p">:</span> <span class="nx">runtime</span> <span class="kt">error</span><span class="p">:</span> <span class="nx">invalid</span> <span class="nx">memory</span> <span class="nx">address</span> <span class="nx">or</span> <span class="kc">nil</span> <span class="nx">pointer</span> <span class="nx">dereference</span>
+<span class="p">[</span><span class="nx">signal</span> <span class="nx">SIGSEGV</span><span class="p">:</span> <span class="nx">segmentation</span> <span class="nx">violation</span> <span class="nx">code</span><span class="p">=</span><span class="mh">0x1</span> <span class="nx">addr</span><span class="p">=</span><span class="mh">0x0</span> <span class="nx">pc</span><span class="p">=</span><span class="mh">0x80bd277</span><span class="p">]</span>
+<span class="nx">goroutine</span> <span class="mi">1</span> <span class="p">[</span><span class="nx">running</span><span class="p">]:</span>
+</pre></div>
+</div>
+<p>这就是 new 函数，它返回的永远是类型的指针，指针指向分配类型的内存地址。</p>
+<p><strong>总结</strong></p>
+<p>简单总结一下Go语言中 make 和 new 关键字的实现原理，</p>
+<ul class="simple">
+<li><p>make 关键字的主要作用是创建 slice、map 和 Channel 等内置的数据结构</p></li>
+<li><p>new 的主要作用是为类型申请一片内存空间，并返回指向这片内存的指针</p></li>
+</ul>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="w012_exception.html" class="btn btn-neutral float-left" title="2. 基础知识之异常处理" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../w02/index.html" class="btn btn-neutral float-right" title="第二章：面向对象" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; 版权所有 2021, 公众号:Java半颗糖.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

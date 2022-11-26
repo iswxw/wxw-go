@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>2. 基础知识之异常处理 &mdash; Go 深入浅出 1.0.0 文档</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/translations.js"></script>
+        <script src="../_static/js/readmore.js"></script>
+        <script src="../_static/js/baidutongji.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="3. 基础知识之函数" href="w013_function.html" />
+    <link rel="prev" title="1. 基础知识之流程控制" href="w011_process.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> Go 深入浅出
+          </a>
+              <div class="version">
+                1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../preface.html">前言</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">第一章：基础知识</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="w011_process.html">1. 基础知识之流程控制</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">2. 基础知识之异常处理</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#defer">2.1. 延迟语句：<code class="docutils literal notranslate"><span class="pre">defer</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id2">1. 怎么使用</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id3">2. 理解defer的执行时机</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#deferreturn">3. defer与return的关系</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id4">4. 深入理解defer</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#recover">2.2. 捕获异常：recover</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#recover-defer">1.  recover 仅在延迟函数 defer 中有效</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#recoverdefer">2. recover在defer中直接调用才生效</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id5">3. 案例解析</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="w013_function.html">3. 基础知识之函数</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../w02/index.html">第二章：面向对象</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../w03/index.html">第三章：并发编程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../w04/index.html">第四章：数据操作</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../w05/index.html">第五章：源码学习</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../w06/index.html">第六章：工程实践</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../wend/about.html">关于作者</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Go 深入浅出</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="index.html">第一章：基础知识</a> &raquo;</li>
+      <li><span class="section-number">2. </span>基础知识之异常处理</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/w01/w012_exception.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="id1">
+<h1><span class="section-number">2. </span>基础知识之异常处理<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h1>
+<hr class="docutils" />
+<section id="defer">
+<h2><span class="section-number">2.1. </span>延迟语句：<code class="docutils literal notranslate"><span class="pre">defer</span></code><a class="headerlink" href="#defer" title="永久链接至标题">¶</a></h2>
+<p>Go 中有几个比较特殊的关键字，如 defer，尤其 <code class="docutils literal notranslate"><span class="pre">defer+panic+recover</span></code>的组合可以发挥出 java 中 <code class="docutils literal notranslate"><span class="pre">try...catch...fanilly</span></code> 的作用，功能非常强大，值的去深入学习。同时他们每个又有自身的特性，这一节我们先来理解一下 <code class="docutils literal notranslate"><span class="pre">defer</span></code>。</p>
+<p><strong><code class="docutils literal notranslate"><span class="pre">defer</span></code></strong> 关键字在 go 中的使用率算是非常高的，类似于 <code class="docutils literal notranslate"><span class="pre">finally</span></code> 与 析构函数的作用，用来做方法的善后工作。</p>
+<p><strong>先抛砖引玉 defer的延迟调用：</strong></p>
+<p>defer特性</p>
+<ol class="simple">
+<li><p>关键字 defer 用于注册延迟调用。</p></li>
+<li><p>这些调用直到 return 前才被执性。因此，可以用来做资源清理。</p></li>
+<li><p>多个defer语句，按先进后出的方式执行（从后往前执行）。</p></li>
+<li><p>defer语句中的变量，在defer声明时就决定了。</p></li>
+</ol>
+<p>defer用途</p>
+<ol class="simple">
+<li><p>关闭文件句柄</p></li>
+<li><p>锁资源释放</p></li>
+<li><p>数据库连接释放</p></li>
+</ol>
+<section id="id2">
+<h3>1. 怎么使用<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h3>
+<p>Go语言中的<code class="docutils literal notranslate"><span class="pre">defer</span></code>语句会将其后面跟随的语句进行延迟处理。在<code class="docutils literal notranslate"><span class="pre">defer</span></code>归属的函数即将返回时，将延迟处理的语句按<code class="docutils literal notranslate"><span class="pre">defer</span></code>定义的逆序进行执行，也就是说，先被<code class="docutils literal notranslate"><span class="pre">defer</span></code>的语句最后被执行，最后被<code class="docutils literal notranslate"><span class="pre">defer</span></code>的语句，最先被执行。</p>
+<p>举个例子：</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;start&quot;</span><span class="p">)</span>
+	<span class="k">defer</span> <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+	<span class="k">defer</span> <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+	<span class="k">defer</span> <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;end&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>输出结果：</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="nx">start</span>
+<span class="nx">end</span>
+<span class="mi">3</span>
+<span class="mi">2</span>
+<span class="mi">1</span>
+</pre></div>
+</div>
+<p>由于<code class="docutils literal notranslate"><span class="pre">defer</span></code>语句延迟调用的特性，所以<code class="docutils literal notranslate"><span class="pre">defer</span></code>语句能非常方便的处理资源释放问题。比如：资源清理、文件关闭、解锁及记录时间等。</p>
+</section>
+<section id="id3">
+<h3>2. 理解defer的执行时机<a class="headerlink" href="#id3" title="永久链接至标题">¶</a></h3>
+<p>在Go语言的函数中<code class="docutils literal notranslate"><span class="pre">return</span></code>语句在底层并不是原子操作，它分为给返回值赋值和RET指令两步。而<code class="docutils literal notranslate"><span class="pre">defer</span></code>语句执行的时机就在返回值赋值操作后，RET指令执行前。具体如下图所示：</p>
+<img src="https://www.liwenzhou.com/images/Go/func/defer.png" alt="defer执行时机" style="zoom: 80%;" />  <p>下面有一段相对复杂的 defer 定义，这个方法里面有定义 4 个 defer , 分别以不同的方式来定义 defer 后的函数</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">func</span> <span class="nx">deferTest</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">fish</span> <span class="o">:=</span> <span class="mi">0</span>
+	
+	<span class="k">defer</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+		<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;d1: &quot;</span><span class="p">,</span> <span class="nx">fish</span><span class="p">)</span>	
+	<span class="p">}()</span>
+	
+	<span class="k">defer</span> <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;d2: &quot;</span><span class="p">,</span> <span class="nx">fish</span><span class="p">)</span> 
+	
+	<span class="k">defer</span> <span class="kd">func</span><span class="p">(</span><span class="nx">fish</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+		<span class="nx">fish</span> <span class="o">+=</span> <span class="mi">2</span>						
+		<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;d3: &quot;</span><span class="p">,</span> <span class="nx">fish</span><span class="p">)</span>	
+	<span class="p">}(</span><span class="nx">fish</span><span class="p">)</span>							    
+	
+	<span class="k">defer</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+		<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;d4: &quot;</span><span class="p">,</span> <span class="nx">fish</span><span class="p">)</span>	
+		<span class="nx">fish</span> <span class="o">+=</span><span class="mi">2</span>						
+	<span class="p">}()</span>
+  
+	<span class="nx">fish</span><span class="o">++</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>这里可以先不要往下看答案，或者直接本地运行看结果，可以先猜猜每个结果的值，然后去跟真实结果做对比</p>
+<p>如果是新手的话，可能会这么认为：d1: 1, d2: 1, d3: 3, d4: 3 , 这肯定是错的啦，要不然我还讲什么呢？哈哈</p>
+<p>首先要明白一点：</p>
+<ul class="simple">
+<li><p><strong>一个方法中声明了多个defer, 那么 defer 是按顺序从后往前执行的</strong></p></li>
+</ul>
+<p>根据这个规则，我们再猜想一次结果：d4: 1, d3:5, d2: 5, d1: 5， 真的对么？ 我们来看看真正的结果</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>d4:  <span class="m">1</span>
+d3:  <span class="m">2</span>
+d2:  <span class="m">0</span>
+d1:  <span class="m">3</span>
+</pre></div>
+</div>
+<p>这个结果是不是很奇怪，无论你怎么想都想不出来，因为它牵涉到 defer 声明时的一些特殊规则，defer 后面的函数对外部参数有两种引用方式：</p>
+<ul class="simple">
+<li><p><strong>参数传递：在defer声明时，即将值传递给defer,并缓存起来，调用defer的时候使用缓存值进行计算</strong></p></li>
+<li><p><strong>直接引用：根据上下文确定当前值，作用域与外部变量相同</strong></p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">d1,d4</span></code> 是在闭包里面直接引用，而 <code class="docutils literal notranslate"><span class="pre">d2,d3</span></code> 是经过参数传递来饮用的，因此 <code class="docutils literal notranslate"><span class="pre">d2,d3</span></code> 传递进去的初始值都是 0</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">func</span> <span class="nx">deferTest</span><span class="p">()</span> <span class="p">{</span>
+  <span class="c1">// 1. 声明 fish=0</span>
+	<span class="nx">fish</span> <span class="o">:=</span> <span class="mi">0</span>
+  
+	<span class="c1">// 直接引用(闭包)</span>
+  <span class="c1">//</span>
+	<span class="k">defer</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c1">// 8. 打印 fish=3</span>
+		<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;d1: &quot;</span><span class="p">,</span> <span class="nx">fish</span><span class="p">)</span>			<span class="c1">// 3</span>
+	<span class="p">}()</span>
+  
+	<span class="c1">// 参数传递</span>
+  <span class="c1">// 2. 传递 fish=0</span>
+  <span class="c1">// 7. 打印内部 fish 0</span>
+	<span class="k">defer</span> <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;d2: &quot;</span><span class="p">,</span> <span class="nx">fish</span><span class="p">)</span> <span class="c1">// 0</span>
+  
+	<span class="c1">// 参数传递(闭包)</span>
+  <span class="c1">// 3. 传递 fish=0</span>
+	<span class="k">defer</span> <span class="kd">func</span><span class="p">(</span><span class="nx">fish</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// 6. 内部 fish 0 + 2 =2</span>
+		<span class="nx">fish</span> <span class="o">+=</span> <span class="mi">2</span>	<span class="c1">// fish 只作用于内部</span>
+    <span class="c1">// 7. 打印内部 fish</span>
+		<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;d3: &quot;</span><span class="p">,</span> <span class="nx">fish</span><span class="p">)</span>			<span class="c1">// 2</span>
+	<span class="p">}(</span><span class="nx">fish</span><span class="p">)</span>	<span class="c1">// 声明时传递, fish = 0</span>
+  
+	<span class="c1">// 直接引用(闭包)</span>
+	<span class="k">defer</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c1">// 4. 打印 fish = 1</span>
+		<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;d4: &quot;</span><span class="p">,</span> <span class="nx">fish</span><span class="p">)</span>			<span class="c1">// 1</span>
+    <span class="c1">// 5. fish = 3</span>
+		<span class="nx">fish</span> <span class="o">+=</span><span class="mi">2</span> <span class="c1">// fish = 3, 作用域与外部的相同</span>
+	<span class="p">}()</span>
+  
+  <span class="c1">// 3. fish=1</span>
+	<span class="nx">fish</span><span class="o">++</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="deferreturn">
+<h3>3. defer与return的关系<a class="headerlink" href="#deferreturn" title="永久链接至标题">¶</a></h3>
+<p>再看一段代码，猜猜下面3个方法的返回值各是多少</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">func</span> <span class="nx">defer1</span><span class="p">()</span> <span class="p">(</span><span class="nx">res</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">defer</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+		<span class="nx">res</span> <span class="o">++</span>
+	<span class="p">}()</span>
+	<span class="k">return</span> <span class="mi">10</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">defer2</span><span class="p">()</span> <span class="p">(</span><span class="nx">res</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">sb</span> <span class="o">:=</span> <span class="mi">10</span>
+	<span class="k">defer</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+		<span class="nx">sb</span> <span class="o">+=</span> <span class="mi">5</span>
+	<span class="p">}()</span>
+	<span class="k">return</span> <span class="nx">sb</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">defer3</span><span class="p">()</span> <span class="p">(</span><span class="nx">res</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">res</span> <span class="p">=</span> <span class="mi">2</span>
+	<span class="k">defer</span> <span class="kd">func</span><span class="p">(</span><span class="nx">res</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+		<span class="nx">res</span> <span class="o">+=</span> <span class="mi">2</span>
+		<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;内部 res &quot;</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span>  
+	<span class="p">}(</span><span class="nx">res</span><span class="p">)</span>		
+	<span class="k">return</span> <span class="mi">10</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>接下来我们一个个看，也许你会认为<code class="docutils literal notranslate"><span class="pre">defer1</span></code> 的结果是10，其实是11，在这里我们先明白一个概念：</p>
+<p><strong>return 语句并不是一条原子指令</strong>，有没有被震慑到！！！</p>
+<p><strong>有返回值的且带有 defer 函数的方法中， return 语句执行顺序：</strong></p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="mf">1.</span> <span class="nx">返回值赋值</span>
+<span class="mf">2.</span> <span class="nx">调用</span> <span class="k">defer</span> <span class="nx">函数</span> <span class="p">(</span><span class="nx">在这里是可以修改返回值的</span><span class="p">)</span>
+<span class="mf">3.</span> <span class="k">return</span> <span class="nx">返回值</span>
+</pre></div>
+</div>
+<p>那 <code class="docutils literal notranslate"><span class="pre">defer1</span></code> 方法可以这样解析：</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="c1">// 不是 10 , 是 11</span>
+<span class="kd">func</span> <span class="nx">defer1</span><span class="p">()</span> <span class="p">(</span><span class="nx">res</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">defer</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+		<span class="c1">// 2. res = 10 + 1 = 11</span>
+		<span class="nx">res</span> <span class="o">++</span>
+	<span class="p">}()</span>
+	<span class="c1">// 1. res = 10</span>
+  <span class="c1">// 3. return res</span>
+	<span class="k">return</span> <span class="mi">10</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>也就是说最后的值为 11</p>
+<p><code class="docutils literal notranslate"><span class="pre">defer2</span></code> 返回值不是15，而是10，这样解析</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="c1">// 不是15, 是10</span>
+<span class="kd">func</span> <span class="nx">defer2</span><span class="p">()</span> <span class="p">(</span><span class="nx">res</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+	<span class="c1">// 1. sb = 10</span>
+	<span class="nx">sb</span> <span class="o">:=</span> <span class="mi">10</span>
+	<span class="k">defer</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+		<span class="c1">// 3. sb = 15, 但是 res = 10</span>
+		<span class="nx">sb</span> <span class="o">+=</span> <span class="mi">5</span>
+	<span class="p">}()</span>
+	<span class="c1">// 2. res = sb = 10</span>
+  <span class="c1">// 4. return res(10)</span>
+	<span class="k">return</span> <span class="nx">sb</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">defer3</span></code> 的返回值不是12， 而是10, 解析如下：</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="c1">// 不是12，是10</span>
+<span class="kd">func</span> <span class="nx">defer3</span><span class="p">()</span> <span class="p">(</span><span class="nx">res</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// 1. res=2</span>
+	<span class="nx">res</span> <span class="p">=</span> <span class="mi">2</span>
+	<span class="k">defer</span> <span class="kd">func</span><span class="p">(</span><span class="nx">res</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// 3. 内部res为形参，不影响外边的值 res=2+2=4</span>
+		<span class="nx">res</span> <span class="o">+=</span> <span class="mi">2</span>
+		<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;内部 res &quot;</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span>   <span class="c1">// 4</span>
+	<span class="p">}(</span><span class="nx">res</span><span class="p">)</span> <span class="c1">// defer 参数的值是在声明的时候确定的，也就是只有 defer 之前的语句会影响这个值</span>
+	<span class="c1">// 2. res = 10</span>
+  <span class="c1">// 4. return res(10)</span>
+	<span class="k">return</span> <span class="mi">10</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="id4">
+<h3>4. 深入理解defer<a class="headerlink" href="#id4" title="永久链接至标题">¶</a></h3>
+<p>通过实例加深理解，我们先看看一段代码</p>
+<ul>
+<li><p><strong>defer 执行顺序可以理解为 先进后出</strong></p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span>package main
+
+import &quot;fmt&quot;
+
+func main() {
+    var users [5]struct{}
+    for i := range users {
+        defer fmt.Println(i)
+    }
+}
+
+输出：4 3 2 1 0 ,defer 是先进后出,这个输出没啥好说的
+</pre></div>
+</div>
+</li>
+<li><p><strong>defer后面的语句在执行的时候，函数调用的参数会被保存起来，但是不执行。也就是复制了一份。但是并没有说struct这里的*指针如何处理</strong></p>
+<p>我们把上面的代码改下：</p>
+<p><strong>[defer 换上闭包]</strong>：</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="s">&quot;fmt&quot;</span>
+
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">users</span> <span class="p">[</span><span class="mi">5</span><span class="p">]</span><span class="kd">struct</span><span class="p">{}</span>
+    <span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">users</span> <span class="p">{</span>
+        <span class="k">defer</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span> <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">i</span><span class="p">)</span> <span class="p">}()</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>输出：4 4 4 4 4，很多人也包括我。预期的结果不是 4 3 2 1 0 吗？</p>
+<p>官网对defer 闭包的使用大致是这个意思：</p>
+<ul class="simple">
+<li><p>函数正常执行,由于闭包用到的变量 i 在执行的时候已经变成4,所以输出全都是4。那么 如何正常输出预期的 4 3 2 1 0 呢？</p></li>
+</ul>
+<p><strong>[不用闭包，换成函数：]</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">package</span> <span class="n">main</span>
+
+<span class="kn">import</span> <span class="s2">&quot;fmt&quot;</span>
+
+<span class="n">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">var</span> <span class="n">users</span> <span class="p">[</span><span class="mi">5</span><span class="p">]</span><span class="n">struct</span><span class="p">{}</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="o">:=</span> <span class="nb">range</span> <span class="n">users</span> <span class="p">{</span>
+        <span class="n">defer</span> <span class="n">Print</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+<span class="n">func</span> <span class="n">Print</span><span class="p">(</span><span class="n">i</span> <span class="nb">int</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>函数正常延迟输出：4 3 2 1 0。</p>
+<p>我们再举一个可能一不小心会犯错的例子：</p>
+<p><strong>[defer调用引用结构体函数]</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">package</span> <span class="n">main</span>
+
+<span class="kn">import</span> <span class="s2">&quot;fmt&quot;</span>
+
+<span class="nb">type</span> <span class="n">Users</span> <span class="n">struct</span> <span class="p">{</span>
+    <span class="n">name</span> <span class="n">string</span>
+<span class="p">}</span>
+
+<span class="n">func</span> <span class="p">(</span><span class="n">t</span> <span class="o">*</span><span class="n">Users</span><span class="p">)</span> <span class="n">GetName</span><span class="p">()</span> <span class="p">{</span> <span class="o">//</span> <span class="n">注意这里是</span> <span class="o">*</span> <span class="n">传地址</span> <span class="n">引用Users</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+<span class="p">}</span>
+<span class="n">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nb">list</span> <span class="o">:=</span> <span class="p">[]</span><span class="n">Users</span><span class="p">{{</span><span class="s2">&quot;乔峰&quot;</span><span class="p">},</span> <span class="p">{</span><span class="s2">&quot;慕容复&quot;</span><span class="p">},</span> <span class="p">{</span><span class="s2">&quot;清风扬&quot;</span><span class="p">}}</span>
+    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">t</span> <span class="o">:=</span> <span class="nb">range</span> <span class="nb">list</span> <span class="p">{</span>
+        <span class="n">defer</span> <span class="n">t</span><span class="o">.</span><span class="n">GetName</span><span class="p">()</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>输出：清风扬 清风扬 清风扬。</p>
+<p>这个输出并不会像我们预计的输出：清风扬 慕容复 乔峰</p>
+<p>可是按照前面的go defer函数中的使用说明,应该输出清风扬 慕容复 乔峰才对啊？</p>
+<p>那我们换一种方式来调用一下</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>package main
+
+import &quot;fmt&quot;
+
+type Users struct {
+    name string
+}
+
+func (t *Users) GetName() { // 注意这里是 * 传地址 引用Users
+    fmt.Println(t.name)
+}
+func GetName(t Users) { // 定义一个函数，名称自定义
+    t.GetName() // 调用结构体USers的方法GetName
+}
+func main() {
+    list := []Users{{&quot;乔峰&quot;}, {&quot;慕容复&quot;}, {&quot;清风扬&quot;}}
+    for _, t := range list {
+        defer GetName(t)
+    }
+}
+</pre></div>
+</div>
+<p>输出：清风扬 慕容复 乔峰。</p>
+<p>这个时候输出的就是所谓”预期”滴了</p>
+<p>当然,如果你不想多写一个函数,也很简单,可以像下面这样（改2处）,同样会输出清风扬 慕容复 乔峰</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>package main
+
+import &quot;fmt&quot;
+
+type Users struct {
+    name string
+}
+
+func (t *Users) GetName() { // 注意这里是 * 传地址 引用Users
+    fmt.Println(t.name)
+}
+func GetName(t Users) { // 定义一个函数，名称自定义
+    t.GetName() // 调用结构体USers的方法GetName
+}
+func main() {
+    list := []Users{{&quot;乔峰&quot;}, {&quot;慕容复&quot;}, {&quot;清风扬&quot;}}
+    for _, t := range list {
+        t2 := t // 定义新变量t2 t赋值给t2
+        defer t2.GetName()
+    }
+}
+</pre></div>
+</div>
+<p>输出：清风扬 慕容复 乔峰。</p>
+<p>通过以上例子</p>
+<p>我们可以得出下面的结论：</p>
+<ul class="simple">
+<li><p>defer后面的语句在执行的时候，函数调用的参数会被保存起来，但是不执行。也就是复制了一份。但是并没有说struct这里的*指针如何处理，</p></li>
+</ul>
+<p>通过这个例子可以看出go语言并没有把这个明确写出来的this指针(比如这里的* Users)当作参数来看待。</p>
+<p>到这里有滴朋友会说。看似多此一举的声明，直接去掉指针调用 t *Users改成 t Users 不就行了？</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="s">&quot;fmt&quot;</span>
+
+<span class="kd">type</span> <span class="nx">Users</span> <span class="kd">struct</span> <span class="p">{</span>
+    <span class="nx">name</span> <span class="kt">string</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">t</span> <span class="nx">Users</span><span class="p">)</span> <span class="nx">GetName</span><span class="p">()</span> <span class="p">{</span> <span class="c1">// 注意这里是 * 传地址 引用Users</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">t</span><span class="p">.</span><span class="nx">name</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">list</span> <span class="o">:=</span> <span class="p">[]</span><span class="nx">Users</span><span class="p">{{</span><span class="s">&quot;乔峰&quot;</span><span class="p">},</span> <span class="p">{</span><span class="s">&quot;慕容复&quot;</span><span class="p">},</span> <span class="p">{</span><span class="s">&quot;清风扬&quot;</span><span class="p">}}</span>
+    <span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">t</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">list</span> <span class="p">{</span>
+        <span class="k">defer</span> <span class="nx">t</span><span class="p">.</span><span class="nx">GetName</span><span class="p">()</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>输出：清风扬 慕容复 乔峰。这就回归到上面的 defer 函数非引用调用的示例了。</p>
+<p>所以这里我们要注意：</p>
+<p><strong>defer后面的指针函数和普通函数的调用区别</strong> ,很容易混淆出错。</p>
+</li>
+<li><p><strong>多个 defer 注册，按 FILO 次序执行 ( 先进后出 )。 哪怕函数或某个延迟调用发生错误，这些调用依旧会被执行</strong>，</p>
+<p>我们看看这一段代码：</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kd">func</span> <span class="nx">users</span><span class="p">(</span><span class="nx">i</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">defer</span> <span class="nb">println</span><span class="p">(</span><span class="s">&quot;北丐&quot;</span><span class="p">)</span>
+    <span class="k">defer</span> <span class="nb">println</span><span class="p">(</span><span class="s">&quot;南帝&quot;</span><span class="p">)</span>
+
+    <span class="k">defer</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nb">println</span><span class="p">(</span><span class="s">&quot;西毒&quot;</span><span class="p">)</span>
+        <span class="nb">println</span><span class="p">(</span><span class="mi">10</span> <span class="o">/</span> <span class="nx">i</span><span class="p">)</span> <span class="c1">// 异常未被捕获，逐步往外传递，最终终止进程。</span>
+    <span class="p">}()</span>
+
+    <span class="k">defer</span> <span class="nb">println</span><span class="p">(</span><span class="s">&quot;东邪&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">users</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="nb">println</span><span class="p">(</span><span class="s">&quot;武林排行榜,这里不会被输出哦&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+
+
+<span class="nx">东邪</span>
+<span class="nx">西毒</span>
+<span class="nx">南帝</span>
+<span class="nx">北丐</span>
+<span class="nx">panic</span><span class="p">:</span> <span class="nx">runtime</span> <span class="kt">error</span><span class="p">:</span> <span class="nx">integer</span> <span class="nx">divide</span> <span class="nx">by</span> <span class="nx">zero</span>
+<span class="nx">goroutine</span> <span class="mi">1</span> <span class="p">[</span><span class="nx">running</span><span class="p">]:</span>
+<span class="nx">main</span><span class="p">.</span><span class="nx">users</span><span class="p">.</span><span class="nx">func1</span><span class="p">(</span><span class="mh">0x0</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>我们发现函数中异常，最后才捕获输出，但是一旦捕获了异常，后面就不会再执行了，即终止了程序。</p>
+</li>
+<li><p><strong>延迟调用参数在求值或复制，指针或闭包会 “延迟” 读取。</strong></p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kd">func</span> <span class="nx">test</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">x</span><span class="p">,</span> <span class="nx">y</span> <span class="o">:=</span> <span class="s">&quot;乔峰&quot;</span><span class="p">,</span> <span class="s">&quot;慕容复&quot;</span>
+
+    <span class="k">defer</span> <span class="kd">func</span><span class="p">(</span><span class="nx">s</span> <span class="kt">string</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nb">println</span><span class="p">(</span><span class="s">&quot;defer:&quot;</span><span class="p">,</span> <span class="nx">s</span><span class="p">,</span> <span class="nx">y</span><span class="p">)</span> <span class="c1">// y 闭包引用 输出延迟和的值，即y+= 后的值=慕容复第二</span>
+
+    <span class="p">}(</span><span class="nx">x</span><span class="p">)</span> <span class="c1">// 匿名函数调用，传送参数x 被复制,注意这里的x 是 乔峰,而不是下面的 x+= 后的值</span>
+
+    <span class="nx">x</span> <span class="o">+=</span> <span class="s">&quot;第一&quot;</span>
+    <span class="nx">y</span> <span class="o">+=</span> <span class="s">&quot;第二&quot;</span>
+    <span class="nb">println</span><span class="p">(</span><span class="s">&quot;x =&quot;</span><span class="p">,</span> <span class="nx">x</span><span class="p">,</span> <span class="s">&quot;y =&quot;</span><span class="p">,</span> <span class="nx">y</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">test</span><span class="p">()</span>
+<span class="p">}</span>
+
+
+<span class="nx">x</span> <span class="p">=</span> <span class="nx">乔峰第一</span> 
+<span class="nx">y</span> <span class="p">=</span> <span class="nx">慕容复第二</span>
+<span class="k">defer</span><span class="p">:</span> <span class="nx">乔峰</span> <span class="nx">慕容复第二</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>defer与return</strong></p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="s">&quot;fmt&quot;</span>
+
+<span class="kd">func</span> <span class="nx">Users</span><span class="p">()</span> <span class="p">(</span><span class="nx">s</span> <span class="kt">string</span><span class="p">)</span> <span class="p">{</span>
+
+    <span class="nx">s</span> <span class="p">=</span> <span class="s">&quot;乔峰&quot;</span>
+    <span class="k">defer</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;延迟执行后:&quot;</span><span class="o">+</span><span class="nx">s</span><span class="p">)</span>
+    <span class="p">}()</span>
+
+    <span class="k">return</span> <span class="s">&quot;清风扬&quot;</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">Users</span><span class="p">()</span> <span class="c1">// 输出:延迟执行后:清风扬</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>解释：</p>
+<ul>
+<li><p>在有命名返回值的函数中（这里命名返回值为 s），执行 return “风清扬” 的时候实际上已经将s 的值重新赋值为 风清扬。</p>
+<p>所以defer 匿名函数 输出结果为 风清扬 而不是 乔峰。</p>
+</li>
+</ul>
+</li>
+<li><p><strong>在错误的位置使用 defer,来一段不严谨滴代码：</strong></p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="s">&quot;net/http&quot;</span>
+
+<span class="kd">func</span> <span class="nx">request</span><span class="p">()</span> <span class="kt">error</span> <span class="p">{</span>
+    <span class="nx">res</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">http</span><span class="p">.</span><span class="nx">Get</span><span class="p">(</span><span class="s">&quot;http://www.google.com&quot;</span><span class="p">)</span> <span class="c1">// 不FQ的情况下。是无法访问滴</span>
+    <span class="k">defer</span> <span class="nx">res</span><span class="p">.</span><span class="nx">Body</span><span class="p">.</span><span class="nx">Close</span><span class="p">()</span>
+    <span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">err</span>
+    <span class="p">}</span>
+
+    <span class="c1">// ..继续业务code...</span>
+
+    <span class="k">return</span> <span class="kc">nil</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">request</span><span class="p">()</span>
+<span class="p">}</span>
+
+<span class="nx">输出</span>
+<span class="nx">panic</span><span class="p">:</span> <span class="nx">runtime</span> <span class="kt">error</span><span class="p">:</span> <span class="nx">invalid</span> <span class="nx">memory</span> <span class="nx">address</span> <span class="nx">or</span> <span class="kc">nil</span> <span class="nx">pointer</span> <span class="nx">dereference</span>
+<span class="p">[</span><span class="nx">signal</span> <span class="mh">0xc0000005</span> <span class="nx">code</span><span class="p">=</span><span class="mh">0x0</span> <span class="nx">addr</span><span class="p">=</span><span class="mh">0x40</span> <span class="nx">pc</span><span class="p">=</span><span class="mh">0x5e553e</span><span class="p">]</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<p>Why？</p>
+<ul class="simple">
+<li><p>因为在这里我们并没有检查我们的请求是否成功执行，当它失败的时候，我们访问了 Body 中的空变量 res ，所以会抛出异常。</p></li>
+</ul>
+<p>怎么优化呢？</p>
+<ul class="simple">
+<li><p>我们应该总是在一次成功的资源分配下面使用 defer ，简单点说就是：当且仅当 http.Get 成功执行时才使用 defer.</p></li>
+</ul>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span>  <span class="kn">package</span> <span class="nx">main</span>
+  
+  <span class="kn">import</span> <span class="s">&quot;net/http&quot;</span>
+  
+  <span class="kd">func</span> <span class="nx">request</span><span class="p">()</span> <span class="kt">error</span> <span class="p">{</span>
+      <span class="nx">res</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">http</span><span class="p">.</span><span class="nx">Get</span><span class="p">(</span><span class="s">&quot;http://www.google.com&quot;</span><span class="p">)</span>
+      <span class="k">if</span> <span class="nx">res</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+          <span class="k">defer</span> <span class="nx">res</span><span class="p">.</span><span class="nx">Body</span><span class="p">.</span><span class="nx">Close</span><span class="p">()</span>
+      <span class="p">}</span>
+  
+      <span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+          <span class="k">return</span> <span class="nx">err</span>
+      <span class="p">}</span>
+  
+      <span class="c1">// ..继续业务code...</span>
+  
+      <span class="k">return</span> <span class="kc">nil</span>
+  <span class="p">}</span>
+  
+  <span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+      <span class="nx">request</span><span class="p">()</span>
+  <span class="p">}</span>
+</pre></div>
+</div>
+<p>这样，当有错误的时候，err 会被返回，否则当整个函数返回的时候，会关闭 res.Body 。</p>
+<p>解释：</p>
+<ul class="simple">
+<li><p>在这里，同样需要检查 res 的值是否为 nil ，这是 http.Get 中的一个警告。</p></li>
+</ul>
+<p>通常情况下，出错的时候，返回的内容应为空并且错误会被返回，可当你获得的是一个重定向 error 时， res 的值并不会为 nil ，</p>
+<p>但其又会将错误返回。所以上面的代码保证了无论如何 Body 都会被关闭。</p>
+<p>另外我们再聊下关于文件的defer close。我们看一段代码：</p>
+<ul>
+<li><p><strong>在这里，f.Close() 可能会返回一个错误，可这个错误会被我们忽略掉</strong></p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="s">&quot;os&quot;</span>
+
+<span class="kd">func</span> <span class="nx">open</span><span class="p">()</span> <span class="kt">error</span> <span class="p">{</span>
+    <span class="nx">f</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">os</span><span class="p">.</span><span class="nx">Open</span><span class="p">(</span><span class="s">&quot;result.json&quot;</span><span class="p">)</span> <span class="c1">// 确保文件名存在</span>
+    <span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">err</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="nx">f</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+        <span class="k">defer</span> <span class="nx">f</span><span class="p">.</span><span class="nx">Close</span><span class="p">()</span>
+    <span class="p">}</span>
+
+    <span class="c1">// ..code...</span>
+
+    <span class="k">return</span> <span class="kc">nil</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">open</span><span class="p">()</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>表面上看似没问题，其实f.Close可能关闭文件失败，我们优化下：</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="s">&quot;os&quot;</span>
+
+<span class="kd">func</span> <span class="nx">open</span><span class="p">()</span> <span class="kt">error</span> <span class="p">{</span>
+    <span class="nx">f</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">os</span><span class="p">.</span><span class="nx">Open</span><span class="p">(</span><span class="s">&quot;result.json&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">err</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="nx">f</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+        <span class="k">defer</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">f</span><span class="p">.</span><span class="nx">Close</span><span class="p">();</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+                <span class="k">return</span>
+            <span class="p">}</span>
+        <span class="p">}()</span>
+    <span class="p">}</span>
+
+    <span class="c1">// ..code...</span>
+
+    <span class="k">return</span> <span class="kc">nil</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">open</span><span class="p">()</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>如果有代码洁癖优化强迫症滴，哈哈。这里我们还可以优化下，可以通过命名的返回变量来返回 defer 内的错误。 如下：</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="s">&quot;os&quot;</span>
+
+<span class="kd">func</span> <span class="nx">open</span><span class="p">()</span> <span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">f</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">os</span><span class="p">.</span><span class="nx">Open</span><span class="p">(</span><span class="s">&quot;result.json&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">err</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="nx">f</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+        <span class="k">defer</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="nx">ferr</span> <span class="o">:=</span> <span class="nx">f</span><span class="p">.</span><span class="nx">Close</span><span class="p">();</span> <span class="nx">ferr</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+                <span class="nx">err</span> <span class="p">=</span> <span class="nx">ferr</span> <span class="c1">//这里 通过命名的返回变量ferr赋值给err 来返回 defer 内的错误</span>
+            <span class="p">}</span>
+        <span class="p">}()</span>
+    <span class="p">}</span>
+
+    <span class="c1">// ..code...</span>
+
+    <span class="k">return</span> <span class="kc">nil</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">open</span><span class="p">()</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<p>最后一个容易忽视的问题：<strong>如果你尝试使用相同的变量释放不同的资源，那么这个操作可能无法正常执行</strong></p>
+<p>神马意思？继续看：</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+    <span class="s">&quot;fmt&quot;</span>
+    <span class="s">&quot;os&quot;</span>
+<span class="p">)</span>
+
+<span class="kd">func</span> <span class="nx">open</span><span class="p">()</span> <span class="kt">error</span> <span class="p">{</span>
+    <span class="nx">f</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">os</span><span class="p">.</span><span class="nx">Open</span><span class="p">(</span><span class="s">&quot;result.json&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">err</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="nx">f</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+        <span class="k">defer</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">f</span><span class="p">.</span><span class="nx">Close</span><span class="p">();</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+                <span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;延迟关闭文件result.json 错误 %v\n&quot;</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+            <span class="p">}</span>
+        <span class="p">}()</span>
+    <span class="p">}</span>
+
+    <span class="c1">// ..code...</span>
+
+    <span class="nx">f</span><span class="p">,</span> <span class="nx">err</span> <span class="p">=</span> <span class="nx">os</span><span class="p">.</span><span class="nx">Open</span><span class="p">(</span><span class="s">&quot;result2.json&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">err</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="nx">f</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+        <span class="k">defer</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">f</span><span class="p">.</span><span class="nx">Close</span><span class="p">();</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+                <span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;延迟关闭文件result2.json 错误 %v\n&quot;</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+            <span class="p">}</span>
+        <span class="p">}()</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="kc">nil</span>
+<span class="p">}</span>
+
+
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">open</span><span class="p">()</span>
+<span class="p">}</span>
+
+<span class="c1">// 延迟关闭文件result.json 错误 close result2.json: file already closed</span>
+</pre></div>
+</div>
+<p><strong>结论：</strong></p>
+<p>当延迟函数执行时，只有最后一个变量会被用到，因此，f 变量 会成为最后那个资源 (result2.json)。</p>
+<p>而且两个 defer 都会将这个资源作为最后的资源来关闭,也就是优先关闭了result2.json后，再执行第一个defer Close result1.json的时候，</p>
+<p>其实还是在关闭result2.json.这样重复关闭同一个文件导致错误异常。肿么解决？很好办？用io.Closer属性</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+    <span class="s">&quot;fmt&quot;</span>
+    <span class="s">&quot;io&quot;</span>
+    <span class="s">&quot;os&quot;</span>
+<span class="p">)</span>
+
+<span class="kd">func</span> <span class="nx">open</span><span class="p">()</span> <span class="kt">error</span> <span class="p">{</span>
+    <span class="nx">f</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">os</span><span class="p">.</span><span class="nx">Open</span><span class="p">(</span><span class="s">&quot;result.json&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">err</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="nx">f</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+        <span class="k">defer</span> <span class="kd">func</span><span class="p">(</span><span class="nx">f</span> <span class="nx">io</span><span class="p">.</span><span class="nx">Closer</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// 注意修改滴地方</span>
+            <span class="k">if</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">f</span><span class="p">.</span><span class="nx">Close</span><span class="p">();</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+                <span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;延迟关闭文件result.json 错误 %v\n&quot;</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+            <span class="p">}</span>
+        <span class="p">}(</span><span class="nx">f</span><span class="p">)</span> <span class="c1">// 注意修改滴地方</span>
+    <span class="p">}</span>
+
+    <span class="c1">// ..code...</span>
+
+    <span class="nx">f</span><span class="p">,</span> <span class="nx">err</span> <span class="p">=</span> <span class="nx">os</span><span class="p">.</span><span class="nx">Open</span><span class="p">(</span><span class="s">&quot;result2.json&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">err</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="nx">f</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+        <span class="k">defer</span> <span class="kd">func</span><span class="p">(</span><span class="nx">f</span> <span class="nx">io</span><span class="p">.</span><span class="nx">Closer</span><span class="p">)</span> <span class="p">{</span><span class="c1">// 注意修改滴地方</span>
+            <span class="k">if</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">f</span><span class="p">.</span><span class="nx">Close</span><span class="p">();</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+                <span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;延迟关闭文件result2.json 错误 %v\n&quot;</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+            <span class="p">}</span>
+        <span class="p">}(</span><span class="nx">f</span><span class="p">)</span><span class="c1">// 注意修改滴地方</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="kc">nil</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">open</span><span class="p">()</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="recover">
+<h2><span class="section-number">2.2. </span>捕获异常：recover<a class="headerlink" href="#recover" title="永久链接至标题">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">For</span> <span class="pre">example</span></code></p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">func</span> <span class="nx">recoverDemo1</span><span class="p">()</span> <span class="p">{</span>
+	<span class="k">defer</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+		<span class="k">if</span> <span class="nx">r</span> <span class="o">:=</span> <span class="nb">recover</span><span class="p">();</span> <span class="nx">r</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="nx">log</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;Runtime error caught: %v&quot;</span><span class="p">,</span> <span class="nx">r</span><span class="p">)</span>
+		<span class="p">}</span>
+	<span class="p">}()</span>
+    
+    <span class="c1">// 调用foo() 方法</span>
+    <span class="nx">foo</span><span class="p">()</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">foo</span><span class="p">(){</span>
+    <span class="nb">panic</span><span class="p">(</span><span class="s">&quot;test panic&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>无论<code class="docutils literal notranslate">&#160; <span class="pre">foo()</span></code> 中是否触发了错误处理流程，该匿名defer函数都将在函数退出时得到执行。假 如 <code class="docutils literal notranslate">&#160; <span class="pre">foo()</span></code> 中触发了错误处理流程，recover()函数执行将使得该错误处理过程终止。如果错误处 理流程被触发时，程序传给panic函数的参数不为nil，则该函数还会打印详细的错误信息。</p>
+<p><code class="docutils literal notranslate"><span class="pre">Golang</span></code>  异常的抛出与捕获，依赖两个内置函数：</p>
+<ul class="simple">
+<li><p>panic：抛出异常，使程序崩溃</p></li>
+<li><p>recover：捕获异常，恢复程序或做收尾工作</p></li>
+</ul>
+<p>revocer 调用后，抛出的 panic 将会在此处终结，不会再外抛，但是 recover，并不能任意使用，它有 <strong>强制要求，必须得在 defer 下才能发挥用途</strong> 。</p>
+<section id="recover-defer">
+<h3>1.  recover 仅在延迟函数 defer 中有效<a class="headerlink" href="#recover-defer" title="永久链接至标题">¶</a></h3>
+<p>先来看个例子：</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="s">&quot;fmt&quot;</span>
+
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nb">recover</span><span class="p">()</span>     <span class="c1">// 无任何作用</span>
+	<span class="nb">panic</span><span class="p">(</span><span class="s">&quot;停止运行&quot;</span><span class="p">)</span>
+	<span class="nb">recover</span><span class="p">()</span>     <span class="c1">// 不会执行到</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;结束&quot;</span><span class="p">)</span>
+	
+	<span class="c1">// 输出</span>
+	<span class="c1">// panic: 停止运行</span>
+	<span class="c1">// goroutine 1 [running]:exit status 2</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>修改下代码：</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="s">&quot;fmt&quot;</span>
+
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="k">defer</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+		<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;捕获到异常:&quot;</span><span class="p">,</span> <span class="nb">recover</span><span class="p">())</span>
+	<span class="p">}()</span>
+	<span class="nb">panic</span><span class="p">(</span><span class="s">&quot;手动抛出异常&quot;</span><span class="p">)</span>
+	
+	<span class="c1">// 输出</span>
+	<span class="c1">// 捕获到异常: 手动抛出异常</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>结论：</strong></p>
+<p>recover 仅在延迟函数 defer 中有效，在正常的执行过程中，调用 recover 会返回 nil 并且没有其他任何效果.</p>
+<p><strong>重要的事再说一遍：仅当在一个defer函数中被完成时，调用recover()才生效。</strong></p>
+</section>
+<section id="recoverdefer">
+<h3>2. recover在defer中直接调用才生效<a class="headerlink" href="#recoverdefer" title="永久链接至标题">¶</a></h3>
+<p>举个例子</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="s">&quot;fmt&quot;</span>
+
+<span class="kd">func</span> <span class="nx">doRecover</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;捕获到异常 =&gt;&quot;</span><span class="p">,</span> <span class="nb">recover</span><span class="p">())</span> <span class="c1">//输出: 捕获到异常 =&gt; &lt;nil&gt;</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="k">defer</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+		<span class="nx">doRecover</span><span class="p">()</span> <span class="c1">//注意：这里间接使用函数，在函数中调用了recover()函数，</span>
+		<span class="c1">// panic 没有恢复,没有捕获到错误信息</span>
+	<span class="p">}()</span>
+	<span class="nb">panic</span><span class="p">(</span><span class="s">&quot;手动抛出异常&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>输出</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">捕获到异常</span> <span class="o">=</span>&gt; &lt;nil&gt;
+panic: 手动抛出异常
+
+goroutine <span class="m">1</span> <span class="o">[</span>running<span class="o">]</span>:
+main.main<span class="o">()</span>
+</pre></div>
+</div>
+<p><strong>总结：panic配合recover使用，recover要在defer函数中直接调用才生效。</strong></p>
+</section>
+<section id="id5">
+<h3>3. 案例解析<a class="headerlink" href="#id5" title="永久链接至标题">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">panic</span></code>可以在任何地方引发，但<code class="docutils literal notranslate"><span class="pre">recover</span></code>只有在<code class="docutils literal notranslate"><span class="pre">defer</span></code>调用的函数中有效。 首先来看一个例子：</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">func</span> <span class="nx">funcA</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;func A&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">funcB</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nb">panic</span><span class="p">(</span><span class="s">&quot;panic in B&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">funcC</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;func C&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">funcA</span><span class="p">()</span>
+	<span class="nx">funcB</span><span class="p">()</span>
+	<span class="nx">funcC</span><span class="p">()</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>输出：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>func A
+panic: panic <span class="k">in</span> B
+
+goroutine <span class="m">1</span> <span class="o">[</span>running<span class="o">]</span>:
+main.funcB<span class="o">(</span>...<span class="o">)</span>
+        .../code/func/main.go:12
+main.main<span class="o">()</span>
+        .../code/func/main.go:20 +0x98
+</pre></div>
+</div>
+<p>程序运行期间<code class="docutils literal notranslate"><span class="pre">funcB</span></code>中引发了<code class="docutils literal notranslate"><span class="pre">panic</span></code>导致程序崩溃，异常退出了。</p>
+<p>这个时候我们就可以通过<code class="docutils literal notranslate"><span class="pre">recover</span></code>将程序恢复回来，继续往后执行。</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">func</span> <span class="nx">funcA</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;func A&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">funcB</span><span class="p">()</span> <span class="p">{</span>
+	<span class="k">defer</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+		<span class="nx">err</span> <span class="o">:=</span> <span class="nb">recover</span><span class="p">()</span>
+		<span class="c1">//如果程序出出现了panic错误,可以通过recover恢复过来</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;recover in B&quot;</span><span class="p">)</span>
+		<span class="p">}</span>
+	<span class="p">}()</span>
+	<span class="nb">panic</span><span class="p">(</span><span class="s">&quot;panic in B&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">funcC</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;func C&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">funcA</span><span class="p">()</span>
+	<span class="nx">funcB</span><span class="p">()</span>
+	<span class="nx">funcC</span><span class="p">()</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>注意：</strong></p>
+<ol class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">recover()</span></code>必须搭配<code class="docutils literal notranslate"><span class="pre">defer</span></code>使用。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">defer</span></code>一定要在可能引发<code class="docutils literal notranslate"><span class="pre">panic</span></code>的语句之前定义。</p></li>
+</ol>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="w011_process.html" class="btn btn-neutral float-left" title="1. 基础知识之流程控制" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="w013_function.html" class="btn btn-neutral float-right" title="3. 基础知识之函数" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; 版权所有 2021, 公众号:Java半颗糖.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

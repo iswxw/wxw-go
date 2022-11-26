@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>3. package/encoding/json &mdash; Go 深入浅出 1.0.0 文档</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/translations.js"></script>
+        <script src="../_static/js/readmore.js"></script>
+        <script src="../_static/js/baidutongji.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="第六章：工程实践" href="../w06/index.html" />
+    <link rel="prev" title="2. pkg/context" href="w052_context.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> Go 深入浅出
+          </a>
+              <div class="version">
+                1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../preface.html">前言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../w01/index.html">第一章：基础知识</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../w02/index.html">第二章：面向对象</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../w03/index.html">第三章：并发编程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../w04/index.html">第四章：数据操作</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">第五章：源码学习</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="w051_sync.html">1. package/sync</a></li>
+<li class="toctree-l2"><a class="reference internal" href="w052_context.html">2. pkg/context</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">3. package/encoding/json</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#json">3.1. 初识<code class="docutils literal notranslate"><span class="pre">json</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id1">3.2. 核心函数</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#func-marshal">1. <code class="docutils literal notranslate"><span class="pre">func</span> <span class="pre">Marshal</span>&#160;&#160; </code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#func-unmarshal">2. <code class="docutils literal notranslate"><span class="pre">func</span> <span class="pre">unMarshal</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../w06/index.html">第六章：工程实践</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../wend/about.html">关于作者</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Go 深入浅出</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="index.html">第五章：源码学习</a> &raquo;</li>
+      <li><span class="section-number">3. </span>package/encoding/json</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/w05/w053_json.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="package-encoding-json">
+<h1><span class="section-number">3. </span>package/encoding/json<a class="headerlink" href="#package-encoding-json" title="永久链接至标题">¶</a></h1>
+<section id="json">
+<h2><span class="section-number">3.1. </span>初识<code class="docutils literal notranslate"><span class="pre">json</span></code><a class="headerlink" href="#json" title="永久链接至标题">¶</a></h2>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span>Package json implements encoding and decoding of JSON as defined in RFC 7159. 
+The mapping between JSON and Go values is described in the documentation for 
+the Marshal and Unmarshal functions.
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>出处：https://golang.google.cn/pkg/encoding/json/</p></li>
+</ul>
+</section>
+<section id="id1">
+<h2><span class="section-number">3.2. </span>核心函数<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h2>
+<section id="func-marshal">
+<h3>1. <code class="docutils literal notranslate"><span class="pre">func</span> <span class="pre">Marshal</span>&#160;&#160; </code><a class="headerlink" href="#func-marshal" title="永久链接至标题">¶</a></h3>
+<section id="marshal">
+<h4>1.1 使用 <code class="docutils literal notranslate"> <span class="pre">Marshal</span></code><a class="headerlink" href="#marshal" title="永久链接至标题">¶</a></h4>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="c1">// Marshal returns the JSON encoding of v.</span>
+<span class="kd">func</span> <span class="nx">Marshal</span><span class="p">(</span><span class="nx">v</span> <span class="kd">interface</span><span class="p">{})</span> <span class="p">([]</span><span class="kt">byte</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>使用示例</strong></p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+	<span class="s">&quot;encoding/json&quot;</span>
+	<span class="s">&quot;fmt&quot;</span>
+	<span class="s">&quot;log&quot;</span>
+	<span class="s">&quot;time&quot;</span>
+<span class="p">)</span>
+
+<span class="c1">// User 定义一个结构体</span>
+<span class="c1">// 首字母大写：表示 public</span>
+<span class="c1">// 首字母小写：表示 private</span>
+<span class="kd">type</span> <span class="nx">User</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">UserName</span> <span class="kt">string</span>    <span class="s">`json:&quot;user_name,omitempty&quot;`</span> <span class="c1">// omitempty 表示忽略空值,</span>
+	<span class="nx">Age</span>      <span class="kt">int</span>       <span class="s">`json:&quot;age&quot;`</span>
+	<span class="nx">Age1</span>     <span class="kt">int</span>       <span class="s">`json:&quot;-&quot;`</span>                   <span class="c1">//`json:&quot;-&quot;` 表示不进行序列化,忽略这个字段</span>
+	<span class="nx">Gender</span>   <span class="kt">string</span>    <span class="s">`json:&quot;gender,string&quot;`</span>
+	<span class="nx">Birthday</span> <span class="nx">time</span><span class="p">.</span><span class="nx">Time</span> <span class="s">`json:&quot;birthday&quot; `</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">NewUser</span><span class="p">()</span> <span class="o">*</span><span class="nx">User</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">User</span><span class="p">{</span>
+		<span class="nx">UserName</span><span class="p">:</span> <span class="s">&quot;Java半颗糖&quot;</span><span class="p">,</span>
+		<span class="nx">Age</span><span class="p">:</span>      <span class="mi">18</span><span class="p">,</span>
+		<span class="nx">Gender</span><span class="p">:</span>   <span class="s">&quot;男&quot;</span><span class="p">,</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">NewEmptyUser</span><span class="p">()</span> <span class="o">*</span><span class="nx">User</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">User</span><span class="p">{}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">user</span> <span class="o">:=</span> <span class="nx">NewUser</span><span class="p">()</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;user: %#v\n&quot;</span><span class="p">,</span><span class="nx">user</span><span class="p">)</span>
+
+	<span class="c1">// marshal</span>
+	<span class="nx">byteUser</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">json</span><span class="p">.</span><span class="nx">Marshal</span><span class="p">(</span><span class="nx">user</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		 <span class="nx">log</span><span class="p">.</span><span class="nx">Fatal</span><span class="p">(</span><span class="s">&quot;json marshal error:&quot;</span><span class="p">,</span><span class="nx">err</span><span class="p">)</span>
+	<span class="p">}</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot; user: %#v\n&quot;</span><span class="p">,</span><span class="nx">byteUser</span><span class="p">)</span>
+
+	<span class="c1">// unmarshal</span>
+	<span class="nx">user1</span> <span class="o">:=</span> <span class="nx">NewEmptyUser</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="p">=</span> <span class="nx">json</span><span class="p">.</span><span class="nx">Unmarshal</span><span class="p">(</span><span class="nx">byteUser</span><span class="p">,</span> <span class="o">&amp;</span><span class="nx">user1</span><span class="p">);</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="nx">log</span><span class="p">.</span><span class="nx">Fatal</span><span class="p">(</span><span class="s">&quot;json unmarshal error:&quot;</span><span class="p">,</span><span class="nx">err</span><span class="p">)</span>
+	<span class="p">}</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot; user: %#v\n&quot;</span><span class="p">,</span><span class="nx">user1</span><span class="p">)</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="marshal-struct">
+<h4>1.2 <code class="docutils literal notranslate"><span class="pre">marshal</span> <span class="pre">struct</span></code><a class="headerlink" href="#marshal-struct" title="永久链接至标题">¶</a></h4>
+<p><code class="docutils literal notranslate"> <span class="pre">Examples</span> <span class="pre">of</span> <span class="pre">struct</span> <span class="pre">field</span> <span class="pre">tags</span> <span class="pre">and</span> <span class="pre">their</span> <span class="pre">meanings:</span></code></p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="c1">// Field appears in JSON as key &quot;myName&quot;.</span>
+<span class="nx">Field</span> <span class="kt">int</span> <span class="s">`json:&quot;myName&quot;`</span>
+
+<span class="c1">// Field appears in JSON as key &quot;myName&quot; and</span>
+<span class="c1">// the field is omitted from the object if its value is empty,</span>
+<span class="c1">// as defined above.</span>
+<span class="nx">Field</span> <span class="kt">int</span> <span class="s">`json:&quot;myName,omitempty&quot;`</span>
+
+<span class="c1">// Field appears in JSON as key &quot;Field&quot; (the default), but</span>
+<span class="c1">// the field is skipped if empty.</span>
+<span class="c1">// Note the leading comma. (注意前面的逗号)</span>
+<span class="nx">Field</span> <span class="kt">int</span> <span class="s">`json:&quot;,omitempty&quot;`</span>
+
+<span class="c1">// Field is ignored by this package.（这个包忽略这个字段）</span>
+<span class="nx">Field</span> <span class="kt">int</span> <span class="s">`json:&quot;-&quot;`</span>
+
+<span class="c1">// Field appears in JSON as key &quot;-&quot;.（这个字段在json中显示key是&quot;-&quot;） </span>
+<span class="nx">Field</span> <span class="kt">int</span> <span class="s">`json:&quot;-,&quot;`</span>
+</pre></div>
+</div>
+<p><strong>序列化时字段限定 tag 标签：</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">json:&quot;myName&quot;</span></code> 指定 序列化后在 <code class="docutils literal notranslate"> <span class="pre">json</span></code> 字符串中显示的 key 名称</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">json:&quot;-&quot;</span></code> 表示不进行序列化，这样在 marshal 后 可以看见值</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">json:&quot;myName,omitempty&quot;</span></code> 表示 序列化的时候，忽略控制，也不展示在序列化后的 <code class="docutils literal notranslate"> <span class="pre">json</span></code>字符串中</p></li>
+<li><p><code class="docutils literal notranslate"> <span class="pre">json:&quot;product_id,string&quot;</span></code> 表示序列化时指定 key 的类型，帮助转换为指定类型</p></li>
+</ul>
+<p><strong>案例分析</strong></p>
+<ul>
+<li><p>一个结构体正常序列化过后是什么样的呢？</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kn">package</span> <span class="nx">main</span>
+<span class="kn">import</span> <span class="p">(</span>
+    <span class="s">&quot;encoding/json&quot;</span>
+    <span class="s">&quot;fmt&quot;</span>
+<span class="p">)</span>
+
+<span class="c1">// Product 商品信息</span>
+<span class="kd">type</span> <span class="nx">Product</span> <span class="kd">struct</span> <span class="p">{</span>
+    <span class="nx">Name</span>      <span class="kt">string</span>
+    <span class="nx">ProductID</span> <span class="kt">int64</span>
+    <span class="nx">Number</span>    <span class="kt">int</span>
+    <span class="nx">Price</span>     <span class="kt">float64</span>
+    <span class="nx">IsOnSale</span>  <span class="kt">bool</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">p</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">Product</span><span class="p">{}</span>
+    <span class="nx">p</span><span class="p">.</span><span class="nx">Name</span> <span class="p">=</span> <span class="s">&quot;Xiao mi 6&quot;</span>
+    <span class="nx">p</span><span class="p">.</span><span class="nx">IsOnSale</span> <span class="p">=</span> <span class="kc">true</span>
+    <span class="nx">p</span><span class="p">.</span><span class="nx">Number</span> <span class="p">=</span> <span class="mi">10000</span>
+    <span class="nx">p</span><span class="p">.</span><span class="nx">Price</span> <span class="p">=</span> <span class="mf">2499.00</span>
+    <span class="nx">p</span><span class="p">.</span><span class="nx">ProductID</span> <span class="p">=</span> <span class="mi">1</span>
+    <span class="nx">data</span><span class="p">,</span> <span class="nx">_</span> <span class="o">:=</span> <span class="nx">json</span><span class="p">.</span><span class="nx">Marshal</span><span class="p">(</span><span class="nx">p</span><span class="p">)</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nb">string</span><span class="p">(</span><span class="nx">data</span><span class="p">))</span>
+<span class="p">}</span>
+
+
+<span class="c1">//结果</span>
+<span class="p">{</span><span class="s">&quot;Name&quot;</span><span class="p">:</span><span class="s">&quot;Xiao mi 6&quot;</span><span class="p">,</span><span class="s">&quot;ProductID&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="s">&quot;Number&quot;</span><span class="p">:</span><span class="mi">10000</span><span class="p">,</span><span class="s">&quot;Price&quot;</span><span class="p">:</span><span class="mi">2499</span><span class="p">,</span><span class="s">&quot;IsOnSale&quot;</span><span class="p">:</span><span class="kc">true</span><span class="p">}</span>
+</pre></div>
+</div>
+</li>
+<li><p>何为Tag，tag就是标签，给结构体的每个字段打上一个标签，标签冒号前是类型，后面是标签名。</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="c1">// Product _</span>
+<span class="kd">type</span> <span class="nx">Product</span> <span class="kd">struct</span> <span class="p">{</span>
+    <span class="nx">Name</span>      <span class="kt">string</span>  <span class="s">`json:&quot;name&quot;`</span>
+    <span class="nx">ProductID</span> <span class="kt">int64</span>   <span class="s">`json:&quot;-&quot;`</span> <span class="c1">// 表示不进行序列化</span>
+    <span class="nx">Number</span>    <span class="kt">int</span>     <span class="s">`json:&quot;number&quot;`</span>
+    <span class="nx">Price</span>     <span class="kt">float64</span> <span class="s">`json:&quot;price&quot;`</span>
+    <span class="nx">IsOnSale</span>  <span class="kt">bool</span>    <span class="s">`json:&quot;is_on_sale,string&quot;`</span>
+<span class="p">}</span>
+
+<span class="c1">// 序列化过后，可以看见</span>
+<span class="p">{</span><span class="s">&quot;name&quot;</span><span class="p">:</span><span class="s">&quot;Xiao mi 6&quot;</span><span class="p">,</span><span class="s">&quot;number&quot;</span><span class="p">:</span><span class="mi">10000</span><span class="p">,</span><span class="s">&quot;price&quot;</span><span class="p">:</span><span class="mi">2499</span><span class="p">,</span><span class="s">&quot;is_on_sale&quot;</span><span class="p">:</span><span class="s">&quot;false&quot;</span><span class="p">}</span>
+</pre></div>
+</div>
+</li>
+<li><p>omitempty，tag里面加上omitempy，可以在序列化的时候忽略0值或者空值</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+    <span class="s">&quot;encoding/json&quot;</span>
+    <span class="s">&quot;fmt&quot;</span>
+<span class="p">)</span>
+
+<span class="c1">// Product _</span>
+<span class="kd">type</span> <span class="nx">Product</span> <span class="kd">struct</span> <span class="p">{</span>
+    <span class="nx">Name</span>      <span class="kt">string</span>  <span class="s">`json:&quot;name&quot;`</span>
+    <span class="nx">ProductID</span> <span class="kt">int64</span>   <span class="s">`json:&quot;product_id,omitempty&quot;`</span> 
+    <span class="nx">Number</span>    <span class="kt">int</span>     <span class="s">`json:&quot;number&quot;`</span>
+    <span class="nx">Price</span>     <span class="kt">float64</span> <span class="s">`json:&quot;price&quot;`</span>
+    <span class="nx">IsOnSale</span>  <span class="kt">bool</span>    <span class="s">`json:&quot;is_on_sale,omitempty&quot;`</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">p</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">Product</span><span class="p">{}</span>
+    <span class="nx">p</span><span class="p">.</span><span class="nx">Name</span> <span class="p">=</span> <span class="s">&quot;Xiao mi 6&quot;</span>
+    <span class="nx">p</span><span class="p">.</span><span class="nx">IsOnSale</span> <span class="p">=</span> <span class="kc">false</span>
+    <span class="nx">p</span><span class="p">.</span><span class="nx">Number</span> <span class="p">=</span> <span class="mi">10000</span>
+    <span class="nx">p</span><span class="p">.</span><span class="nx">Price</span> <span class="p">=</span> <span class="mf">2499.00</span>
+    <span class="nx">p</span><span class="p">.</span><span class="nx">ProductID</span> <span class="p">=</span> <span class="mi">0</span>
+
+    <span class="nx">data</span><span class="p">,</span> <span class="nx">_</span> <span class="o">:=</span> <span class="nx">json</span><span class="p">.</span><span class="nx">Marshal</span><span class="p">(</span><span class="nx">p</span><span class="p">)</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nb">string</span><span class="p">(</span><span class="nx">data</span><span class="p">))</span>
+<span class="p">}</span>
+<span class="c1">// 结果</span>
+<span class="p">{</span><span class="s">&quot;name&quot;</span><span class="p">:</span><span class="s">&quot;Xiao mi 6&quot;</span><span class="p">,</span><span class="s">&quot;number&quot;</span><span class="p">:</span><span class="mi">10000</span><span class="p">,</span><span class="s">&quot;price&quot;</span><span class="p">:</span><span class="mi">2499</span><span class="p">}</span>
+</pre></div>
+</div>
+</li>
+<li><p>type，有些时候，我们在序列化或者反序列化的时候，可能结构体类型和需要的类型不一致，这个时候可以指定,支持string,number和boolean</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+    <span class="s">&quot;encoding/json&quot;</span>
+    <span class="s">&quot;fmt&quot;</span>
+<span class="p">)</span>
+
+<span class="c1">// Product _</span>
+<span class="kd">type</span> <span class="nx">Product</span> <span class="kd">struct</span> <span class="p">{</span>
+    <span class="nx">Name</span>      <span class="kt">string</span>  <span class="s">`json:&quot;name&quot;`</span>
+    <span class="nx">ProductID</span> <span class="kt">int64</span>   <span class="s">`json:&quot;product_id,string&quot;`</span>
+    <span class="nx">Number</span>    <span class="kt">int</span>     <span class="s">`json:&quot;number,string&quot;`</span>
+    <span class="nx">Price</span>     <span class="kt">float64</span> <span class="s">`json:&quot;price,string&quot;`</span>
+    <span class="nx">IsOnSale</span>  <span class="kt">bool</span>    <span class="s">`json:&quot;is_on_sale,string&quot;`</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">data</span> <span class="p">=</span> <span class="s">`{&quot;name&quot;:&quot;Xiao mi 6&quot;,&quot;product_id&quot;:&quot;10&quot;,&quot;number&quot;:&quot;10000&quot;,&quot;price&quot;:&quot;2499&quot;,&quot;is_on_sale&quot;:&quot;true&quot;}`</span>
+    <span class="nx">p</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">Product</span><span class="p">{}</span>
+    <span class="nx">err</span> <span class="o">:=</span> <span class="nx">json</span><span class="p">.</span><span class="nx">Unmarshal</span><span class="p">([]</span><span class="nb">byte</span><span class="p">(</span><span class="nx">data</span><span class="p">),</span> <span class="nx">p</span><span class="p">)</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="o">*</span><span class="nx">p</span><span class="p">)</span>
+<span class="p">}</span>
+<span class="c1">// 结果</span>
+<span class="p">&lt;</span><span class="kc">nil</span><span class="p">&gt;</span>
+<span class="p">{</span><span class="nx">Xiao</span> <span class="nx">mi</span> <span class="mi">6</span> <span class="mi">10</span> <span class="mi">10000</span> <span class="mi">2499</span> <span class="kc">true</span><span class="p">}</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+<section id="id2">
+<h4>1.3 <code class="docutils literal notranslate"> <span class="pre">marshal</span></code> 源码<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h4>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="c1">// Marshal returns the JSON encoding of v.</span>
+<span class="c1">//</span>
+<span class="c1">// Marshal traverses the value v recursively.</span>
+<span class="c1">// If an encountered value implements the Marshaler interface</span>
+<span class="c1">// and is not a nil pointer, Marshal calls its MarshalJSON method</span>
+<span class="c1">// to produce JSON. If no MarshalJSON method is present but the</span>
+<span class="c1">// value implements encoding.TextMarshaler instead, Marshal calls</span>
+<span class="c1">// its MarshalText method and encodes the result as a JSON string.</span>
+<span class="c1">// The nil pointer exception is not strictly necessary</span>
+<span class="c1">// but mimics a similar, necessary exception in the behavior of</span>
+<span class="c1">// UnmarshalJSON.</span>
+<span class="c1">//</span>
+<span class="c1">// Otherwise, Marshal uses the following type-dependent default encodings:</span>
+<span class="c1">//</span>
+<span class="c1">// Boolean values encode as JSON booleans.</span>
+<span class="c1">//</span>
+<span class="c1">// Floating point, integer, and Number values encode as JSON numbers.</span>
+<span class="c1">//</span>
+<span class="c1">// String values encode as JSON strings coerced to valid UTF-8,</span>
+<span class="c1">// replacing invalid bytes with the Unicode replacement rune.</span>
+<span class="c1">// So that the JSON will be safe to embed inside HTML &lt;script&gt; tags,</span>
+<span class="c1">// the string is encoded using HTMLEscape,</span>
+<span class="c1">// which replaces &quot;&lt;&quot;, &quot;&gt;&quot;, &quot;&amp;&quot;, U+2028, and U+2029 are escaped</span>
+<span class="c1">// to &quot;\u003c&quot;,&quot;\u003e&quot;, &quot;\u0026&quot;, &quot;\u2028&quot;, and &quot;\u2029&quot;.</span>
+<span class="c1">// This replacement can be disabled when using an Encoder,</span>
+<span class="c1">// by calling SetEscapeHTML(false).</span>
+<span class="c1">//</span>
+<span class="c1">// Array and slice values encode as JSON arrays, except that</span>
+<span class="c1">// []byte encodes as a base64-encoded string, and a nil slice</span>
+<span class="c1">// encodes as the null JSON value.</span>
+<span class="c1">//</span>
+<span class="c1">// Struct values encode as JSON objects.</span>
+<span class="c1">// Each exported struct field becomes a member of the object, using the</span>
+<span class="c1">// field name as the object key, unless the field is omitted for one of the</span>
+<span class="c1">// reasons given below.</span>
+<span class="c1">//</span>
+<span class="c1">// The encoding of each struct field can be customized by the format string</span>
+<span class="c1">// stored under the &quot;json&quot; key in the struct field&#39;s tag.</span>
+<span class="c1">// The format string gives the name of the field, possibly followed by a</span>
+<span class="c1">// comma-separated list of options. The name may be empty in order to</span>
+<span class="c1">// specify options without overriding the default field name.</span>
+<span class="c1">//</span>
+<span class="c1">// The &quot;omitempty&quot; option specifies that the field should be omitted</span>
+<span class="c1">// from the encoding if the field has an empty value, defined as</span>
+<span class="c1">// false, 0, a nil pointer, a nil interface value, and any empty array,</span>
+<span class="c1">// slice, map, or string.</span>
+<span class="c1">//</span>
+<span class="c1">// As a special case, if the field tag is &quot;-&quot;, the field is always omitted.</span>
+<span class="c1">// Note that a field with name &quot;-&quot; can still be generated using the tag &quot;-,&quot;.</span>
+<span class="c1">//</span>
+<span class="c1">// Examples of struct field tags and their meanings:</span>
+<span class="c1">//</span>
+<span class="c1">//   // Field appears in JSON as key &quot;myName&quot;.</span>
+<span class="c1">//   Field int `json:&quot;myName&quot;`</span>
+<span class="c1">//</span>
+<span class="c1">//   // Field appears in JSON as key &quot;myName&quot; and</span>
+<span class="c1">//   // the field is omitted from the object if its value is empty,</span>
+<span class="c1">//   // as defined above.</span>
+<span class="c1">//   Field int `json:&quot;myName,omitempty&quot;`</span>
+<span class="c1">//</span>
+<span class="c1">//   // Field appears in JSON as key &quot;Field&quot; (the default), but</span>
+<span class="c1">//   // the field is skipped if empty.</span>
+<span class="c1">//   // Note the leading comma.</span>
+<span class="c1">//   Field int `json:&quot;,omitempty&quot;`</span>
+<span class="c1">//</span>
+<span class="c1">//   // Field is ignored by this package.</span>
+<span class="c1">//   Field int `json:&quot;-&quot;`</span>
+<span class="c1">//</span>
+<span class="c1">//   // Field appears in JSON as key &quot;-&quot;.</span>
+<span class="c1">//   Field int `json:&quot;-,&quot;`</span>
+<span class="c1">//</span>
+<span class="c1">// The &quot;string&quot; option signals that a field is stored as JSON inside a</span>
+<span class="c1">// JSON-encoded string. It applies only to fields of string, floating point,</span>
+<span class="c1">// integer, or boolean types. This extra level of encoding is sometimes used</span>
+<span class="c1">// when communicating with JavaScript programs:</span>
+<span class="c1">//</span>
+<span class="c1">//    Int64String int64 `json:&quot;,string&quot;`</span>
+<span class="c1">//</span>
+<span class="c1">// The key name will be used if it&#39;s a non-empty string consisting of</span>
+<span class="c1">// only Unicode letters, digits, and ASCII punctuation except quotation</span>
+<span class="c1">// marks, backslash, and comma.</span>
+<span class="c1">//</span>
+<span class="c1">// Anonymous struct fields are usually marshaled as if their inner exported fields</span>
+<span class="c1">// were fields in the outer struct, subject to the usual Go visibility rules amended</span>
+<span class="c1">// as described in the next paragraph.</span>
+<span class="c1">// An anonymous struct field with a name given in its JSON tag is treated as</span>
+<span class="c1">// having that name, rather than being anonymous.</span>
+<span class="c1">// An anonymous struct field of interface type is treated the same as having</span>
+<span class="c1">// that type as its name, rather than being anonymous.</span>
+<span class="c1">//</span>
+<span class="c1">// The Go visibility rules for struct fields are amended for JSON when</span>
+<span class="c1">// deciding which field to marshal or unmarshal. If there are</span>
+<span class="c1">// multiple fields at the same level, and that level is the least</span>
+<span class="c1">// nested (and would therefore be the nesting level selected by the</span>
+<span class="c1">// usual Go rules), the following extra rules apply:</span>
+<span class="c1">//</span>
+<span class="c1">// 1) Of those fields, if any are JSON-tagged, only tagged fields are considered,</span>
+<span class="c1">// even if there are multiple untagged fields that would otherwise conflict.</span>
+<span class="c1">//</span>
+<span class="c1">// 2) If there is exactly one field (tagged or not according to the first rule), that is selected.</span>
+<span class="c1">//</span>
+<span class="c1">// 3) Otherwise there are multiple fields, and all are ignored; no error occurs.</span>
+<span class="c1">//</span>
+<span class="c1">// Handling of anonymous struct fields is new in Go 1.1.</span>
+<span class="c1">// Prior to Go 1.1, anonymous struct fields were ignored. To force ignoring of</span>
+<span class="c1">// an anonymous struct field in both current and earlier versions, give the field</span>
+<span class="c1">// a JSON tag of &quot;-&quot;.</span>
+<span class="c1">//</span>
+<span class="c1">// Map values encode as JSON objects. The map&#39;s key type must either be a</span>
+<span class="c1">// string, an integer type, or implement encoding.TextMarshaler. The map keys</span>
+<span class="c1">// are sorted and used as JSON object keys by applying the following rules,</span>
+<span class="c1">// subject to the UTF-8 coercion described for string values above:</span>
+<span class="c1">//   - keys of any string type are used directly</span>
+<span class="c1">//   - encoding.TextMarshalers are marshaled</span>
+<span class="c1">//   - integer keys are converted to strings</span>
+<span class="c1">//</span>
+<span class="c1">// Pointer values encode as the value pointed to.</span>
+<span class="c1">// A nil pointer encodes as the null JSON value.</span>
+<span class="c1">//</span>
+<span class="c1">// Interface values encode as the value contained in the interface.</span>
+<span class="c1">// A nil interface value encodes as the null JSON value.</span>
+<span class="c1">//</span>
+<span class="c1">// Channel, complex, and function values cannot be encoded in JSON.</span>
+<span class="c1">// Attempting to encode such a value causes Marshal to return</span>
+<span class="c1">// an UnsupportedTypeError.</span>
+<span class="c1">//</span>
+<span class="c1">// JSON cannot represent cyclic data structures and Marshal does not</span>
+<span class="c1">// handle them. Passing cyclic structures to Marshal will result in</span>
+<span class="c1">// an error.</span>
+<span class="c1">//</span>
+<span class="kd">func</span> <span class="nx">Marshal</span><span class="p">(</span><span class="nx">v</span> <span class="kd">interface</span><span class="p">{})</span> <span class="p">([]</span><span class="kt">byte</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">e</span> <span class="o">:=</span> <span class="nx">newEncodeState</span><span class="p">()</span>
+
+	<span class="nx">err</span> <span class="o">:=</span> <span class="nx">e</span><span class="p">.</span><span class="nx">marshal</span><span class="p">(</span><span class="nx">v</span><span class="p">,</span> <span class="nx">encOpts</span><span class="p">{</span><span class="nx">escapeHTML</span><span class="p">:</span> <span class="kc">true</span><span class="p">})</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">buf</span> <span class="o">:=</span> <span class="nb">append</span><span class="p">([]</span><span class="nb">byte</span><span class="p">(</span><span class="kc">nil</span><span class="p">),</span> <span class="nx">e</span><span class="p">.</span><span class="nx">Bytes</span><span class="p">()</span><span class="o">...</span><span class="p">)</span>
+
+	<span class="nx">encodeStatePool</span><span class="p">.</span><span class="nx">Put</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span>
+
+	<span class="k">return</span> <span class="nx">buf</span><span class="p">,</span> <span class="kc">nil</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>相关资料</p>
+<ol class="simple">
+<li><p>源码：<a class="reference external" href="https://golang.google.cn/src/encoding/json/encode.go?s=6458:6501#L148">https://golang.google.cn/src/encoding/json/encode.go?s=6458:6501#L148</a></p></li>
+</ol>
+</section>
+</section>
+<section id="func-unmarshal">
+<h3>2. <code class="docutils literal notranslate"><span class="pre">func</span> <span class="pre">unMarshal</span></code><a class="headerlink" href="#func-unmarshal" title="永久链接至标题">¶</a></h3>
+<section id="unmarshal">
+<h4>2.1 使用 <code class="docutils literal notranslate"> <span class="pre">unmarshal</span></code><a class="headerlink" href="#unmarshal" title="永久链接至标题">¶</a></h4>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">func</span> <span class="nx">Unmarshal</span><span class="p">(</span><span class="nx">data</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="nx">v</span> <span class="kd">interface</span><span class="p">{})</span> <span class="kt">error</span>
+</pre></div>
+</div>
+</section>
+<section id="unmarshal-struct">
+<h4>2.2 <code class="docutils literal notranslate"><span class="pre">unmarshal</span> <span class="pre">struct</span></code><a class="headerlink" href="#unmarshal-struct" title="永久链接至标题">¶</a></h4>
+</section>
+<section id="id3">
+<h4>2.3 <code class="docutils literal notranslate"><span class="pre">unmarshal</span> <span class="pre">源码</span></code><a class="headerlink" href="#id3" title="永久链接至标题">¶</a></h4>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="c1">// Unmarshal parses the JSON-encoded data and stores the result</span>
+<span class="c1">// in the value pointed to by v. If v is nil or not a pointer,</span>
+<span class="c1">// Unmarshal returns an InvalidUnmarshalError.</span>
+<span class="c1">//</span>
+<span class="c1">// Unmarshal uses the inverse of the encodings that</span>
+<span class="c1">// Marshal uses, allocating maps, slices, and pointers as necessary,</span>
+<span class="c1">// with the following additional rules:</span>
+<span class="c1">//</span>
+<span class="c1">// To unmarshal JSON into a pointer, Unmarshal first handles the case of</span>
+<span class="c1">// the JSON being the JSON literal null. In that case, Unmarshal sets</span>
+<span class="c1">// the pointer to nil. Otherwise, Unmarshal unmarshals the JSON into</span>
+<span class="c1">// the value pointed at by the pointer. If the pointer is nil, Unmarshal</span>
+<span class="c1">// allocates a new value for it to point to.</span>
+<span class="c1">//</span>
+<span class="c1">// To unmarshal JSON into a value implementing the Unmarshaler interface,</span>
+<span class="c1">// Unmarshal calls that value&#39;s UnmarshalJSON method, including</span>
+<span class="c1">// when the input is a JSON null.</span>
+<span class="c1">// Otherwise, if the value implements encoding.TextUnmarshaler</span>
+<span class="c1">// and the input is a JSON quoted string, Unmarshal calls that value&#39;s</span>
+<span class="c1">// UnmarshalText method with the unquoted form of the string.</span>
+<span class="c1">//</span>
+<span class="c1">// To unmarshal JSON into a struct, Unmarshal matches incoming object</span>
+<span class="c1">// keys to the keys used by Marshal (either the struct field name or its tag),</span>
+<span class="c1">// preferring an exact match but also accepting a case-insensitive match. By</span>
+<span class="c1">// default, object keys which don&#39;t have a corresponding struct field are</span>
+<span class="c1">// ignored (see Decoder.DisallowUnknownFields for an alternative).</span>
+<span class="c1">//</span>
+<span class="c1">// To unmarshal JSON into an interface value,</span>
+<span class="c1">// Unmarshal stores one of these in the interface value:</span>
+<span class="c1">//</span>
+<span class="c1">//	bool, for JSON booleans</span>
+<span class="c1">//	float64, for JSON numbers</span>
+<span class="c1">//	string, for JSON strings</span>
+<span class="c1">//	[]interface{}, for JSON arrays</span>
+<span class="c1">//	map[string]interface{}, for JSON objects</span>
+<span class="c1">//	nil for JSON null</span>
+<span class="c1">//</span>
+<span class="c1">// To unmarshal a JSON array into a slice, Unmarshal resets the slice length</span>
+<span class="c1">// to zero and then appends each element to the slice.</span>
+<span class="c1">// As a special case, to unmarshal an empty JSON array into a slice,</span>
+<span class="c1">// Unmarshal replaces the slice with a new empty slice.</span>
+<span class="c1">//</span>
+<span class="c1">// To unmarshal a JSON array into a Go array, Unmarshal decodes</span>
+<span class="c1">// JSON array elements into corresponding Go array elements.</span>
+<span class="c1">// If the Go array is smaller than the JSON array,</span>
+<span class="c1">// the additional JSON array elements are discarded.</span>
+<span class="c1">// If the JSON array is smaller than the Go array,</span>
+<span class="c1">// the additional Go array elements are set to zero values.</span>
+<span class="c1">//</span>
+<span class="c1">// To unmarshal a JSON object into a map, Unmarshal first establishes a map to</span>
+<span class="c1">// use. If the map is nil, Unmarshal allocates a new map. Otherwise Unmarshal</span>
+<span class="c1">// reuses the existing map, keeping existing entries. Unmarshal then stores</span>
+<span class="c1">// key-value pairs from the JSON object into the map. The map&#39;s key type must</span>
+<span class="c1">// either be any string type, an integer, implement json.Unmarshaler, or</span>
+<span class="c1">// implement encoding.TextUnmarshaler.</span>
+<span class="c1">//</span>
+<span class="c1">// If a JSON value is not appropriate for a given target type,</span>
+<span class="c1">// or if a JSON number overflows the target type, Unmarshal</span>
+<span class="c1">// skips that field and completes the unmarshaling as best it can.</span>
+<span class="c1">// If no more serious errors are encountered, Unmarshal returns</span>
+<span class="c1">// an UnmarshalTypeError describing the earliest such error. In any</span>
+<span class="c1">// case, it&#39;s not guaranteed that all the remaining fields following</span>
+<span class="c1">// the problematic one will be unmarshaled into the target object.</span>
+<span class="c1">//</span>
+<span class="c1">// The JSON null value unmarshals into an interface, map, pointer, or slice</span>
+<span class="c1">// by setting that Go value to nil. Because null is often used in JSON to mean</span>
+<span class="c1">// ``not present,&#39;&#39; unmarshaling a JSON null into any other Go type has no effect</span>
+<span class="c1">// on the value and produces no error.</span>
+<span class="c1">//</span>
+<span class="c1">// When unmarshaling quoted strings, invalid UTF-8 or</span>
+<span class="c1">// invalid UTF-16 surrogate pairs are not treated as an error.</span>
+<span class="c1">// Instead, they are replaced by the Unicode replacement</span>
+<span class="c1">// character U+FFFD.</span>
+<span class="c1">//</span>
+<span class="kd">func</span> <span class="nx">Unmarshal</span><span class="p">(</span><span class="nx">data</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="nx">v</span> <span class="kd">interface</span><span class="p">{})</span> <span class="kt">error</span> <span class="p">{</span>
+	<span class="c1">// Check for well-formedness.</span>
+	<span class="c1">// Avoids filling out half a data structure</span>
+	<span class="c1">// before discovering a JSON syntax error.</span>
+	<span class="kd">var</span> <span class="nx">d</span> <span class="nx">decodeState</span>
+	<span class="nx">err</span> <span class="o">:=</span> <span class="nx">checkValid</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="o">&amp;</span><span class="nx">d</span><span class="p">.</span><span class="nx">scan</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+
+	<span class="nx">d</span><span class="p">.</span><span class="nx">init</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span>
+	<span class="k">return</span> <span class="nx">d</span><span class="p">.</span><span class="nx">unmarshal</span><span class="p">(</span><span class="nx">v</span><span class="p">)</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>相关资料</p>
+<ol class="simple">
+<li><p>源码：<a class="reference external" href="https://golang.google.cn/src/encoding/json/decode.go?s=4081:4129#L86">https://golang.google.cn/src/encoding/json/decode.go?s=4081:4129#L86</a></p></li>
+</ol>
+</section>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="w052_context.html" class="btn btn-neutral float-left" title="2. pkg/context" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../w06/index.html" class="btn btn-neutral float-right" title="第六章：工程实践" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; 版权所有 2021, 公众号:Java半颗糖.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

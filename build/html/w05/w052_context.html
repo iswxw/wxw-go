@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>2. pkg/context &mdash; Go 深入浅出 1.0.0 文档</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/translations.js"></script>
+        <script src="../_static/js/readmore.js"></script>
+        <script src="../_static/js/baidutongji.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="3. package/encoding/json" href="w053_json.html" />
+    <link rel="prev" title="1. package/sync" href="w051_sync.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> Go 深入浅出
+          </a>
+              <div class="version">
+                1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../preface.html">前言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../w01/index.html">第一章：基础知识</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../w02/index.html">第二章：面向对象</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../w03/index.html">第三章：并发编程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../w04/index.html">第四章：数据操作</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">第五章：源码学习</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="w051_sync.html">1. package/sync</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">2. pkg/context</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#context">2.1. context 初识</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id1">2.2. context 接口</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id2">为什么需要context</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#with">2.3. with 系列函数</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#withcancel">1. withCancel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#withdeadline">2. withDeadline</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#withtimeout">3. withTimeout</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#withvalue">4. withValue</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#id3">2.4. context 注意事项</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#case">2.5. 客户端超时取消case</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#server">1. server 端</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#client">2. client 端</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="w053_json.html">3. package/encoding/json</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../w06/index.html">第六章：工程实践</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../wend/about.html">关于作者</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Go 深入浅出</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="index.html">第五章：源码学习</a> &raquo;</li>
+      <li><span class="section-number">2. </span>pkg/context</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/w05/w052_context.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="pkg-context">
+<h1><span class="section-number">2. </span>pkg/context<a class="headerlink" href="#pkg-context" title="永久链接至标题">¶</a></h1>
+<p>在 Go http包的Server中，每一个请求在都有一个对应的 goroutine 去处理。请求处理函数通常会启动额外的 goroutine 用来访问后端服务，比如数据库和RPC服务。用来处理一个请求的 goroutine 通常需要访问一些与请求特定的数据，比如终端用户的身份认证信息、验证相关的token、请求的截止时间。 当一个请求被取消或超时时，所有用来处理该请求的 goroutine 都应该迅速退出，然后系统才能释放这些 goroutine 占用的资源。</p>
+<section id="context">
+<h2><span class="section-number">2.1. </span>context 初识<a class="headerlink" href="#context" title="永久链接至标题">¶</a></h2>
+<p>Go1.7加入了一个新的标准库<code class="docutils literal notranslate"><span class="pre">context</span></code>，它定义了<code class="docutils literal notranslate"><span class="pre">Context</span></code>类型，专门用来简化 对于处理单个请求的多个 goroutine 之间与请求域的数据、取消信号、截止时间等相关操作，这些操作可能涉及多个 API 调用。</p>
+<p>对服务器传入的请求应创建上下文，而对服务器的传出调用应该接受上下文。它们之间的函数调用链必须传递上下文，或者可以使用<code class="docutils literal notranslate"><span class="pre">WithCancel</span></code>、<code class="docutils literal notranslate"><span class="pre">WithDeadline</span></code>、<code class="docutils literal notranslate"><span class="pre">WithTimeout</span></code>或<code class="docutils literal notranslate"><span class="pre">WithValue</span></code>创建的派生上下文。当一个上下文被取消时，它派生的所有上下文也被取消。</p>
+</section>
+<section id="id1">
+<h2><span class="section-number">2.2. </span>context 接口<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">context.Context</span></code>是一个接口，该接口定义了四个需要实现的方法。具体签名如下：</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">type</span> <span class="nx">Context</span> <span class="kd">interface</span> <span class="p">{</span>
+    <span class="nx">Deadline</span><span class="p">()</span> <span class="p">(</span><span class="nx">deadline</span> <span class="nx">time</span><span class="p">.</span><span class="nx">Time</span><span class="p">,</span> <span class="nx">ok</span> <span class="kt">bool</span><span class="p">)</span>
+    <span class="nx">Done</span><span class="p">()</span> <span class="o">&lt;-</span><span class="kd">chan</span> <span class="kd">struct</span><span class="p">{}</span>
+    <span class="nx">Err</span><span class="p">()</span> <span class="kt">error</span>
+    <span class="nx">Value</span><span class="p">(</span><span class="nx">key</span> <span class="kd">interface</span><span class="p">{})</span> <span class="kd">interface</span><span class="p">{}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>其中：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Deadline</span></code>方法需要返回当前<code class="docutils literal notranslate"><span class="pre">Context</span></code>被取消的时间，也就是完成工作的截止时间（deadline）；</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Done</span></code>方法需要返回一个<code class="docutils literal notranslate"><span class="pre">Channel</span></code>，这个Channel会在当前工作完成或者上下文被取消之后关闭，多次调用<code class="docutils literal notranslate"><span class="pre">Done</span></code>方法会返回同一个Channel；</p></li>
+<li><p><code class="docutils literal notranslate"> <span class="pre">Err</span></code>方法会返回当前 <code class="docutils literal notranslate"> <span class="pre">Context</span></code> 结束的原因，它只会在 Done 返回的Channel被关闭时才会返回非空的值；</p>
+<ul>
+<li><p>如果当前<code class="docutils literal notranslate"><span class="pre">Context</span></code>被取消就会返回<code class="docutils literal notranslate"><span class="pre">Canceled</span></code>错误；</p></li>
+<li><p>如果当前<code class="docutils literal notranslate"><span class="pre">Context</span></code>超时就会返回<code class="docutils literal notranslate"><span class="pre">DeadlineExceeded</span></code>错误；</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Value</span></code>方法会从<code class="docutils literal notranslate"><span class="pre">Context</span></code>中返回键对应的值，对于同一个上下文来说，多次调用<code class="docutils literal notranslate"><span class="pre">Value</span></code> 并传入相同的<code class="docutils literal notranslate"><span class="pre">Key</span></code>会返回相同的结果，该方法仅用于传递跨API和进程间跟请求域的数据；</p></li>
+</ul>
+<p><strong>Background()<code class="docutils literal notranslate"><span class="pre">和</span></code>TODO()</strong></p>
+<p>Go内置两个函数：<code class="docutils literal notranslate"><span class="pre">Background()</span></code>和<code class="docutils literal notranslate"><span class="pre">TODO()</span></code>，这两个函数分别返回一个实现了<code class="docutils literal notranslate"><span class="pre">Context</span></code>接口的<code class="docutils literal notranslate"><span class="pre">background</span></code>和<code class="docutils literal notranslate"><span class="pre">todo</span></code>。我们代码中最开始都是以这两个内置的上下文对象作为最顶层的<code class="docutils literal notranslate"><span class="pre">partent</span> <span class="pre">context</span></code>，衍生出更多的子上下文对象。</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Background()</span></code>主要用于main函数、初始化以及测试代码中，作为Context这个树结构的最顶层的Context，也就是根Context。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">TODO()</span></code>，它目前还不知道具体的使用场景，如果我们不知道该使用什么Context的时候，可以使用这个。</p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">background</span></code>和<code class="docutils literal notranslate"><span class="pre">todo</span></code>本质上都是<code class="docutils literal notranslate"><span class="pre">emptyCtx</span></code>结构体类型，是一个不可取消，没有设置截止时间，没有携带任何值的Context。</p>
+<section id="id2">
+<h3>为什么需要context<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h3>
+<p>WaitGroup 和信道(channel)是常见的 2 种并发控制的方式。</p>
+<p>如果并发启动了多个子协程，需要等待所有的子协程完成任务，WaitGroup 非常适合于这类场景，例如下面的例子：</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">var</span> <span class="nx">wg</span> <span class="nx">sync</span><span class="p">.</span><span class="nx">WaitGroup</span>
+
+<span class="kd">func</span> <span class="nx">doTask</span><span class="p">(</span><span class="nx">n</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">time</span><span class="p">.</span><span class="nx">Sleep</span><span class="p">(</span><span class="nx">time</span><span class="p">.</span><span class="nx">Duration</span><span class="p">(</span><span class="nx">n</span><span class="p">))</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;Task %d Done\n&quot;</span><span class="p">,</span> <span class="nx">n</span><span class="p">)</span>
+	<span class="nx">wg</span><span class="p">.</span><span class="nx">Done</span><span class="p">()</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="p">&lt;</span> <span class="mi">3</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
+		<span class="nx">wg</span><span class="p">.</span><span class="nx">Add</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+		<span class="k">go</span> <span class="nx">doTask</span><span class="p">(</span><span class="nx">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+	<span class="p">}</span>
+	<span class="nx">wg</span><span class="p">.</span><span class="nx">Wait</span><span class="p">()</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;All Task Done&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">wg.Wait()</span></code> 会等待所有的子协程任务全部完成，所有子协程结束后，才会执行 <code class="docutils literal notranslate"><span class="pre">wg.Wait()</span></code> 后面的代码。</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>Task <span class="m">3</span> Done
+Task <span class="m">1</span> Done
+Task <span class="m">2</span> Done
+All Task Done
+</pre></div>
+</div>
+<p>WaitGroup 只是傻傻地等待子协程结束，但是并不能主动通知子协程退出。假如开启了一个定时轮询的子协程，有没有什么办法，通知该子协程退出呢？这种场景下，可以使用 <code class="docutils literal notranslate"><span class="pre">select+chan</span></code> 的机制。</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">var</span> <span class="nx">stop</span> <span class="kd">chan</span> <span class="kt">bool</span>
+
+<span class="kd">func</span> <span class="nx">reqTask</span><span class="p">(</span><span class="nx">name</span> <span class="kt">string</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">for</span> <span class="p">{</span>
+		<span class="k">select</span> <span class="p">{</span>
+		<span class="k">case</span> <span class="o">&lt;-</span><span class="nx">stop</span><span class="p">:</span>
+			<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;stop&quot;</span><span class="p">,</span> <span class="nx">name</span><span class="p">)</span>
+			<span class="k">return</span>
+		<span class="k">default</span><span class="p">:</span>
+			<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="s">&quot;send request&quot;</span><span class="p">)</span>
+			<span class="nx">time</span><span class="p">.</span><span class="nx">Sleep</span><span class="p">(</span><span class="mi">1</span> <span class="o">*</span> <span class="nx">time</span><span class="p">.</span><span class="nx">Second</span><span class="p">)</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">stop</span> <span class="p">=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">bool</span><span class="p">)</span>
+	<span class="k">go</span> <span class="nx">reqTask</span><span class="p">(</span><span class="s">&quot;worker1&quot;</span><span class="p">)</span>
+	<span class="nx">time</span><span class="p">.</span><span class="nx">Sleep</span><span class="p">(</span><span class="mi">3</span> <span class="o">*</span> <span class="nx">time</span><span class="p">.</span><span class="nx">Second</span><span class="p">)</span>
+	<span class="nx">stop</span> <span class="o">&lt;-</span> <span class="kc">true</span>
+	<span class="nx">time</span><span class="p">.</span><span class="nx">Sleep</span><span class="p">(</span><span class="mi">3</span> <span class="o">*</span> <span class="nx">time</span><span class="p">.</span><span class="nx">Second</span><span class="p">)</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>子协程使用 for 循环定时轮询，如果 <code class="docutils literal notranslate"><span class="pre">stop</span></code> 信道有值，则退出，否则继续轮询。</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>worker1 send request
+worker1 send request
+worker1 send request
+stop worker1
+</pre></div>
+</div>
+<p>更复杂的场景如何做并发控制呢？比如子协程中开启了新的子协程，或者需要同时控制多个子协程。这种场景下，<code class="docutils literal notranslate"><span class="pre">select+chan</span></code>的方式就显得力不从心了。</p>
+<p>Go 语言提供了 Context 标准库可以解决这类场景的问题，Context 的作用和它的名字很像，上下文，即子协程的下上文。Context 有两个主要的功能：</p>
+<ul class="simple">
+<li><p>通知子协程退出（正常退出，超时退出等）；</p></li>
+<li><p>传递必要的参数。</p></li>
+</ul>
+</section>
+</section>
+<section id="with">
+<h2><span class="section-number">2.3. </span>with 系列函数<a class="headerlink" href="#with" title="永久链接至标题">¶</a></h2>
+<p>此外，<code class="docutils literal notranslate"><span class="pre">context</span></code>包中还定义了四个With系列函数。</p>
+<section id="withcancel">
+<h3>1. withCancel<a class="headerlink" href="#withcancel" title="永久链接至标题">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">context.WithCancel()</span></code> 创建可取消的 Context 对象，即可以主动通知子协程退出。</p>
+<p><code class="docutils literal notranslate"><span class="pre">WithCancel</span></code>的函数签名如下：</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">func</span> <span class="nx">WithCancel</span><span class="p">(</span><span class="nx">parent</span> <span class="nx">Context</span><span class="p">)</span> <span class="p">(</span><span class="nx">ctx</span> <span class="nx">Context</span><span class="p">,</span> <span class="nx">cancel</span> <span class="nx">CancelFunc</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>（1）控制单个协程</strong></p>
+<p>使用 Context 改写上述的例子，效果与 <code class="docutils literal notranslate"><span class="pre">select+chan</span></code> 相同。</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">func</span> <span class="nx">reqTask</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">context</span><span class="p">.</span><span class="nx">Context</span><span class="p">,</span> <span class="nx">name</span> <span class="kt">string</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">for</span> <span class="p">{</span>
+		<span class="k">select</span> <span class="p">{</span>
+		<span class="k">case</span> <span class="o">&lt;-</span><span class="nx">ctx</span><span class="p">.</span><span class="nx">Done</span><span class="p">():</span>
+			<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;stop&quot;</span><span class="p">,</span> <span class="nx">name</span><span class="p">)</span>
+			<span class="k">return</span>
+		<span class="k">default</span><span class="p">:</span>
+			<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="s">&quot;send request&quot;</span><span class="p">)</span>
+			<span class="nx">time</span><span class="p">.</span><span class="nx">Sleep</span><span class="p">(</span><span class="mi">1</span> <span class="o">*</span> <span class="nx">time</span><span class="p">.</span><span class="nx">Second</span><span class="p">)</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">ctx</span><span class="p">,</span> <span class="nx">cancel</span> <span class="o">:=</span> <span class="nx">context</span><span class="p">.</span><span class="nx">WithCancel</span><span class="p">(</span><span class="nx">context</span><span class="p">.</span><span class="nx">Background</span><span class="p">())</span>
+	<span class="k">go</span> <span class="nx">reqTask</span><span class="p">(</span><span class="nx">ctx</span><span class="p">,</span> <span class="s">&quot;worker1&quot;</span><span class="p">)</span>
+	<span class="nx">time</span><span class="p">.</span><span class="nx">Sleep</span><span class="p">(</span><span class="mi">3</span> <span class="o">*</span> <span class="nx">time</span><span class="p">.</span><span class="nx">Second</span><span class="p">)</span>
+	<span class="nx">cancel</span><span class="p">()</span>
+	<span class="nx">time</span><span class="p">.</span><span class="nx">Sleep</span><span class="p">(</span><span class="mi">3</span> <span class="o">*</span> <span class="nx">time</span><span class="p">.</span><span class="nx">Second</span><span class="p">)</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>说明：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">context.Backgroud()</span></code> 创建根 Context，通常在 main 函数、初始化和测试代码中创建，作为顶层 Context。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">context.WithCancel(parent)</span></code> 创建可取消的子 Context，同时返回函数 <code class="docutils literal notranslate"><span class="pre">cancel</span></code>。</p></li>
+<li><p>在子协程中，使用 select 调用 <code class="docutils literal notranslate"><span class="pre">&lt;-ctx.Done()</span></code> 判断是否需要退出。</p></li>
+<li><p>主协程中，调用 <code class="docutils literal notranslate"><span class="pre">cancel()</span></code> 函数通知子协程退出。</p></li>
+</ul>
+<p><strong>（2）控制多个协程</strong></p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">ctx</span><span class="p">,</span> <span class="nx">cancel</span> <span class="o">:=</span> <span class="nx">context</span><span class="p">.</span><span class="nx">WithCancel</span><span class="p">(</span><span class="nx">context</span><span class="p">.</span><span class="nx">Background</span><span class="p">())</span>
+	
+	<span class="k">go</span> <span class="nx">reqTask</span><span class="p">(</span><span class="nx">ctx</span><span class="p">,</span> <span class="s">&quot;worker1&quot;</span><span class="p">)</span>
+	<span class="k">go</span> <span class="nx">reqTask</span><span class="p">(</span><span class="nx">ctx</span><span class="p">,</span> <span class="s">&quot;worker2&quot;</span><span class="p">)</span>
+	
+	<span class="nx">time</span><span class="p">.</span><span class="nx">Sleep</span><span class="p">(</span><span class="mi">3</span> <span class="o">*</span> <span class="nx">time</span><span class="p">.</span><span class="nx">Second</span><span class="p">)</span>
+	<span class="nx">cancel</span><span class="p">()</span>
+	<span class="nx">time</span><span class="p">.</span><span class="nx">Sleep</span><span class="p">(</span><span class="mi">3</span> <span class="o">*</span> <span class="nx">time</span><span class="p">.</span><span class="nx">Second</span><span class="p">)</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>为每个子协程传递相同的上下文 <code class="docutils literal notranslate"><span class="pre">ctx</span></code> 即可，调用 <code class="docutils literal notranslate"><span class="pre">cancel()</span></code> 函数后该 Context 控制的所有子协程都会退出。</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>worker1 send request
+worker2 send request
+worker1 send request
+worker2 send request
+worker1 send request
+worker2 send request
+stop worker1
+stop worker2
+</pre></div>
+</div>
+</section>
+<section id="withdeadline">
+<h3>2. withDeadline<a class="headerlink" href="#withdeadline" title="永久链接至标题">¶</a></h3>
+<p>超时退出可以控制子协程的最长执行时间，那 <code class="docutils literal notranslate"><span class="pre">context.WithDeadline()</span></code> 则可以控制子协程的最迟退出时间</p>
+<p><code class="docutils literal notranslate"><span class="pre">WithDeadline</span></code>的函数签名如下：</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">func</span> <span class="nx">WithDeadline</span><span class="p">(</span><span class="nx">parent</span> <span class="nx">Context</span><span class="p">,</span> <span class="nx">deadline</span> <span class="nx">time</span><span class="p">.</span><span class="nx">Time</span><span class="p">)</span> <span class="p">(</span><span class="nx">Context</span><span class="p">,</span> <span class="nx">CancelFunc</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>返回父上下文的副本，并将deadline调整为不迟于d。如果父上下文的deadline已经早于d，则WithDeadline(parent, d)在语义上等同于父上下文。当截止日过期时，当调用返回的cancel函数时，或者当父上下文的Done通道关闭时，返回上下文的Done通道将被关闭，以最先发生的情况为准。</p>
+<p>取消此上下文将释放与其关联的资源，因此代码应该在此上下文中运行的操作完成后立即调用cancel。</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">func</span> <span class="nx">reqTask</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">context</span><span class="p">.</span><span class="nx">Context</span><span class="p">,</span> <span class="nx">name</span> <span class="kt">string</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">for</span> <span class="p">{</span>
+		<span class="k">select</span> <span class="p">{</span>
+		<span class="k">case</span> <span class="o">&lt;-</span><span class="nx">ctx</span><span class="p">.</span><span class="nx">Done</span><span class="p">():</span>
+			<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;stop&quot;</span><span class="p">,</span> <span class="nx">name</span><span class="p">,</span> <span class="nx">ctx</span><span class="p">.</span><span class="nx">Err</span><span class="p">())</span>
+			<span class="k">return</span>
+		<span class="k">default</span><span class="p">:</span>
+			<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="s">&quot;send request&quot;</span><span class="p">)</span>
+			<span class="nx">time</span><span class="p">.</span><span class="nx">Sleep</span><span class="p">(</span><span class="mi">1</span> <span class="o">*</span> <span class="nx">time</span><span class="p">.</span><span class="nx">Second</span><span class="p">)</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">ctx</span><span class="p">,</span> <span class="nx">cancel</span> <span class="o">:=</span> <span class="nx">context</span><span class="p">.</span><span class="nx">WithDeadline</span><span class="p">(</span><span class="nx">context</span><span class="p">.</span><span class="nx">Background</span><span class="p">(),</span> <span class="nx">time</span><span class="p">.</span><span class="nx">Now</span><span class="p">().</span><span class="nx">Add</span><span class="p">(</span><span class="mi">1</span><span class="o">*</span><span class="nx">time</span><span class="p">.</span><span class="nx">Second</span><span class="p">))</span>
+	<span class="k">go</span> <span class="nx">reqTask</span><span class="p">(</span><span class="nx">ctx</span><span class="p">,</span> <span class="s">&quot;worker1&quot;</span><span class="p">)</span>
+	<span class="k">go</span> <span class="nx">reqTask</span><span class="p">(</span><span class="nx">ctx</span><span class="p">,</span> <span class="s">&quot;worker2&quot;</span><span class="p">)</span>
+
+	<span class="nx">time</span><span class="p">.</span><span class="nx">Sleep</span><span class="p">(</span><span class="mi">3</span> <span class="o">*</span> <span class="nx">time</span><span class="p">.</span><span class="nx">Second</span><span class="p">)</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;before cancel&quot;</span><span class="p">)</span>
+	<span class="nx">cancel</span><span class="p">()</span>
+	<span class="nx">time</span><span class="p">.</span><span class="nx">Sleep</span><span class="p">(</span><span class="mi">3</span> <span class="o">*</span> <span class="nx">time</span><span class="p">.</span><span class="nx">Second</span><span class="p">)</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">WithDeadline</span></code> 用于设置截止时间。在这个例子中，将截止时间设置为1s后，<code class="docutils literal notranslate"><span class="pre">cancel()</span></code> 函数在 3s 后调用，因此子协程将在调用 <code class="docutils literal notranslate"><span class="pre">cancel()</span></code> 函数前结束。</p></li>
+<li><p>在子协程中，可以通过 <code class="docutils literal notranslate"><span class="pre">ctx.Err()</span></code> 获取到子协程退出的错误原因。</p></li>
+</ul>
+<p>运行结果如下：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>worker2 send request
+worker1 send request
+stop worker2 context deadline exceeded
+stop worker1 context deadline exceeded
+before cancel
+</pre></div>
+</div>
+<p>可以看到，子协程 <code class="docutils literal notranslate"><span class="pre">worker1</span></code> 和 <code class="docutils literal notranslate"><span class="pre">worker2</span></code> 均是因为截止时间到了而退出。</p>
+</section>
+<section id="withtimeout">
+<h3>3. withTimeout<a class="headerlink" href="#withtimeout" title="永久链接至标题">¶</a></h3>
+<p>如果需要控制子协程的执行时间，可以使用 <code class="docutils literal notranslate"><span class="pre">context.WithTimeout</span></code> 创建具有超时通知机制的 Context 对象。</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">ctx</span><span class="p">,</span> <span class="nx">cancel</span> <span class="o">:=</span> <span class="nx">context</span><span class="p">.</span><span class="nx">WithTimeout</span><span class="p">(</span><span class="nx">context</span><span class="p">.</span><span class="nx">Background</span><span class="p">(),</span> <span class="mi">2</span><span class="o">*</span><span class="nx">time</span><span class="p">.</span><span class="nx">Second</span><span class="p">)</span>
+	<span class="k">go</span> <span class="nx">reqTask</span><span class="p">(</span><span class="nx">ctx</span><span class="p">,</span> <span class="s">&quot;worker1&quot;</span><span class="p">)</span>
+	<span class="k">go</span> <span class="nx">reqTask</span><span class="p">(</span><span class="nx">ctx</span><span class="p">,</span> <span class="s">&quot;worker2&quot;</span><span class="p">)</span>
+
+	<span class="nx">time</span><span class="p">.</span><span class="nx">Sleep</span><span class="p">(</span><span class="mi">3</span> <span class="o">*</span> <span class="nx">time</span><span class="p">.</span><span class="nx">Second</span><span class="p">)</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;before cancel&quot;</span><span class="p">)</span>
+	<span class="nx">cancel</span><span class="p">()</span>
+	<span class="nx">time</span><span class="p">.</span><span class="nx">Sleep</span><span class="p">(</span><span class="mi">3</span> <span class="o">*</span> <span class="nx">time</span><span class="p">.</span><span class="nx">Second</span><span class="p">)</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">WithTimeout</span></code>的函数签名如下：</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">func</span> <span class="nx">WithTimeout</span><span class="p">(</span><span class="nx">parent</span> <span class="nx">Context</span><span class="p">,</span> <span class="nx">timeout</span> <span class="nx">time</span><span class="p">.</span><span class="nx">Duration</span><span class="p">)</span> <span class="p">(</span><span class="nx">Context</span><span class="p">,</span> <span class="nx">CancelFunc</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">WithTimeout</span></code>返回<code class="docutils literal notranslate"><span class="pre">WithDeadline(parent,</span> <span class="pre">time.Now().Add(timeout))</span></code>。</p>
+<p>取消此上下文将释放与其相关的资源，因此代码应该在此上下文中运行的操作完成后立即调用cancel，通常用于数据库或者网络连接的超时控制。具体示例如下：</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+	<span class="s">&quot;context&quot;</span>
+	<span class="s">&quot;fmt&quot;</span>
+	<span class="s">&quot;sync&quot;</span>
+
+	<span class="s">&quot;time&quot;</span>
+<span class="p">)</span>
+
+<span class="c1">// context.WithTimeout</span>
+
+<span class="kd">var</span> <span class="nx">wg</span> <span class="nx">sync</span><span class="p">.</span><span class="nx">WaitGroup</span>
+
+<span class="kd">func</span> <span class="nx">worker</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">context</span><span class="p">.</span><span class="nx">Context</span><span class="p">)</span> <span class="p">{</span>
+<span class="nx">LOOP</span><span class="p">:</span>
+	<span class="k">for</span> <span class="p">{</span>
+		<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;db connecting ...&quot;</span><span class="p">)</span>
+		<span class="nx">time</span><span class="p">.</span><span class="nx">Sleep</span><span class="p">(</span><span class="nx">time</span><span class="p">.</span><span class="nx">Millisecond</span> <span class="o">*</span> <span class="mi">10</span><span class="p">)</span> <span class="c1">// 假设正常连接数据库耗时10毫秒</span>
+		<span class="k">select</span> <span class="p">{</span>
+		<span class="k">case</span> <span class="o">&lt;-</span><span class="nx">ctx</span><span class="p">.</span><span class="nx">Done</span><span class="p">():</span> <span class="c1">// 50毫秒后自动调用</span>
+			<span class="k">break</span> <span class="nx">LOOP</span>
+		<span class="k">default</span><span class="p">:</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;worker done!&quot;</span><span class="p">)</span>
+	<span class="nx">wg</span><span class="p">.</span><span class="nx">Done</span><span class="p">()</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="c1">// 设置一个50毫秒的超时</span>
+	<span class="nx">ctx</span><span class="p">,</span> <span class="nx">cancel</span> <span class="o">:=</span> <span class="nx">context</span><span class="p">.</span><span class="nx">WithTimeout</span><span class="p">(</span><span class="nx">context</span><span class="p">.</span><span class="nx">Background</span><span class="p">(),</span> <span class="nx">time</span><span class="p">.</span><span class="nx">Millisecond</span><span class="o">*</span><span class="mi">50</span><span class="p">)</span>
+	<span class="nx">wg</span><span class="p">.</span><span class="nx">Add</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+	<span class="k">go</span> <span class="nx">worker</span><span class="p">(</span><span class="nx">ctx</span><span class="p">)</span>
+	<span class="nx">time</span><span class="p">.</span><span class="nx">Sleep</span><span class="p">(</span><span class="nx">time</span><span class="p">.</span><span class="nx">Second</span> <span class="o">*</span> <span class="mi">5</span><span class="p">)</span>
+	<span class="nx">cancel</span><span class="p">()</span> <span class="c1">// 通知子goroutine结束</span>
+	<span class="nx">wg</span><span class="p">.</span><span class="nx">Wait</span><span class="p">()</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;over&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="withvalue">
+<h3>4. withValue<a class="headerlink" href="#withvalue" title="永久链接至标题">¶</a></h3>
+<p>如果需要往子协程中传递参数，可以使用 <code class="docutils literal notranslate"><span class="pre">context.WithValue()</span></code>。</p>
+<p><code class="docutils literal notranslate"><span class="pre">WithValue</span></code>函数能够将请求作用域的数据与 Context 对象建立关系。声明如下：</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">func</span> <span class="nx">WithValue</span><span class="p">(</span><span class="nx">parent</span> <span class="nx">Context</span><span class="p">,</span> <span class="nx">key</span><span class="p">,</span> <span class="nx">val</span> <span class="kd">interface</span><span class="p">{})</span> <span class="nx">Context</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">WithValue</span></code>返回父节点的副本，其中与key关联的值为val。</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">type</span> <span class="nx">Options</span> <span class="kd">struct</span><span class="p">{</span>
+    <span class="nx">Interval</span> <span class="nx">time</span><span class="p">.</span><span class="nx">Duration</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">reqTask</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">context</span><span class="p">.</span><span class="nx">Context</span><span class="p">,</span> <span class="nx">name</span> <span class="kt">string</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">for</span> <span class="p">{</span>
+		<span class="k">select</span> <span class="p">{</span>
+		<span class="k">case</span> <span class="o">&lt;-</span><span class="nx">ctx</span><span class="p">.</span><span class="nx">Done</span><span class="p">():</span>
+			<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;stop&quot;</span><span class="p">,</span> <span class="nx">name</span><span class="p">)</span>
+			<span class="k">return</span>
+		<span class="k">default</span><span class="p">:</span>
+			<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="s">&quot;send request&quot;</span><span class="p">)</span>
+			<span class="nx">op</span> <span class="o">:=</span> <span class="nx">ctx</span><span class="p">.</span><span class="nx">Value</span><span class="p">(</span><span class="s">&quot;options&quot;</span><span class="p">).(</span><span class="o">*</span><span class="nx">Options</span><span class="p">)</span>
+			<span class="nx">time</span><span class="p">.</span><span class="nx">Sleep</span><span class="p">(</span><span class="nx">op</span><span class="p">.</span><span class="nx">Interval</span> <span class="o">*</span> <span class="nx">time</span><span class="p">.</span><span class="nx">Second</span><span class="p">)</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">ctx</span><span class="p">,</span> <span class="nx">cancel</span> <span class="o">:=</span> <span class="nx">context</span><span class="p">.</span><span class="nx">WithCancel</span><span class="p">(</span><span class="nx">context</span><span class="p">.</span><span class="nx">Background</span><span class="p">())</span>
+	<span class="nx">vCtx</span> <span class="o">:=</span> <span class="nx">context</span><span class="p">.</span><span class="nx">WithValue</span><span class="p">(</span><span class="nx">ctx</span><span class="p">,</span> <span class="s">&quot;options&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="nx">Options</span><span class="p">{</span><span class="mi">1</span><span class="p">})</span>
+
+	<span class="k">go</span> <span class="nx">reqTask</span><span class="p">(</span><span class="nx">vCtx</span><span class="p">,</span> <span class="s">&quot;worker1&quot;</span><span class="p">)</span>
+	<span class="k">go</span> <span class="nx">reqTask</span><span class="p">(</span><span class="nx">vCtx</span><span class="p">,</span> <span class="s">&quot;worker2&quot;</span><span class="p">)</span>
+
+	<span class="nx">time</span><span class="p">.</span><span class="nx">Sleep</span><span class="p">(</span><span class="mi">3</span> <span class="o">*</span> <span class="nx">time</span><span class="p">.</span><span class="nx">Second</span><span class="p">)</span>
+	<span class="nx">cancel</span><span class="p">()</span>
+	<span class="nx">time</span><span class="p">.</span><span class="nx">Sleep</span><span class="p">(</span><span class="mi">3</span> <span class="o">*</span> <span class="nx">time</span><span class="p">.</span><span class="nx">Second</span><span class="p">)</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">context.WithValue()</span></code> 创建了一个基于 <code class="docutils literal notranslate"><span class="pre">ctx</span></code> 的子 Context，并携带了值 <code class="docutils literal notranslate"><span class="pre">options</span></code>。</p></li>
+<li><p>在子协程中，使用 <code class="docutils literal notranslate"><span class="pre">ctx.Value(&quot;options&quot;)</span></code> 获取到传递的值，读取/修改该值。</p></li>
+</ul>
+</section>
+</section>
+<section id="id3">
+<h2><span class="section-number">2.4. </span>context 注意事项<a class="headerlink" href="#id3" title="永久链接至标题">¶</a></h2>
+<ul class="simple">
+<li><p>推荐以参数的方式显示传递Context</p></li>
+<li><p>以Context作为参数的函数方法，应该把Context作为第一个参数。</p></li>
+<li><p>给一个函数方法传递Context的时候，不要传递nil，如果不知道传递什么，就使用context.TODO()</p></li>
+<li><p>Context的Value相关方法应该传递请求域的必要数据，不应该用于传递可选参数</p></li>
+<li><p>Context是线程安全的，可以放心的在多个goroutine中传递</p></li>
+</ul>
+</section>
+<section id="case">
+<h2><span class="section-number">2.5. </span>客户端超时取消case<a class="headerlink" href="#case" title="永久链接至标题">¶</a></h2>
+<p>调用服务端API时如何在客户端实现超时控制？</p>
+<section id="server">
+<h3>1. server 端<a class="headerlink" href="#server" title="永久链接至标题">¶</a></h3>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="c1">// context_timeout/server/main.go</span>
+<span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+	<span class="s">&quot;fmt&quot;</span>
+	<span class="s">&quot;math/rand&quot;</span>
+	<span class="s">&quot;net/http&quot;</span>
+
+	<span class="s">&quot;time&quot;</span>
+<span class="p">)</span>
+
+<span class="c1">// server端，随机出现慢响应</span>
+
+<span class="kd">func</span> <span class="nx">indexHandler</span><span class="p">(</span><span class="nx">w</span> <span class="nx">http</span><span class="p">.</span><span class="nx">ResponseWriter</span><span class="p">,</span> <span class="nx">r</span> <span class="o">*</span><span class="nx">http</span><span class="p">.</span><span class="nx">Request</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">number</span> <span class="o">:=</span> <span class="nx">rand</span><span class="p">.</span><span class="nx">Intn</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">number</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">{</span>
+		<span class="nx">time</span><span class="p">.</span><span class="nx">Sleep</span><span class="p">(</span><span class="nx">time</span><span class="p">.</span><span class="nx">Second</span> <span class="o">*</span> <span class="mi">10</span><span class="p">)</span> <span class="c1">// 耗时10秒的慢响应</span>
+		<span class="nx">fmt</span><span class="p">.</span><span class="nx">Fprintf</span><span class="p">(</span><span class="nx">w</span><span class="p">,</span> <span class="s">&quot;slow response&quot;</span><span class="p">)</span>
+		<span class="k">return</span>
+	<span class="p">}</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Fprint</span><span class="p">(</span><span class="nx">w</span><span class="p">,</span> <span class="s">&quot;quick response&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">http</span><span class="p">.</span><span class="nx">HandleFunc</span><span class="p">(</span><span class="s">&quot;/&quot;</span><span class="p">,</span> <span class="nx">indexHandler</span><span class="p">)</span>
+	<span class="nx">err</span> <span class="o">:=</span> <span class="nx">http</span><span class="p">.</span><span class="nx">ListenAndServe</span><span class="p">(</span><span class="s">&quot;:8000&quot;</span><span class="p">,</span> <span class="kc">nil</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="nb">panic</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="client">
+<h3>2. client 端<a class="headerlink" href="#client" title="永久链接至标题">¶</a></h3>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="c1">// context_timeout/client/main.go</span>
+<span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+	<span class="s">&quot;context&quot;</span>
+	<span class="s">&quot;fmt&quot;</span>
+	<span class="s">&quot;io/ioutil&quot;</span>
+	<span class="s">&quot;net/http&quot;</span>
+	<span class="s">&quot;sync&quot;</span>
+	<span class="s">&quot;time&quot;</span>
+<span class="p">)</span>
+
+<span class="c1">// 客户端</span>
+
+<span class="kd">type</span> <span class="nx">respData</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">resp</span> <span class="o">*</span><span class="nx">http</span><span class="p">.</span><span class="nx">Response</span>
+	<span class="nx">err</span>  <span class="kt">error</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">doCall</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">context</span><span class="p">.</span><span class="nx">Context</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">transport</span> <span class="o">:=</span> <span class="nx">http</span><span class="p">.</span><span class="nx">Transport</span><span class="p">{</span>
+	   <span class="c1">// 请求频繁可定义全局的client对象并启用长链接</span>
+	   <span class="c1">// 请求不频繁使用短链接</span>
+	   <span class="nx">DisableKeepAlives</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span> 	<span class="p">}</span>
+	<span class="nx">client</span> <span class="o">:=</span> <span class="nx">http</span><span class="p">.</span><span class="nx">Client</span><span class="p">{</span>
+		<span class="nx">Transport</span><span class="p">:</span> <span class="o">&amp;</span><span class="nx">transport</span><span class="p">,</span>
+	<span class="p">}</span>
+
+	<span class="nx">respChan</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="o">*</span><span class="nx">respData</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+	<span class="nx">req</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">http</span><span class="p">.</span><span class="nx">NewRequest</span><span class="p">(</span><span class="s">&quot;GET&quot;</span><span class="p">,</span> <span class="s">&quot;http://127.0.0.1:8000/&quot;</span><span class="p">,</span> <span class="kc">nil</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;new requestg failed, err:%v\n&quot;</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+		<span class="k">return</span>
+	<span class="p">}</span>
+	<span class="nx">req</span> <span class="p">=</span> <span class="nx">req</span><span class="p">.</span><span class="nx">WithContext</span><span class="p">(</span><span class="nx">ctx</span><span class="p">)</span> <span class="c1">// 使用带超时的ctx创建一个新的client request</span>
+	<span class="kd">var</span> <span class="nx">wg</span> <span class="nx">sync</span><span class="p">.</span><span class="nx">WaitGroup</span>
+	<span class="nx">wg</span><span class="p">.</span><span class="nx">Add</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+	<span class="k">defer</span> <span class="nx">wg</span><span class="p">.</span><span class="nx">Wait</span><span class="p">()</span>
+	<span class="k">go</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+		<span class="nx">resp</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">client</span><span class="p">.</span><span class="nx">Do</span><span class="p">(</span><span class="nx">req</span><span class="p">)</span>
+		<span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;client.do resp:%v, err:%v\n&quot;</span><span class="p">,</span> <span class="nx">resp</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+		<span class="nx">rd</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">respData</span><span class="p">{</span>
+			<span class="nx">resp</span><span class="p">:</span> <span class="nx">resp</span><span class="p">,</span>
+			<span class="nx">err</span><span class="p">:</span>  <span class="nx">err</span><span class="p">,</span>
+		<span class="p">}</span>
+		<span class="nx">respChan</span> <span class="o">&lt;-</span> <span class="nx">rd</span>
+		<span class="nx">wg</span><span class="p">.</span><span class="nx">Done</span><span class="p">()</span>
+	<span class="p">}()</span>
+
+	<span class="k">select</span> <span class="p">{</span>
+	<span class="k">case</span> <span class="o">&lt;-</span><span class="nx">ctx</span><span class="p">.</span><span class="nx">Done</span><span class="p">():</span>
+		<span class="c1">//transport.CancelRequest(req)</span>
+		<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;call api timeout&quot;</span><span class="p">)</span>
+	<span class="k">case</span> <span class="nx">result</span> <span class="o">:=</span> <span class="o">&lt;-</span><span class="nx">respChan</span><span class="p">:</span>
+		<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;call server api success&quot;</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nx">result</span><span class="p">.</span><span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;call server api failed, err:%v\n&quot;</span><span class="p">,</span> <span class="nx">result</span><span class="p">.</span><span class="nx">err</span><span class="p">)</span>
+			<span class="k">return</span>
+		<span class="p">}</span>
+		<span class="k">defer</span> <span class="nx">result</span><span class="p">.</span><span class="nx">resp</span><span class="p">.</span><span class="nx">Body</span><span class="p">.</span><span class="nx">Close</span><span class="p">()</span>
+		<span class="nx">data</span><span class="p">,</span> <span class="nx">_</span> <span class="o">:=</span> <span class="nx">ioutil</span><span class="p">.</span><span class="nx">ReadAll</span><span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">resp</span><span class="p">.</span><span class="nx">Body</span><span class="p">)</span>
+		<span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;resp:%v\n&quot;</span><span class="p">,</span> <span class="nb">string</span><span class="p">(</span><span class="nx">data</span><span class="p">))</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="c1">// 定义一个100毫秒的超时</span>
+	<span class="nx">ctx</span><span class="p">,</span> <span class="nx">cancel</span> <span class="o">:=</span> <span class="nx">context</span><span class="p">.</span><span class="nx">WithTimeout</span><span class="p">(</span><span class="nx">context</span><span class="p">.</span><span class="nx">Background</span><span class="p">(),</span> <span class="nx">time</span><span class="p">.</span><span class="nx">Millisecond</span><span class="o">*</span><span class="mi">100</span><span class="p">)</span>
+	<span class="k">defer</span> <span class="nx">cancel</span><span class="p">()</span> <span class="c1">// 调用cancel释放子goroutine资源</span>
+	<span class="nx">doCall</span><span class="p">(</span><span class="nx">ctx</span><span class="p">)</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>相关资料</p>
+<ol class="simple">
+<li><p>出处：<a class="reference external" href="https://golang.google.cn/pkg/context/">https://golang.google.cn/pkg/context/</a></p></li>
+</ol>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="w051_sync.html" class="btn btn-neutral float-left" title="1. package/sync" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="w053_json.html" class="btn btn-neutral float-right" title="3. package/encoding/json" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; 版权所有 2021, 公众号:Java半颗糖.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

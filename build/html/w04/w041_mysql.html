@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>1. Go 操作MySQL &mdash; Go 深入浅出 1.0.0 文档</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/translations.js"></script>
+        <script src="../_static/js/readmore.js"></script>
+        <script src="../_static/js/baidutongji.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="2. Go 操作 Redis" href="w042_redis.html" />
+    <link rel="prev" title="第四章：数据操作" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> Go 深入浅出
+          </a>
+              <div class="version">
+                1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../preface.html">前言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../w01/index.html">第一章：基础知识</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../w02/index.html">第二章：面向对象</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../w03/index.html">第三章：并发编程</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">第四章：数据操作</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">1. Go 操作MySQL</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#dockermysql">1.1. Docker准备MySQL环境</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id1">1.2. 准备数据库和表</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id2">准备数据库</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id3">准备表</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id4">增加数据</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#go-sql-driver-mysql">1.3. 基于go-sql-driver操作 MySQL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#beego-mysql">1.4. 基于beego 操作MySQL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#gorm-mysql">1.5. 基于gorm 操作MySQL</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="w042_redis.html">2. Go 操作 Redis</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../w05/index.html">第五章：源码学习</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../w06/index.html">第六章：工程实践</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../wend/about.html">关于作者</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Go 深入浅出</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="index.html">第四章：数据操作</a> &raquo;</li>
+      <li><span class="section-number">1. </span>Go 操作MySQL</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/w04/w041_mysql.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="go-mysql">
+<h1><span class="section-number">1. </span>Go 操作MySQL<a class="headerlink" href="#go-mysql" title="永久链接至标题">¶</a></h1>
+<hr class="docutils" />
+<section id="dockermysql">
+<h2><span class="section-number">1.1. </span>Docker准备MySQL环境<a class="headerlink" href="#dockermysql" title="永久链接至标题">¶</a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># 查看 mysql 库</span>
+docker search mysql 
+
+<span class="c1"># 普通docker 使用</span>
+docker pull mysql
+<span class="c1"># M1 芯片使用</span>
+docker pull mysql/mysql-server
+
+<span class="c1"># 通过镜像启动容器</span>
+docker run -itd --name mysql-test -p <span class="m">3306</span>:3306 -e <span class="nv">MYSQL_ROOT_PASSWORD</span><span class="o">=</span><span class="m">123456</span> <span class="o">[</span>镜像名称或ID<span class="o">]</span>
+
+----
+参数说明：
+  -p <span class="m">3306</span>:3306 ：映射容器服务的 <span class="m">3306</span> 端口到宿主机的 <span class="m">3306</span> 端口
+   外部主机可以直接通过 宿主机ip:3306 访问到 MySQL 的服务。
+  - <span class="nv">MYSQL_ROOT_PASSWORD</span><span class="o">=</span><span class="m">123456</span>：设置 MySQL 服务 root 用户的密码。
+  
+  
+<span class="c1"># 进入mysql 容器</span>
+docker <span class="nb">exec</span> -it mysql-test bash
+
+<span class="c1"># 登录mysql</span>
+mysql -u root -p
+</pre></div>
+</div>
+</section>
+<section id="id1">
+<h2><span class="section-number">1.2. </span>准备数据库和表<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h2>
+<section id="id2">
+<h3>准备数据库<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h3>
+<div class="highlight-mysql notranslate"><div class="highlight"><pre><span></span><span class="c1"># 创建数据库 userinfo</span>
+<span class="n">mysql</span><span class="o">&gt;</span> <span class="k">create</span> <span class="k">database</span> <span class="n">wxw_test</span><span class="p">;</span>
+<span class="k">Query</span> <span class="n">OK</span><span class="p">,</span> <span class="mi">1</span> <span class="k">row</span> <span class="n">affected</span> <span class="p">(</span><span class="mf">0.04</span> <span class="n">sec</span><span class="p">)</span>
+
+<span class="c1"># 查看存在的数据库</span>
+<span class="n">mysql</span><span class="o">&gt;</span> <span class="k">show</span> <span class="k">databases</span><span class="p">;</span>
+<span class="o">+--------------------+</span>
+<span class="o">|</span> <span class="k">Database</span>           <span class="o">|</span>
+<span class="o">+--------------------+</span>
+<span class="o">|</span> <span class="n">information_schema</span> <span class="o">|</span>
+<span class="o">|</span> <span class="n">mysql</span>              <span class="o">|</span>
+<span class="o">|</span> <span class="n">performance_schema</span> <span class="o">|</span>
+<span class="o">|</span> <span class="n">sys</span>                <span class="o">|</span>
+<span class="o">|</span> <span class="n">wxw_test</span>           <span class="o">|</span>
+<span class="o">+--------------------+</span>
+<span class="mi">5</span> <span class="k">rows</span> <span class="k">in</span> <span class="kt">set</span> <span class="p">(</span><span class="mf">0.00</span> <span class="n">sec</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>可以看到 wxw_test 数据库已经成功创建。接下来我们在 wxw_test 数据库创建两张表：userinfo 和 userdetail。首先切换到 wxw_test 数据库。我们先看看当前正在使用的数据库：</p>
+<div class="highlight-mysql notranslate"><div class="highlight"><pre><span></span><span class="c1">## 查看正在使用的数据库</span>
+<span class="n">mysql</span><span class="o">&gt;</span> <span class="k">select</span> <span class="k">database</span><span class="p">();</span>
+<span class="o">+------------+</span>
+<span class="o">|</span> <span class="k">database</span><span class="p">()</span> <span class="o">|</span>
+<span class="o">+------------+</span>
+<span class="o">|</span> <span class="n">user_info</span>   <span class="o">|</span>
+<span class="o">+------------+</span>
+<span class="mi">1</span> <span class="k">row</span> <span class="k">in</span> <span class="kt">set</span> <span class="p">(</span><span class="mf">0.00</span> <span class="n">sec</span><span class="p">)</span>
+
+<span class="c1"># 切换数据库</span>
+<span class="n">mysql</span><span class="o">&gt;</span> <span class="k">use</span> <span class="n">wxw_test</span><span class="p">;</span>
+<span class="k">Database</span> <span class="k">changed</span>
+</pre></div>
+</div>
+<p>如上，我们就成功切换到 test 数据库中了，接下来我们创建两张表啦：</p>
+</section>
+<section id="id3">
+<h3>准备表<a class="headerlink" href="#id3" title="永久链接至标题">¶</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1">## 创建 userinfo 表</span>
+CREATE TABLE <span class="sb">`</span>user_info<span class="sb">`</span> <span class="o">(</span>
+         <span class="sb">`</span>uid<span class="sb">`</span> INT<span class="o">(</span><span class="m">10</span><span class="o">)</span> NOT NULL AUTO_INCREMENT,
+         <span class="sb">`</span>username<span class="sb">`</span> VARCHAR<span class="o">(</span><span class="m">64</span><span class="o">)</span> NULL DEFAULT NULL,
+         <span class="sb">`</span>company<span class="sb">`</span> VARCHAR<span class="o">(</span><span class="m">64</span><span class="o">)</span> NULL DEFAULT NULL,
+         <span class="sb">`</span>createtime<span class="sb">`</span> DATE NULL DEFAULT NULL,
+          PRIMARY KEY <span class="o">(</span><span class="sb">`</span>uid<span class="sb">`</span><span class="o">)</span>
+    <span class="o">)</span><span class="p">;</span>
+    
+<span class="c1">## 查看表是否创建成功</span>
+mysql&gt; show tables<span class="p">;</span>
++--------------------+
+<span class="p">|</span> Tables_in_wxw_test <span class="p">|</span>
++--------------------+
+<span class="p">|</span> userinfo           <span class="p">|</span>
++--------------------+
+
+<span class="c1">## 查看建表的表结构</span>
+mysql&gt; desc use_rinfo<span class="p">;</span>
++------------+-------------+------+-----+---------+----------------+
+<span class="p">|</span> Field      <span class="p">|</span> Type        <span class="p">|</span> Null <span class="p">|</span> Key <span class="p">|</span> Default <span class="p">|</span> Extra          <span class="p">|</span>
++------------+-------------+------+-----+---------+----------------+
+<span class="p">|</span> uid        <span class="p">|</span> int         <span class="p">|</span> NO   <span class="p">|</span> PRI <span class="p">|</span> NULL    <span class="p">|</span> auto_increment <span class="p">|</span>
+<span class="p">|</span> username   <span class="p">|</span> varchar<span class="o">(</span><span class="m">64</span><span class="o">)</span> <span class="p">|</span> YES  <span class="p">|</span>     <span class="p">|</span> NULL    <span class="p">|</span>                <span class="p">|</span>
+<span class="p">|</span> company    <span class="p">|</span> varchar<span class="o">(</span><span class="m">64</span><span class="o">)</span> <span class="p">|</span> YES  <span class="p">|</span>     <span class="p">|</span> NULL    <span class="p">|</span>                <span class="p">|</span>
+<span class="p">|</span> createtime <span class="p">|</span> date        <span class="p">|</span> YES  <span class="p">|</span>     <span class="p">|</span> NULL    <span class="p">|</span>                <span class="p">|</span>
++------------+-------------+------+-----+---------+----------------+
+</pre></div>
+</div>
+</section>
+<section id="id4">
+<h3>增加数据<a class="headerlink" href="#id4" title="永久链接至标题">¶</a></h3>
+<div class="highlight-mysql notranslate"><div class="highlight"><pre><span></span><span class="c1">## 增加一条记录</span>
+<span class="n">mysql</span><span class="o">&gt;</span> <span class="k">insert</span> <span class="k">into</span> <span class="n">user_info</span> <span class="k">values</span><span class="p">(</span><span class="s1">&#39;1&#39;</span><span class="p">,</span><span class="s1">&#39;wxw&#39;</span><span class="p">,</span><span class="s1">&#39;jd&#39;</span><span class="p">,</span><span class="s1">&#39;2021-09-29&#39;</span><span class="p">);</span>
+<span class="k">Query</span> <span class="n">OK</span><span class="p">,</span> <span class="mi">1</span> <span class="k">row</span> <span class="n">affected</span> <span class="p">(</span><span class="mf">0.01</span> <span class="n">sec</span><span class="p">)</span>
+
+<span class="c1">## 查看这条记录</span>
+<span class="n">mysql</span><span class="o">&gt;</span> <span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="n">user_info</span><span class="p">;</span>
+<span class="o">+-----+----------+---------+------------+</span>
+<span class="o">|</span> <span class="n">uid</span> <span class="o">|</span> <span class="n">username</span> <span class="o">|</span> <span class="n">company</span> <span class="o">|</span> <span class="n">createtime</span> <span class="o">|</span>
+<span class="o">+-----+----------+---------+------------+</span>
+<span class="o">|</span>   <span class="mi">1</span> <span class="o">|</span> <span class="n">wxw</span>      <span class="o">|</span> <span class="n">jd</span>      <span class="o">|</span> <span class="mi">2021</span><span class="o">-</span><span class="mi">09</span><span class="o">-</span><span class="mi">29</span> <span class="o">|</span>
+<span class="o">+-----+----------+---------+------------+</span>
+</pre></div>
+</div>
+<p>上面就是 Mysql 数据表最基本的操作了，还有很多要学习，其他的话大家 Google 一下就好了。接下来我们讲述 Go 中如何操作 Mysql 数据库。</p>
+</section>
+</section>
+<section id="go-sql-driver-mysql">
+<h2><span class="section-number">1.3. </span>基于go-sql-driver操作 MySQL<a class="headerlink" href="#go-sql-driver-mysql" title="永久链接至标题">¶</a></h2>
+<p>Go没有内置的驱动支持任何的数据库，但是Go定义了database/sql接口，用户可以基于驱动接口开发相应数据库的驱动。这一节来尝试与喜爱 mysql 的驱动</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1">## 获取 sql驱动的依赖</span>
+go get github.com/go-sql-driver/mysql
+</pre></div>
+</div>
+<p>安装好 mysql 驱动之后，我们按照上述的步骤在终端创建：userinfo 。接下来看看 Go 官方提供的示例代码：</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="cm">/*</span>
+<span class="cm">@Time: 2021/10/5 20:48</span>
+<span class="cm">@Author: wxw</span>
+<span class="cm">@File: demo</span>
+<span class="cm">*/</span>
+<span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+	<span class="s">&quot;database/sql&quot;</span>
+	<span class="s">&quot;fmt&quot;</span>
+	<span class="nx">_</span> <span class="s">&quot;github.com/go-sql-driver/mysql&quot;</span>
+<span class="p">)</span>
+
+<span class="c1">// 基于 sql-driver 操作数据库</span>
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">db</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">sql</span><span class="p">.</span><span class="nx">Open</span><span class="p">(</span><span class="s">&quot;mysql&quot;</span><span class="p">,</span> <span class="s">&quot;root:123456@/wxw_test?charset=utf8&quot;</span><span class="p">)</span>
+	<span class="nx">checkErr</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+
+	<span class="c1">//2. 插入数据</span>
+	<span class="nx">stmt</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">db</span><span class="p">.</span><span class="nx">Prepare</span><span class="p">(</span><span class="s">&quot;INSERT user_info SET username=?,company=?,createtime=?&quot;</span><span class="p">)</span>
+	<span class="nx">checkErr</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+	<span class="nx">res</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">stmt</span><span class="p">.</span><span class="nx">Exec</span><span class="p">(</span><span class="s">&quot;w02&quot;</span><span class="p">,</span> <span class="s">&quot;WeChat&quot;</span><span class="p">,</span> <span class="s">&quot;2012-12-09&quot;</span><span class="p">)</span>
+	<span class="nx">checkErr</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+	<span class="c1">// 插入的Id</span>
+	<span class="nx">id</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">res</span><span class="p">.</span><span class="nx">LastInsertId</span><span class="p">()</span>
+	<span class="nx">checkErr</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;插入的Id = %d\n&quot;</span><span class="p">,</span> <span class="nx">id</span><span class="p">)</span>
+
+	<span class="c1">//3. 更新数据</span>
+	<span class="nx">stmt</span><span class="p">,</span> <span class="nx">err</span> <span class="p">=</span> <span class="nx">db</span><span class="p">.</span><span class="nx">Prepare</span><span class="p">(</span><span class="s">&quot;update user_info set username=? where uid=?&quot;</span><span class="p">)</span>
+	<span class="nx">checkErr</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+	<span class="nx">res</span><span class="p">,</span> <span class="nx">err</span> <span class="p">=</span> <span class="nx">stmt</span><span class="p">.</span><span class="nx">Exec</span><span class="p">(</span><span class="s">&quot;w02&quot;</span><span class="p">,</span> <span class="nx">id</span><span class="p">)</span>
+	<span class="nx">checkErr</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+	<span class="nx">affect</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">res</span><span class="p">.</span><span class="nx">RowsAffected</span><span class="p">()</span>
+	<span class="nx">checkErr</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">affect</span><span class="p">)</span>
+
+	<span class="c1">//1. 查询数据</span>
+	<span class="nx">rows</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">db</span><span class="p">.</span><span class="nx">Query</span><span class="p">(</span><span class="s">&quot;SELECT * FROM user_info&quot;</span><span class="p">)</span>
+	<span class="nx">checkErr</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+	<span class="k">for</span> <span class="nx">rows</span><span class="p">.</span><span class="nx">Next</span><span class="p">()</span> <span class="p">{</span>
+		<span class="kd">var</span> <span class="nx">uid</span> <span class="kt">int</span>
+		<span class="kd">var</span> <span class="nx">username</span> <span class="kt">string</span>
+		<span class="kd">var</span> <span class="nx">company</span> <span class="kt">string</span>
+		<span class="kd">var</span> <span class="nx">createtime</span> <span class="kt">string</span>
+		<span class="nx">err</span> <span class="p">=</span> <span class="nx">rows</span><span class="p">.</span><span class="nx">Scan</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">uid</span><span class="p">,</span> <span class="o">&amp;</span><span class="nx">username</span><span class="p">,</span> <span class="o">&amp;</span><span class="nx">company</span><span class="p">,</span> <span class="o">&amp;</span><span class="nx">createtime</span><span class="p">)</span>
+		<span class="nx">checkErr</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+		<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">uid</span><span class="p">,</span><span class="nx">username</span><span class="p">,</span><span class="nx">company</span><span class="p">,</span><span class="nx">createtime</span><span class="p">)</span>
+	<span class="p">}</span>
+
+	<span class="c1">//删除数据</span>
+	<span class="nx">stmt</span><span class="p">,</span> <span class="nx">err</span> <span class="p">=</span> <span class="nx">db</span><span class="p">.</span><span class="nx">Prepare</span><span class="p">(</span><span class="s">&quot;delete from user_info where uid=?&quot;</span><span class="p">)</span>
+	<span class="nx">checkErr</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+	<span class="nx">res</span><span class="p">,</span> <span class="nx">err</span> <span class="p">=</span> <span class="nx">stmt</span><span class="p">.</span><span class="nx">Exec</span><span class="p">(</span><span class="nx">id</span><span class="p">)</span>
+	<span class="nx">checkErr</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+	<span class="nx">affect</span><span class="p">,</span> <span class="nx">err</span> <span class="p">=</span> <span class="nx">res</span><span class="p">.</span><span class="nx">RowsAffected</span><span class="p">()</span>
+	<span class="nx">checkErr</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;影响行数: %d\n&quot;</span><span class="p">,</span><span class="nx">affect</span><span class="p">)</span>
+
+	<span class="c1">// 关闭连接</span>
+	<span class="nx">db</span><span class="p">.</span><span class="nx">Close</span><span class="p">()</span>
+
+<span class="p">}</span>
+
+<span class="c1">// 存在 error 进行 painc</span>
+<span class="kd">func</span> <span class="nx">checkErr</span><span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="nb">panic</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>打印结果：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">插入的Id</span> <span class="o">=</span> <span class="m">4</span>
+<span class="m">0</span>
+<span class="m">1</span> wxw jd <span class="m">2021</span>-09-29
+<span class="m">2</span> w01 WeChat <span class="m">2012</span>-12-09
+<span class="m">3</span> w01 WeChat <span class="m">2012</span>-12-09
+<span class="m">4</span> w02 WeChat <span class="m">2012</span>-12-09
+影响行数: <span class="m">1</span>
+</pre></div>
+</div>
+</section>
+<section id="beego-mysql">
+<h2><span class="section-number">1.4. </span>基于beego 操作MySQL<a class="headerlink" href="#beego-mysql" title="永久链接至标题">¶</a></h2>
+<p>ORM 是一种对象关系的映射。接下来体验一下 Beego 中内部支持的 ORM。我们还是先来安装 beego 框架。</p>
+<ul class="simple">
+<li><p>beego 在线文档：</p></li>
+<li><p>beego github地址：https://github.com/astaxie/beego</p></li>
+</ul>
+<blockquote>
+<div><p>安装beego依赖</p>
+</div></blockquote>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1">## 获取远程依赖</span>
+go get github.com/astaxie/beego
+</pre></div>
+</div>
+<blockquote>
+<div><p>基于beego的数据操作案例</p>
+</div></blockquote>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+	<span class="s">&quot;fmt&quot;</span>
+	<span class="s">&quot;github.com/astaxie/beego/orm&quot;</span>
+	<span class="nx">_</span> <span class="s">&quot;github.com/go-sql-driver/mysql&quot;</span> <span class="c1">// 导入数据库驱动</span>
+<span class="p">)</span>
+
+<span class="c1">// UserInfo model struct</span>
+<span class="kd">type</span> <span class="nx">UserInfo</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">Uid</span>        <span class="kt">int64</span> <span class="s">`orm:&quot;colunm(uid);pk&quot;`</span> <span class="c1">// 设置主键</span>
+	<span class="nx">Username</span>   <span class="kt">string</span>
+	<span class="nx">Company</span>    <span class="kt">string</span>
+	<span class="nx">Createtime</span> <span class="kt">string</span> <span class="s">`default:&quot;1994-01-01&quot;`</span> <span class="c1">// 设置默认值</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">init</span><span class="p">()</span> <span class="p">{</span>
+	<span class="c1">// 设置默认数据库</span>
+	<span class="nx">orm</span><span class="p">.</span><span class="nx">RegisterDataBase</span><span class="p">(</span><span class="s">&quot;default&quot;</span><span class="p">,</span> <span class="s">&quot;mysql&quot;</span><span class="p">,</span> <span class="s">&quot;root:123456@/wxw_test?charset=utf8&quot;</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
+	<span class="c1">// 注册定义的 model 可以同时注册多个 model</span>
+	<span class="nx">orm</span><span class="p">.</span><span class="nx">RegisterModel</span><span class="p">(</span><span class="nb">new</span><span class="p">(</span><span class="nx">UserInfo</span><span class="p">))</span>
+	<span class="c1">//orm.RegisterModel(new(User), new(Profile), new(Post))</span>
+
+	<span class="c1">// 如果不存在就创建表</span>
+	<span class="nx">orm</span><span class="p">.</span><span class="nx">RunSyncdb</span><span class="p">(</span><span class="s">&quot;default&quot;</span><span class="p">,</span> <span class="kc">false</span><span class="p">,</span> <span class="kc">true</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;beego开始操作...&quot;</span><span class="p">)</span>
+	<span class="c1">// 基本的赋值</span>
+	<span class="nx">user</span> <span class="o">:=</span> <span class="nx">UserInfo</span><span class="p">{</span><span class="nx">Username</span><span class="p">:</span> <span class="s">&quot;slene&quot;</span><span class="p">,</span> <span class="nx">Createtime</span><span class="p">:</span> <span class="s">&quot;2021-08-12&quot;</span><span class="p">}</span>
+
+	<span class="c1">// 打印记录</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">user</span><span class="p">.</span><span class="nx">Uid</span><span class="p">,</span> <span class="nx">user</span><span class="p">.</span><span class="nx">Username</span><span class="p">,</span> <span class="nx">user</span><span class="p">.</span><span class="nx">Company</span><span class="p">,</span> <span class="nx">user</span><span class="p">.</span><span class="nx">Createtime</span><span class="p">)</span>
+
+	<span class="c1">// 开启一个连接</span>
+	<span class="nx">o</span> <span class="o">:=</span> <span class="nx">orm</span><span class="p">.</span><span class="nx">NewOrm</span><span class="p">()</span>
+
+	<span class="c1">// 插入表</span>
+	<span class="nx">id</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">o</span><span class="p">.</span><span class="nx">Insert</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">user</span><span class="p">)</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;ID: %d, ERR: %v\n&quot;</span><span class="p">,</span> <span class="nx">id</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+
+	<span class="c1">// 更新表</span>
+	<span class="c1">//user.Username = &quot;w4&quot;</span>
+	<span class="c1">//num, err := o.Update(&amp;user)</span>
+	<span class="c1">//fmt.Printf(&quot;NUM: %d, ERR: %v\n&quot;, num, err)</span>
+
+	<span class="c1">// 读取 one</span>
+	<span class="nx">u</span> <span class="o">:=</span> <span class="nx">UserInfo</span><span class="p">{</span><span class="nx">Uid</span><span class="p">:</span> <span class="nx">user</span><span class="p">.</span><span class="nx">Uid</span><span class="p">}</span>
+	<span class="nx">err</span> <span class="p">=</span> <span class="nx">o</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">u</span><span class="p">)</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;ERR: %v\n&quot;</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+	<span class="c1">//</span>
+	<span class="c1">//	// 删除表</span>
+	<span class="c1">//	//num, err = o.Delete(&amp;u)</span>
+	<span class="c1">//fmt.Printf(&quot;NUM: %d, ERR: %v\n&quot;, num, err)</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="gorm-mysql">
+<h2><span class="section-number">1.5. </span>基于gorm 操作MySQL<a class="headerlink" href="#gorm-mysql" title="永久链接至标题">¶</a></h2>
+<p>之前咱们学习过原生的Go连接MYSQL的方法，使用Go自带的<code class="docutils literal notranslate"><span class="pre">&quot;database/sql&quot;</span></code>数据库连接api，<code class="docutils literal notranslate"><span class="pre">&quot;github.com/go-sql-driver/mysql&quot;</span></code>MYSQL驱动，通过比较原生的写法去写sql和处理事务。目前开源界也有很多封装好的orm操作框架，帮我们简省一些重复的操作，提高代码可读性。<code class="docutils literal notranslate"><span class="pre">gorm</span></code>就是这样的一款作品，我们来学习一下gorm的操作流程。</p>
+<blockquote>
+<div><p>概览</p>
+</div></blockquote>
+<ul class="simple">
+<li><p>gorm在线文档：<a class="reference external" href="https://gorm.io/zh_CN/docs/index.html">https://gorm.io</a></p></li>
+</ul>
+<blockquote>
+<div><p>安装gorm依赖</p>
+</div></blockquote>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>go get -u gorm.io/gorm
+go get -u gorm.io/driver/sqlite
+</pre></div>
+</div>
+<blockquote>
+<div><p>快速入门</p>
+</div></blockquote>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+	<span class="s">&quot;fmt&quot;</span>
+	<span class="s">&quot;gorm.io/driver/mysql&quot;</span>
+	<span class="s">&quot;gorm.io/gorm&quot;</span>
+	<span class="s">&quot;gorm.io/gorm/schema&quot;</span>
+	<span class="s">&quot;time&quot;</span>
+<span class="p">)</span>
+
+<span class="kd">type</span> <span class="nx">UserInfo</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">Uid</span>        <span class="kt">int64</span> <span class="s">`gorm:&quot;primaryKey&quot;`</span>
+	<span class="nx">UserName</span>   <span class="kt">string</span>
+	<span class="nx">Company</span>    <span class="kt">string</span>
+	<span class="nx">CreateTime</span> <span class="nx">time</span><span class="p">.</span><span class="nx">Time</span>
+<span class="p">}</span>
+
+<span class="kd">var</span> <span class="nx">db</span> <span class="o">*</span><span class="nx">gorm</span><span class="p">.</span><span class="nx">DB</span>
+
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="kd">var</span> <span class="nx">err</span> <span class="kt">error</span>
+	<span class="nx">dsn</span> <span class="o">:=</span> <span class="s">&quot;root:123456@tcp(127.0.0.1:3306)/wxw_test?charset=utf8mb4&amp;parseTime=True&amp;loc=Local&quot;</span>
+	<span class="nx">db</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">gorm</span><span class="p">.</span><span class="nx">Open</span><span class="p">(</span><span class="nx">mysql</span><span class="p">.</span><span class="nx">Open</span><span class="p">(</span><span class="nx">dsn</span><span class="p">),</span> <span class="o">&amp;</span><span class="nx">gorm</span><span class="p">.</span><span class="nx">Config</span><span class="p">{</span>
+		<span class="nx">NamingStrategy</span><span class="p">:</span> <span class="nx">schema</span><span class="p">.</span><span class="nx">NamingStrategy</span><span class="p">{</span>
+			<span class="nx">SingularTable</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span> <span class="c1">// 使用单数表名，启用该选项后，`User` 表将是`user`</span>
+		<span class="p">},</span>
+	<span class="p">})</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="nb">panic</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+	<span class="p">}</span>
+
+	<span class="c1">// 定义指针</span>
+	<span class="kd">var</span> <span class="nx">userinfo</span> <span class="nx">UserInfo</span>
+
+	<span class="c1">// 获取第一条记录</span>
+	<span class="c1">// 有效，因为目标 struct 是指针</span>
+	<span class="c1">// SELECT * FROM `user_info` ORDER BY `user_info`.`uid` LIMIT 1</span>
+	<span class="nx">db</span><span class="p">.</span><span class="nx">First</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">userinfo</span><span class="p">)</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">userinfo</span><span class="p">)</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="第四章：数据操作" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="w042_redis.html" class="btn btn-neutral float-right" title="2. Go 操作 Redis" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; 版权所有 2021, 公众号:Java半颗糖.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

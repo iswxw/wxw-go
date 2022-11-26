@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>5. 面向对象之集合Map &mdash; Go 深入浅出 1.0.0 文档</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/translations.js"></script>
+        <script src="../_static/js/readmore.js"></script>
+        <script src="../_static/js/baidutongji.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="第三章：并发编程" href="../w03/index.html" />
+    <link rel="prev" title="4. 面向对象之切片Slice" href="w024_slice.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> Go 深入浅出
+          </a>
+              <div class="version">
+                1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../preface.html">前言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../w01/index.html">第一章：基础知识</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">第二章：面向对象</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="w021_struct.html">1. 面向对象之结构体</a></li>
+<li class="toctree-l2"><a class="reference internal" href="w022_interface.html">2. 面向对象之接口</a></li>
+<li class="toctree-l2"><a class="reference internal" href="w023_array.html">3. 面向对象之数组</a></li>
+<li class="toctree-l2"><a class="reference internal" href="w024_slice.html">4. 面向对象之切片Slice</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">5. 面向对象之集合Map</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id1">5.1. Map 定义</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id2">5.2. Map 的基本使用</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#key">1. 判断某个Key是否存在</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id3">2. map 的遍历</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#map-delete">3. map删除元素 delete()方法</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#id4">5.3. 按照指定顺序遍历map</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id5">5.4. 元素为map类型的切片</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id6">5.5. 值为切片类型的map</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../w03/index.html">第三章：并发编程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../w04/index.html">第四章：数据操作</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../w05/index.html">第五章：源码学习</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../w06/index.html">第六章：工程实践</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../wend/about.html">关于作者</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Go 深入浅出</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="index.html">第二章：面向对象</a> &raquo;</li>
+      <li><span class="section-number">5. </span>面向对象之集合Map</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/w02/w025_map.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="map">
+<h1><span class="section-number">5. </span>面向对象之集合Map<a class="headerlink" href="#map" title="永久链接至标题">¶</a></h1>
+<hr class="docutils" />
+<p>map是一种无序的基于<code class="docutils literal notranslate"><span class="pre">key-value</span></code>的数据结构，Go语言中的map是引用类型，必须初始化才能使用。</p>
+<section id="id1">
+<h2><span class="section-number">5.1. </span>Map 定义<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h2>
+<p>Go语言中 <code class="docutils literal notranslate"><span class="pre">map</span></code>的定义语法如下：</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">map</span><span class="p">[</span><span class="nx">KeyType</span><span class="p">]</span><span class="nx">ValueType</span>
+</pre></div>
+</div>
+<p>其中，</p>
+<ul class="simple">
+<li><p>KeyType:表示键的类型。</p></li>
+<li><p>ValueType:表示键对应的值的类型。</p></li>
+</ul>
+<p>map类型的变量默认初始值为nil，需要使用make()函数来分配内存。语法为：</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="nb">make</span><span class="p">(</span><span class="kd">map</span><span class="p">[</span><span class="nx">KeyType</span><span class="p">]</span><span class="nx">ValueType</span><span class="p">,</span> <span class="p">[</span><span class="nx">cap</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>其中cap表示map的容量，该参数虽然不是必须的，但是我们应该在初始化map的时候就为其指定一个合适的容量。</p>
+</section>
+<section id="id2">
+<h2><span class="section-number">5.2. </span>Map 的基本使用<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h2>
+<p>map中的数据都是成对出现的，map的基本使用示例代码如下：</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">scoreMap</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">int</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
+	<span class="nx">scoreMap</span><span class="p">[</span><span class="s">&quot;张三&quot;</span><span class="p">]</span> <span class="p">=</span> <span class="mi">90</span>
+	<span class="nx">scoreMap</span><span class="p">[</span><span class="s">&quot;小明&quot;</span><span class="p">]</span> <span class="p">=</span> <span class="mi">100</span>
+    
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">scoreMap</span><span class="p">)</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">scoreMap</span><span class="p">[</span><span class="s">&quot;小明&quot;</span><span class="p">])</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;type of a:%T\n&quot;</span><span class="p">,</span> <span class="nx">scoreMap</span><span class="p">)</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>输出：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>map<span class="o">[</span>小明:100 张三:90<span class="o">]</span>
+<span class="m">100</span>
+<span class="nb">type</span> of a:map<span class="o">[</span>string<span class="o">]</span>int
+</pre></div>
+</div>
+<p>map也支持在声明的时候填充元素，例如：</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">userInfo</span> <span class="o">:=</span> <span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">string</span><span class="p">{</span>
+		<span class="s">&quot;username&quot;</span><span class="p">:</span> <span class="s">&quot;半颗糖&quot;</span><span class="p">,</span>
+		<span class="s">&quot;password&quot;</span><span class="p">:</span> <span class="s">&quot;123456&quot;</span><span class="p">,</span>
+	<span class="p">}</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">userInfo</span><span class="p">)</span> <span class="c1">//</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<section id="key">
+<h3>1. 判断某个Key是否存在<a class="headerlink" href="#key" title="永久链接至标题">¶</a></h3>
+<p>Go语言中有个判断map中键是否存在的特殊写法，格式如下:</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="nx">value</span><span class="p">,</span> <span class="nx">ok</span> <span class="o">:=</span> <span class="kd">map</span><span class="p">[</span><span class="nx">key</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>举个例子：</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">scoreMap</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">int</span><span class="p">)</span>
+	<span class="nx">scoreMap</span><span class="p">[</span><span class="s">&quot;张三&quot;</span><span class="p">]</span> <span class="p">=</span> <span class="mi">90</span>
+	<span class="nx">scoreMap</span><span class="p">[</span><span class="s">&quot;小明&quot;</span><span class="p">]</span> <span class="p">=</span> <span class="mi">100</span>
+    
+	<span class="c1">// 如果key存在ok为true,v为对应的值；不存在ok为false,v为值类型的零值</span>
+	<span class="nx">v</span><span class="p">,</span> <span class="nx">ok</span> <span class="o">:=</span> <span class="nx">scoreMap</span><span class="p">[</span><span class="s">&quot;张三&quot;</span><span class="p">]</span>
+    
+	<span class="k">if</span> <span class="nx">ok</span> <span class="p">{</span>
+		<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">v</span><span class="p">)</span>
+	<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+		<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;查无此人&quot;</span><span class="p">)</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="id3">
+<h3>2. map 的遍历<a class="headerlink" href="#id3" title="永久链接至标题">¶</a></h3>
+<p>Go语言中使用<code class="docutils literal notranslate"><span class="pre">for</span> <span class="pre">range</span></code>遍历map。</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">scoreMap</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">int</span><span class="p">)</span>
+	<span class="nx">scoreMap</span><span class="p">[</span><span class="s">&quot;张三&quot;</span><span class="p">]</span> <span class="p">=</span> <span class="mi">90</span>
+	<span class="nx">scoreMap</span><span class="p">[</span><span class="s">&quot;小明&quot;</span><span class="p">]</span> <span class="p">=</span> <span class="mi">100</span>
+	<span class="nx">scoreMap</span><span class="p">[</span><span class="s">&quot;娜扎&quot;</span><span class="p">]</span> <span class="p">=</span> <span class="mi">60</span>
+	<span class="k">for</span> <span class="nx">k</span><span class="p">,</span> <span class="nx">v</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">scoreMap</span> <span class="p">{</span>
+		<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">k</span><span class="p">,</span> <span class="nx">v</span><span class="p">)</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>但我们只想遍历key的时候，可以按下面的写法：</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">scoreMap</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">int</span><span class="p">)</span>
+	<span class="nx">scoreMap</span><span class="p">[</span><span class="s">&quot;张三&quot;</span><span class="p">]</span> <span class="p">=</span> <span class="mi">90</span>
+	<span class="nx">scoreMap</span><span class="p">[</span><span class="s">&quot;小明&quot;</span><span class="p">]</span> <span class="p">=</span> <span class="mi">100</span>
+	<span class="nx">scoreMap</span><span class="p">[</span><span class="s">&quot;娜扎&quot;</span><span class="p">]</span> <span class="p">=</span> <span class="mi">60</span>
+	<span class="k">for</span> <span class="nx">k</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">scoreMap</span> <span class="p">{</span>
+		<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">k</span><span class="p">)</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>注意：</strong> 遍历map时的元素顺序与添加键值对的顺序无关。</p>
+</section>
+<section id="map-delete">
+<h3>3. map删除元素 delete()方法<a class="headerlink" href="#map-delete" title="永久链接至标题">¶</a></h3>
+<p>使用<code class="docutils literal notranslate"><span class="pre">delete()</span></code>内建函数从map中删除一组键值对，<code class="docutils literal notranslate"><span class="pre">delete()</span></code>函数的格式如下：</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="nb">delete</span><span class="p">(</span><span class="kd">map</span><span class="p">,</span> <span class="nx">key</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>其中，</p>
+<ul class="simple">
+<li><p>map:表示要删除键值对的map</p></li>
+<li><p>key:表示要删除的键值对的键</p></li>
+</ul>
+<p>示例代码如下：</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">func</span> <span class="nx">main</span><span class="p">(){</span>
+	<span class="nx">scoreMap</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">int</span><span class="p">)</span>
+	<span class="nx">scoreMap</span><span class="p">[</span><span class="s">&quot;张三&quot;</span><span class="p">]</span> <span class="p">=</span> <span class="mi">90</span>
+	<span class="nx">scoreMap</span><span class="p">[</span><span class="s">&quot;小明&quot;</span><span class="p">]</span> <span class="p">=</span> <span class="mi">100</span>
+	<span class="nx">scoreMap</span><span class="p">[</span><span class="s">&quot;娜扎&quot;</span><span class="p">]</span> <span class="p">=</span> <span class="mi">60</span>
+    
+	<span class="nb">delete</span><span class="p">(</span><span class="nx">scoreMap</span><span class="p">,</span> <span class="s">&quot;小明&quot;</span><span class="p">)</span><span class="c1">//将小明:100从map中删除</span>
+	<span class="k">for</span> <span class="nx">k</span><span class="p">,</span><span class="nx">v</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">scoreMap</span><span class="p">{</span>
+		<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">k</span><span class="p">,</span> <span class="nx">v</span><span class="p">)</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="id4">
+<h2><span class="section-number">5.3. </span>按照指定顺序遍历map<a class="headerlink" href="#id4" title="永久链接至标题">¶</a></h2>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">rand</span><span class="p">.</span><span class="nx">Seed</span><span class="p">(</span><span class="nx">time</span><span class="p">.</span><span class="nx">Now</span><span class="p">().</span><span class="nx">UnixNano</span><span class="p">())</span> <span class="c1">//初始化随机数种子</span>
+
+	<span class="kd">var</span> <span class="nx">scoreMap</span> <span class="p">=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">int</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+
+	<span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="p">&lt;</span> <span class="mi">100</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
+		<span class="nx">key</span> <span class="o">:=</span> <span class="nx">fmt</span><span class="p">.</span><span class="nx">Sprintf</span><span class="p">(</span><span class="s">&quot;stu%02d&quot;</span><span class="p">,</span> <span class="nx">i</span><span class="p">)</span> <span class="c1">//生成stu开头的字符串</span>
+		<span class="nx">value</span> <span class="o">:=</span> <span class="nx">rand</span><span class="p">.</span><span class="nx">Intn</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>          <span class="c1">//生成0~99的随机整数</span>
+		<span class="nx">scoreMap</span><span class="p">[</span><span class="nx">key</span><span class="p">]</span> <span class="p">=</span> <span class="nx">value</span>
+	<span class="p">}</span>
+	<span class="c1">//取出map中的所有key存入切片keys</span>
+	<span class="kd">var</span> <span class="nx">keys</span> <span class="p">=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">string</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+	<span class="k">for</span> <span class="nx">key</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">scoreMap</span> <span class="p">{</span>
+		<span class="nx">keys</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">keys</span><span class="p">,</span> <span class="nx">key</span><span class="p">)</span>
+	<span class="p">}</span>
+	<span class="c1">//对切片进行排序</span>
+	<span class="nx">sort</span><span class="p">.</span><span class="nx">Strings</span><span class="p">(</span><span class="nx">keys</span><span class="p">)</span>
+	<span class="c1">//按照排序后的key遍历map</span>
+	<span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">key</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">keys</span> <span class="p">{</span>
+		<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">key</span><span class="p">,</span> <span class="nx">scoreMap</span><span class="p">[</span><span class="nx">key</span><span class="p">])</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="id5">
+<h2><span class="section-number">5.4. </span>元素为map类型的切片<a class="headerlink" href="#id5" title="永久链接至标题">¶</a></h2>
+<p>下面的代码演示了切片中的元素为map类型时的操作：</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="kd">var</span> <span class="nx">mapSlice</span> <span class="p">=</span> <span class="nb">make</span><span class="p">([]</span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">string</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+	<span class="k">for</span> <span class="nx">index</span><span class="p">,</span> <span class="nx">value</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">mapSlice</span> <span class="p">{</span>
+		<span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;index:%d value:%v\n&quot;</span><span class="p">,</span> <span class="nx">index</span><span class="p">,</span> <span class="nx">value</span><span class="p">)</span>
+	<span class="p">}</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;after init&quot;</span><span class="p">)</span>
+	<span class="c1">// 对切片中的map元素进行初始化</span>
+	<span class="nx">mapSlice</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="p">=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">string</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+	<span class="nx">mapSlice</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s">&quot;name&quot;</span><span class="p">]</span> <span class="p">=</span> <span class="s">&quot;小王子&quot;</span>
+	<span class="nx">mapSlice</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s">&quot;password&quot;</span><span class="p">]</span> <span class="p">=</span> <span class="s">&quot;123456&quot;</span>
+	<span class="nx">mapSlice</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s">&quot;address&quot;</span><span class="p">]</span> <span class="p">=</span> <span class="s">&quot;沙河&quot;</span>
+	<span class="k">for</span> <span class="nx">index</span><span class="p">,</span> <span class="nx">value</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">mapSlice</span> <span class="p">{</span>
+		<span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;index:%d value:%v\n&quot;</span><span class="p">,</span> <span class="nx">index</span><span class="p">,</span> <span class="nx">value</span><span class="p">)</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="id6">
+<h2><span class="section-number">5.5. </span>值为切片类型的map<a class="headerlink" href="#id6" title="永久链接至标题">¶</a></h2>
+<p>下面的代码演示了map中值为切片类型的操作：</p>
+<div class="highlight-go notranslate"><div class="highlight"><pre><span></span><span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="kd">var</span> <span class="nx">sliceMap</span> <span class="p">=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">][]</span><span class="kt">string</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">sliceMap</span><span class="p">)</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;after init&quot;</span><span class="p">)</span>
+	<span class="nx">key</span> <span class="o">:=</span> <span class="s">&quot;中国&quot;</span>
+	<span class="nx">value</span><span class="p">,</span> <span class="nx">ok</span> <span class="o">:=</span> <span class="nx">sliceMap</span><span class="p">[</span><span class="nx">key</span><span class="p">]</span>
+	<span class="k">if</span> <span class="p">!</span><span class="nx">ok</span> <span class="p">{</span>
+		<span class="nx">value</span> <span class="p">=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">string</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+	<span class="p">}</span>
+	<span class="nx">value</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">value</span><span class="p">,</span> <span class="s">&quot;北京&quot;</span><span class="p">,</span> <span class="s">&quot;上海&quot;</span><span class="p">)</span>
+	<span class="nx">sliceMap</span><span class="p">[</span><span class="nx">key</span><span class="p">]</span> <span class="p">=</span> <span class="nx">value</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">sliceMap</span><span class="p">)</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="w024_slice.html" class="btn btn-neutral float-left" title="4. 面向对象之切片Slice" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../w03/index.html" class="btn btn-neutral float-right" title="第三章：并发编程" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; 版权所有 2021, 公众号:Java半颗糖.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
