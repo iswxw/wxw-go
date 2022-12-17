@@ -1,6 +1,6 @@
 // @Time : 2022/12/17 16:53
 // @Author : xiaoweiwei
-// @File : pool
+// @File : pool https://time.geekbang.org/column/article/479171
 
 package worker_pool
 
