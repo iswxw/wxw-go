@@ -1,5 +1,0 @@
-
-
-
-// 生成程序调试信息（-N -l用于关闭编译器的内联优化）
-go build -gcflags="-N -l" ../dbg_test
