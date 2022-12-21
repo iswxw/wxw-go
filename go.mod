@@ -16,7 +16,6 @@ require (
 	github.com/jung-kurt/gofpdf v1.16.2 // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/mitchellh/mapstructure v1.5.0
-	github.com/nguyenthenguyen/docx v0.0.0-20220721043308-1903da0ef37d // indirect
 	github.com/olivere/elastic v6.2.37+incompatible // indirect
 	github.com/phpdave11/gofpdi v1.0.13 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
@@ -35,6 +34,7 @@ require (
 	github.com/SebastiaanKlippert/go-wkhtmltopdf v1.7.2 // indirect
 	github.com/astaxie/beego v1.12.3 // indirect
 	github.com/go-sql-driver/mysql v1.6.0 // indirect
+	github.com/google/pprof v0.0.0-20221219190121-3cb0bae90811 // indirect
 	github.com/hashicorp/golang-lru v0.5.4 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
