@@ -1,4 +1,6 @@
 
 
 [相关资料]
-  1.实践说明：https://blog.wolfogre.com/posts/go-ppof-practice/
+  1. pprof实践笔记
+     - 实践博客：https://blog.wolfogre.com/posts/go-ppof-practice/
+     - github仓库：https://github.com/wolfogre/go-pprof-practice

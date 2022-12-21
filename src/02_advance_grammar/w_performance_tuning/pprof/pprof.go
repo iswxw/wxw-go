@@ -10,9 +10,15 @@ import (
 	_ "net/http/pprof" // 会自动注册 handler 到 http server，方便通过 http 接口获取程序运行采样
 	"os"
 	"runtime"
+	"src/com.wxw/project_actual/src/02_advance_grammar/w_performance_tuning/pprof/animal"
+	"time"
 )
 
 func main() {
+
+	log.SetFlags(log.Lshortfile | log.LstdFlags)
+	log.SetOutput(os.Stdout)
+
 	runtime.GOMAXPROCS(1)              // 限制 CPU 使用数，避免过载
 	runtime.SetMutexProfileFraction(1) // 开启对锁调用的跟踪
 	runtime.SetBlockProfileRate(1)     // 开启对阻塞操作的跟踪
@@ -24,4 +30,11 @@ func main() {
 		}
 		os.Exit(0)
 	}()
+
+	for {
+		for _, v := range animal.AllAnimals {
+			v.Live()
+		}
+		time.Sleep(time.Second)
+	}
 }
