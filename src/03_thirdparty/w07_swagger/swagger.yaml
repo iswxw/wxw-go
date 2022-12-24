@@ -25,7 +25,7 @@ definitions:
     - nickname
     title: User represents body of User request and response.
     type: object
-    x-go-package: src/com.wxw/project_actual/src/com.wxw/04_project_actual/w07_swagger/api
+    x-go-package: src/com.wxw/project_actual/src/com.wxw/04_project_actual/w07_swagger/router
 host: some-url.com
 info:
   description: Documentation of our wxw_swagger_ui API.

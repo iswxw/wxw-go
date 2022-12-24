@@ -3,7 +3,7 @@
 @Author: wxw
 @File: hello_world
 */
-package test
+package api
 
 import (
 	"github.com/gin-gonic/gin"

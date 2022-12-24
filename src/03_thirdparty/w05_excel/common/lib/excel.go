@@ -215,7 +215,7 @@ func (c *ExcelStruct) Row(row []string) (map[string]interface{}, error) {
 					}
 				}
 			} else {
-				//other
+				//api
 				//其他类型
 				switch fields.FieldType {
 				case "bool":

@@ -19,7 +19,7 @@ func main() {
 
 	// Obtain a client and connect to the default Elasticsearch installation
 	// on 127.0.0.1:9200. Of course you can configure your client to connect
-	// to other hosts and configure it in various other ways.
+	// to api hosts and configure it in various api ways.
 	client, err := elastic.NewClient()
 	if err != nil {
 		// Handle error
@@ -124,7 +124,7 @@ func main() {
 	}
 
 	// searchResult is of type SearchResult and returns hits, suggestions,
-	// and all kinds of other information from Elasticsearch.
+	// and all kinds of api information from Elasticsearch.
 	fmt.Printf("Query took %d milliseconds\n", searchResult.TookInMillis)
 
 	// Each is a convenience function that iterates over hits in a search result.

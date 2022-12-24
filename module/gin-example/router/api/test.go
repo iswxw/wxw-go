@@ -3,14 +3,14 @@
 @Author: wxw
 @File: hello_world
 */
-package test
+package api
 
 import (
 	"github.com/gin-gonic/gin"
-	"src/com.wxw/project_actual/module/gin-example/app/test"
+	"src/com.wxw/project_actual/module/gin-example/app/test/api"
 )
 
 // DebugAPI 调试及工具接口
 func DebugAPI(r *gin.Engine) {
-	r.GET("/wxw/gin/test/ping", test.Ping)
+	r.GET("/wxw/debug/ping", api.Ping)
 }

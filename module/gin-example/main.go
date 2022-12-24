@@ -10,6 +10,7 @@ import (
 	"src/com.wxw/project_actual/module/gin-example/common/server"
 )
 
+// 测试接口：http://localhost:8000/wxw/debug/ping
 func main() {
 	funcInit()
 	server.Setup()

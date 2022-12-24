@@ -3,7 +3,7 @@
 @Author : weixiaowei
 @File : user
 */
-// Package api defines the user model.
+// Package router defines the user model.
 package api
 
 // User represents body of User request and response.

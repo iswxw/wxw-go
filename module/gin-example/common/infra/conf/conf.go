@@ -53,7 +53,7 @@ func Setup(path string) {
 
 	err := Viper.ReadInConfig()
 	if err != nil {
-		panic(fmt.Sprintf(" init conf failed: %s", err))
+		panic(fmt.Sprintf(" setup conf failed: %s", err))
 	}
 
 	log.Printf("[%s_conf] setup success;\n", Env)

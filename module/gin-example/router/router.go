@@ -7,7 +7,7 @@ package router
 
 import (
 	"github.com/gin-gonic/gin"
-	"src/com.wxw/project_actual/module/gin-example/router/test"
+	"src/com.wxw/project_actual/module/gin-example/router/api"
 )
 
 func Setup() *gin.Engine {
@@ -16,7 +16,7 @@ func Setup() *gin.Engine {
 	r.Use(gin.Recovery())
 
 	// test 调试相关接口
-	test.DebugAPI(r)
+	api.DebugAPI(r)
 
 	return r
 }
