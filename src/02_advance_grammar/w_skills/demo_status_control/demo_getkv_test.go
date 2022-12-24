@@ -12,7 +12,7 @@ import "testing"
 // D:\Project\wxw-go\src\com.wxw\02_advance_grammar\w_skills\demo_status_control>go test -bench=.
 // goos: windows
 // goarch: amd64
-// 05_pkg: com.wxw/02_advance_grammar/w_skills/demo_status_control
+// 04_pkg: com.wxw/02_advance_grammar/w_skills/demo_status_control
 // cpu: AMD Ryzen 7 4700U with Radeon Graphics
 // BenchmarkSwitch-8       1000000000               0.2515 ns/op
 // BenchmarkMap-8          100000000               11.21 ns/op
