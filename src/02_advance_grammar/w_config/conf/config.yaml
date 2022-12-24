@@ -8,7 +8,7 @@ log:
   file: 'DEBUG'
 
 mylog:
-  level: 'debug'
+  level: 'test'
   prefix: '[MY-LOG]'
   file_path: 'log'
   file_name: 'mylog.log'

@@ -22,7 +22,7 @@ var bytePool = sync.Pool{
 // https://www.cnblogs.com/sunsky303/p/9706210.html
 func main() {
 	//defer
-	//debug.SetGCPercent(debug.SetGCPercent(-1))
+	//test.SetGCPercent(test.SetGCPercent(-1))
 
 	// 记录开始构建对象时间
 	a := time.Now().Unix() // 返回单位是 秒（s）

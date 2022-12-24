@@ -1,9 +1,9 @@
 /*
-@Time: 2022/12/24 17:46
+@Time: 2022/12/24 18:03
 @Author: wxw
 @File: hello_world
 */
-package debug
+package test
 
 import (
 	"github.com/gin-gonic/gin"

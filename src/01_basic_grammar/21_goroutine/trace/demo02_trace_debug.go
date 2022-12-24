@@ -19,5 +19,5 @@ func main() {
 
 // 当前路径下
 // 编译：go build demo02_trace_debug.go
-// debug：GODEBUG=schedtrace=1000 ./demo02_trace_debug.exe
+// test：GODEBUG=schedtrace=1000 ./demo02_trace_debug.exe
 //
