@@ -5,11 +5,16 @@
 */
 package main
 
-import "src/com.wxw/project_actual/module/gin-example/common/server"
-
-func init() {
-}
+import (
+	"src/com.wxw/project_actual/module/gin-example/common/infra/conf"
+	"src/com.wxw/project_actual/module/gin-example/common/server"
+)
 
 func main() {
+	funcInit()
 	server.Setup()
+}
+
+func funcInit() {
+	conf.Setup("")
 }

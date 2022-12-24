@@ -1,8 +1,8 @@
 [server]
 port = 8000
+run_mode = "release"
 read_timeout = 60
 write_timeout = 60
-run_mode = "debug"
 
 [app]
 PageSize = 10

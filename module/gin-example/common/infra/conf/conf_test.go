@@ -9,6 +9,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"runtime"
 	"testing"
 )
 
@@ -30,4 +31,10 @@ func TestPathConfig(t *testing.T) {
 	log.Println(newPath)
 
 	log.Println(GetEnvironment())
+
+	_, fn, _, _ := runtime.Caller(0)
+	path := filepath.Dir(fn)
+	newPath2 := filepath.Join(path, "../../../conf/", "dev")
+	log.Println(newPath2)
+
 }

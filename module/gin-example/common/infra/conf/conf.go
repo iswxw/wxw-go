@@ -12,13 +12,19 @@ import (
 	"log"
 	"os"
 	"path/filepath"
-	"src/com.wxw/project_actual/module/gin-example/common/consts"
+	"runtime"
 	"strings"
+)
+
+const (
+	Dev  = "dev"
+	Test = "test"
+	Prod = "prod"
 )
 
 var (
 	Viper = viper.New()
-	Env   = consts.Dev
+	Env   = Dev
 )
 
 // Setup 初始化配置项
@@ -30,6 +36,14 @@ func Setup(path string) {
 	if path == "" {
 		dir, _ := os.Getwd()
 		path = filepath.Join(dir, "../../../conf/", Env, "app.toml")
+
+		// windows 本地golang编译
+		if runtime.GOOS == "windows" {
+			_, fn, _, _ := runtime.Caller(0)
+			dir := filepath.Dir(fn)
+			path = filepath.Join(dir, "../../../conf/", Env, "app.toml")
+		}
+
 		Viper.SetConfigFile(path)
 	} else {
 		Viper.SetConfigFile(path)
@@ -50,19 +64,19 @@ func GetEnvironment() string {
 	path := "src/04_project_actual/gin-example/.deploy"
 	file, err := os.Open(path)
 	if err != nil {
-		return consts.Dev
+		return Dev
 	}
 	v, err := ioutil.ReadAll(file)
 	if err != nil {
-		return consts.Dev
+		return Dev
 	}
 	envValue := string(v)
 	switch {
 	case strings.Contains(envValue, "test"):
-		return consts.Test
+		return Test
 	case strings.Contains(envValue, "prod"):
-		return consts.Prod
+		return Prod
 	default:
-		return consts.Dev
+		return Dev
 	}
 }
