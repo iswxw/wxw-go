@@ -3,7 +3,7 @@
 @Author : wxw
 @File : demo_type_transformation 类型转换
 */
-package type_convert
+package _2_type_convert
 
 import (
 	"encoding/json"

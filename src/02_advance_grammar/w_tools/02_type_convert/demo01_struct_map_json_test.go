@@ -2,7 +2,7 @@
 // @Author : xiaoweiwei
 // @File : demo01_struct_map_json_test
 
-package type_convert
+package _2_type_convert
 
 import (
 	"log"

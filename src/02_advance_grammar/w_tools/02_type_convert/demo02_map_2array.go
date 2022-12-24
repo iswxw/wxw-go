@@ -2,4 +2,4 @@
 // @Author : xiaoweiwei
 // @File : demo02_map_2array
 
-package type_convert
+package _2_type_convert
