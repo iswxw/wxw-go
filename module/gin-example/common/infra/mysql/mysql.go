@@ -14,14 +14,14 @@ import (
 	"src/com.wxw/project_actual/module/gin-example/common/infra/conf"
 )
 
-// client gorm DB 的对象是线程安全的
-var client *gorm.DB
+// Client gorm DB 的对象是线程安全的
+var Client *gorm.DB
 
 // Setup 设置mysql启动项
 func Setup() {
 	var err error
 	dsn := conf.Viper.GetString("mysql.dsn")
-	client, err = gorm.Open(mysql.Open(dsn), &gorm.Config{
+	Client, err = gorm.Open(mysql.Open(dsn), &gorm.Config{
 		NamingStrategy: schema.NamingStrategy{
 			SingularTable: true, // 使用单数表名，启用该选项后，`User` 表将是`user`
 		},
