@@ -12,16 +12,30 @@ import (
 )
 
 type IArticle interface {
-	Query() (*dao.Article, error)
+	Query(tagID uint) (*dao.Article, error)
+	Insert(article *dao.Article) (uint, error)
 }
 
 type articleModel struct {
 	db *gorm.DB
 }
 
-func (a articleModel) Query() (*dao.Article, error) {
+func (a articleModel) Insert(article *dao.Article) (uint, error) {
+	db := a.db.Table(article.TableArticle())
+	err := db.Create(&article).Error
+	if err != nil {
+		return 0, err
+	}
+	return article.TagId, nil
+}
+
+func (a articleModel) Query(tagID uint) (*dao.Article, error) {
 	article := &dao.Article{}
 	db := a.db.Table(article.TableArticle())
+
+	if tagID != 0 {
+		db = db.Where("tag_id = ?", tagID)
+	}
 
 	err := db.Order("id desc").First(article).Error
 	if err != nil {
