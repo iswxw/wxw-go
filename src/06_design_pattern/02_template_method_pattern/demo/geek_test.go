@@ -5,11 +5,28 @@
 */
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"testing"
+)
 
 // https://time.geekbang.org/column/article/386238
 // 做菜流程 说明 模板方法模式
 
+// 实现方式一
+func TestTemplate_g02(t *testing.T) {
+	// 具体实现1
+	xhs := &XiHongShi{}
+	xhs.cooke()
+
+	fmt.Println("\n=====> 执行另外一个具体实现")
+
+	// 具体实现2
+	cjd := &ChaoJiDan{}
+	cjd.cooke()
+}
+
+// ==============================具体实现============================
 type Cooker interface {
 	fire()    // 开火
 	cooke()   // 做菜
@@ -44,7 +61,7 @@ type XiHongShi struct {
 	CookMenu
 }
 
-func (*XiHongShi) cooke() {
+func (xhs *XiHongShi) cooke() {
 	fmt.Println("做西红柿")
 }
 
@@ -53,6 +70,6 @@ type ChaoJiDan struct {
 	CookMenu
 }
 
-func (*ChaoJiDan) cooke() {
+func (cjd *ChaoJiDan) cooke() {
 	fmt.Println("炒鸡蛋")
 }
