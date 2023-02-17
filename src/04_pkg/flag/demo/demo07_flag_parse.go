@@ -44,7 +44,7 @@ func main() {
 	fmt.Println(flag.NFlag())
 }
 
-// usage
+// 01usage
 //go run demo07_flag_parse.go -help
 //Usage of /var/folders/vd/ms9cv4zj187g_wd6bzt4jq2r0000ks/T/go-build3947223647/b001/exe/demo07_flag_parse:
 //-age int
