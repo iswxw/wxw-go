@@ -6,11 +6,11 @@
 package main
 
 import (
-	"com.wxw/AdvanceGrammar/w_config/tools"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
+	"src/com.wxw/project_actual/src/02_advance_grammar/w_config/tools"
 	"sync"
 )
 
