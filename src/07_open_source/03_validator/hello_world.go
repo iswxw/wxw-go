@@ -7,41 +7,28 @@ package main
 import (
 	"fmt"
 	"github.com/go-playground/validator/v10"
-	"time"
 )
 
-type Inner struct {
-	StartDate time.Time
+type User struct {
+	Name string `validate:"min=6,max=10"`
+	Age  int    `validate:"min=1,max=100"`
 }
 
-type Outer struct {
-	InnerStructField *Inner
-	CreatedAt        time.Time `validate:"ltecsfield=InnerStructField.StartDate"`
-}
-
-// NOTE: when calling validate.Struct(val) topStruct will be the top level struct passed
-//
-//	into the function
-//	when calling validate.VarWithValue(val, field, tag) val will be
-//	whatever you pass, struct, field...
-//	when calling validate.Field(field, tag) val will be nil
-//
-// https://pkg.go.dev/github.com/go-playground/validator/v10#hdr-Singleton
+// 出自：https://blog.51cto.com/u_15301988/5133385
 func main() {
-	now := time.Now()
+	validate := validator.New()
 
-	inner := &Inner{
-		StartDate: now,
+	u1 := User{
+		Name: "wxw-go",
+		Age:  18,
 	}
+	err := validate.Struct(u1)
+	fmt.Println("u1 = ", err)
 
-	outer := &Outer{
-		InnerStructField: inner,
-		CreatedAt:        now,
+	u2 := User{
+		Name: "wxw",
+		Age:  101,
 	}
-
-	err := validator.New().Struct(outer)
-	if err != nil {
-		fmt.Println("err = ", err)
-	}
-	fmt.Println("check result = success")
+	err = validate.Struct(u2)
+	fmt.Println("u2 = ", err)
 }
