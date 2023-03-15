@@ -12,7 +12,7 @@ import (
 
 // 文件路径
 const (
-	ConfigFilePath = "/src/com.wxw/04_project_actual/w_config/tools/conf/"
+	ConfigFilePath = "/src/com.wxw/04_project_actual/w_config/libs/conf/"
 )
 
 // 获取指定文件路径
