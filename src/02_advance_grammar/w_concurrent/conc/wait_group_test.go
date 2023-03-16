@@ -29,8 +29,8 @@ func TestNums(t *testing.T) {
 	wg.Add(10)
 	for i := 0; i < 10; i++ {
 		go func(i int) {
-			fmt.Println(i)
 			wg.Done()
+			fmt.Println(i)
 		}(i)
 	}
 	wg.Wait()
