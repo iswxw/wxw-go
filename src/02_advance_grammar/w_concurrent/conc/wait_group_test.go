@@ -7,6 +7,7 @@ package conc
 import (
 	"fmt"
 	"github.com/sourcegraph/conc"
+	"sync"
 	"sync/atomic"
 	"testing"
 )
@@ -17,9 +18,20 @@ func TestHelloWorld(t *testing.T) {
 	for i := 0; i < 10; i++ {
 		wg.Go(func() {
 			count.Add(1)
+			fmt.Println(count.Load())
 		})
 	}
 	wg.Wait()
+}
 
-	fmt.Println(count.Load())
+func TestNums(t *testing.T) {
+	wg := sync.WaitGroup{}
+	wg.Add(10)
+	for i := 0; i < 10; i++ {
+		go func(i int) {
+			fmt.Println(i)
+			wg.Done()
+		}(i)
+	}
+	wg.Wait()
 }
