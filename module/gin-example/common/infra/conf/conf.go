@@ -35,7 +35,7 @@ func Setup(path string) {
 
 	if path == "" {
 		dir, _ := os.Getwd()
-		path = filepath.Join(dir, "../../../conf/", Env, "app.toml")
+		path = filepath.Join(dir, "/module/gin-example/conf/", Env, "app.toml")
 
 		// windows 本地golang编译
 		if runtime.GOOS == "windows" {
@@ -53,7 +53,7 @@ func Setup(path string) {
 
 	err := Viper.ReadInConfig()
 	if err != nil {
-		panic(fmt.Sprintf(" setup conf failed: %s", err))
+		panic(any(fmt.Sprintf(" setup conf failed: %s", err)))
 	}
 
 	log.Printf("[%s_conf] setup success;\n", Env)
@@ -61,7 +61,7 @@ func Setup(path string) {
 
 // GetEnvironment 获取当前环境
 func GetEnvironment() string {
-	path := "src/04_project_actual/gin-example/.deploy"
+	path := "module/gin-example/.deploy"
 	file, err := os.Open(path)
 	if err != nil {
 		return Dev

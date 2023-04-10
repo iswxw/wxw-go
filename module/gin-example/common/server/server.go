@@ -33,5 +33,9 @@ func Setup() {
 
 	log.Printf("[info] start http server listening %s", endPoint)
 
-	server.ListenAndServe()
+	err := server.ListenAndServe()
+	if err != nil {
+		log.Printf("err = %s", err)
+		return
+	}
 }
