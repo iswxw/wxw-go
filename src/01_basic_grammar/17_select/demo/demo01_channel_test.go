@@ -7,12 +7,13 @@ package main
 
 import (
 	"fmt"
+	"testing"
 	"time"
 )
 
-func main() {
-
+func TestHelloWorld(t *testing.T) {
 	ch := make(chan int)
+
 	c := 0
 	stopCh := make(chan bool)
 
@@ -30,6 +31,7 @@ func main() {
 	}
 end:
 }
+
 func Chan(ch chan int, stopCh chan bool) {
 	for j := 0; j < 10; j++ {
 		ch <- j
