@@ -47,6 +47,7 @@ func TestCrossPrinting(t *testing.T) {
 
 }
 
+// 关于字符和整型的说明：https://blog.csdn.net/wucz122140729/article/details/105724633
 // ASCII码 对照表：http://ascii.wjccx.com/
 // TestCharAndIntContact 字符与整型之间的关系
 func TestCharAndIntContact(t *testing.T) {
