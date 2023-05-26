@@ -15,12 +15,13 @@ func main() {
 	getCurrentTime()
 
 	// 2. Go 时间比较
-	timeCompare()
+	//timeCompare()
 }
 
 func timeCompare() {
 	format := "2006-01-02 15:04:05"
 	now := time.Now()
+
 	//now, _ := time.Parse(format, time.Now().Format(format))
 	a, _ := time.Parse(format, "2015-03-10 11:00:00")
 	b, _ := time.Parse(format, "2015-03-10 16:00:00")
@@ -37,16 +38,24 @@ func timeCompare() {
 }
 
 func getCurrentTime() {
-	year := time.Now().Year()
-	month := time.Now().Format("01")
-	day := time.Now().Day()
+	format := "2006-01-02 15:04:05"
+	now := time.Now()
+	fmt.Println(now.Format(format))
+
+	fmt.Println(now.Second())
+
+	// 年月日
+	year := now.Year()
+	month := now.Format("01")
+	day := now.Day()
 	fmt.Println(year, month, day)
+
 	//或者
-	year01 := time.Now().Format("2006")
-	month01 := time.Now().Format("01")
-	day01 := time.Now().Format("02")
-	hour := time.Now().Format("15")
-	min := time.Now().Format("04")
-	second := time.Now().Format("05")
+	year01 := now.Format("2006")
+	month01 := now.Format("01")
+	day01 := now.Format("02")
+	hour := now.Format("15")
+	min := now.Format("04")
+	second := now.Format("05")
 	fmt.Println(year01, month01, day01, hour, min, second)
 }
