@@ -14,9 +14,12 @@ type User struct {
 	Name     string `validate:"min=6,max=10"`
 	Age      int    `validate:"min=1,max=100"`
 	Birthday string `validate:"required,datetime=2006-01-02 15:04:05"`
+	Content  string `validate:"required"`
+	Phone    string `validate:"omitempty"`
 }
 
 // 出自：https://blog.51cto.com/u_15301988/5133385
+// omitempty: https://www.cnblogs.com/MyUniverse/p/15227003.html
 func TestCheckTime(t *testing.T) {
 	validate := validator.New()
 
