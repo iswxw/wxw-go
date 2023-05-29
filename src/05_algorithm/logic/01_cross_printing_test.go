@@ -1,5 +1,5 @@
 // @Time : 2023/5/24 16:11
-// @Author : xiaoweiwei 数据和字母交叉打印
+// @Author : xiaoweiwei 1、数据和字母交叉打印
 // @File : 01_cross_printing_test
 
 package logic
@@ -10,6 +10,7 @@ import (
 	"testing"
 )
 
+// TestCrossPrinting 1、数据和字母交叉打印
 func TestCrossPrinting(t *testing.T) {
 
 	var wg sync.WaitGroup
