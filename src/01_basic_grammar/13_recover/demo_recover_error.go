@@ -9,7 +9,7 @@ import "fmt"
 
 func main() {
 	recover() // 无任何作用
-	panic("停止运行")
+	panic(any("停止运行"))
 	recover() // 不会执行到
 	fmt.Println("结束")
 

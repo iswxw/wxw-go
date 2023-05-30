@@ -15,5 +15,5 @@ func main() {
 		doRecover() //注意：这里间接使用函数，在函数中调用了recover()函数，
 		// panic 没有恢复,没有捕获到错误信息
 	}()
-	panic("手动抛出异常")
+	panic(any("手动抛出异常"))
 }
