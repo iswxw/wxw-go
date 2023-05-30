@@ -24,7 +24,7 @@ func TestMemoryLeak(t *testing.T) {
 
 }
 
-// 泄露场景一：(1) 缺少发送器，导致接收阻塞
+// 泄露场景一：(1) 非缓冲通道，缺少发送器，导致接收阻塞
 func TestMissingSender(t *testing.T) {
 	ch := make(chan int)
 	go func(ch chan int) {
@@ -35,7 +35,7 @@ func TestMissingSender(t *testing.T) {
 	fmt.Println("=== RESULT execute finished")
 }
 
-// 泄露场景二：(2) 缺少接收器，导致发送阻塞
+// 泄露场景二：(2) 非缓冲通道，缺少接收器，导致发送阻塞
 func TestMissingReceiver(t *testing.T) {
 	ch := make(chan int)
 	go func(ch chan int) {
