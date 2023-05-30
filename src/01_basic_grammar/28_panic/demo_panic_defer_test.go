@@ -35,7 +35,7 @@ func f1() {
 func g1(i int) {
 	if i > 3 {
 		fmt.Println("Panicking!")
-		panic(fmt.Sprintf("%v", i))
+		panic(any(fmt.Sprintf("%v", i)))
 	}
 	defer fmt.Println("Defer in g1", i)
 	fmt.Println("Printing in g1", i)
