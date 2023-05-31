@@ -3,12 +3,15 @@
 @Author : weixiaowei
 @File : demo03_range
 */
-package main
+package demo
 
-import "fmt"
+import (
+	"fmt"
+	"testing"
+)
 
 // channel 通便关闭和遍历
-func main() {
+func TestRange(t *testing.T) {
 
 	// 定义带缓存的通道
 	c := make(chan int, 10)

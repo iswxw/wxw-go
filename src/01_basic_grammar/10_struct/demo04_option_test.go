@@ -2,9 +2,12 @@
 // @Author : xiaoweiwei
 // @File : demo_option https://time.geekbang.org/column/article/479883
 
-package main
+package _struct
 
-import "fmt"
+import (
+	"fmt"
+	"testing"
+)
 
 type Foo struct {
 	name string
@@ -51,7 +54,7 @@ func NewFoo(id int, options ...FooOption) *Foo {
 	return foo
 }
 
-func main() {
+func TestOption(t *testing.T) {
 	Bar()
 }
 

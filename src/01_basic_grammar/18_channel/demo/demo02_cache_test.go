@@ -3,11 +3,14 @@
 @Author : weixiaowei
 @File : demo02_cache
 */
-package main
+package demo
 
-import "fmt"
+import (
+	"fmt"
+	"testing"
+)
 
-func main() {
+func TestCache(t *testing.T) {
 	// 这里我们定义了一个可以存储整数类型的带缓冲通道
 	// 缓冲区大小为2
 	ch := make(chan int, 2)

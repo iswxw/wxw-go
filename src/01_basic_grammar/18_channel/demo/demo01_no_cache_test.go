@@ -3,11 +3,14 @@
 @Author : weixiaowei
 @File : demo01
 */
-package main
+package demo
 
-import "fmt"
+import (
+	"fmt"
+	"testing"
+)
 
-func main() {
+func TestNoCache(t *testing.T) {
 	// 定义一个数据
 	s := []int{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
 

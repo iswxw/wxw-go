@@ -3,9 +3,12 @@
 @Author: wxw
 @File: demo_method
 */
-package main
+package _struct
 
-import "fmt"
+import (
+	"fmt"
+	"testing"
+)
 
 // Person 结构体
 type Person struct {
@@ -34,7 +37,7 @@ func (p Person) SetAge1(newAge int64) {
 	p.age = newAge
 }
 
-func main() {
+func TestMethod(t *testing.T) {
 	p1 := NewPerson("半颗糖", 18)
 	p1.Dream()
 

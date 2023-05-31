@@ -3,11 +3,12 @@
 @Author: wxw
 @File: demo_json
 */
-package main
+package _struct
 
 import (
 	"encoding/json"
 	"fmt"
+	"testing"
 )
 
 // Student 学生
@@ -23,7 +24,7 @@ type Class struct {
 	Students []*Student
 }
 
-func main() {
+func TestJson(t *testing.T) {
 	c := &Class{
 		Title:    "101",
 		Students: make([]*Student, 0, 200),

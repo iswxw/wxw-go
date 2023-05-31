@@ -4,9 +4,12 @@
 @File: demo_success
 */
 // 结构体的继承
-package main
+package _struct
 
-import "fmt"
+import (
+	"fmt"
+	"testing"
+)
 
 // Animal 结构体
 type Animal struct {
@@ -28,7 +31,7 @@ func (d *Dog) wang() {
 	fmt.Printf("%s 会汪汪叫 \n", d.name)
 }
 
-func main() {
+func TestSuccess(t *testing.T) {
 	d1 := &Dog{
 		Feet: 4,
 		Animal: &Animal{ //注意嵌套的是结构体指针

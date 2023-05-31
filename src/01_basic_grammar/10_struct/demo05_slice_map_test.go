@@ -3,9 +3,12 @@
 @Author: wxw
 @File: demo_slice_map
 */
-package main
+package _struct
 
-import "fmt"
+import (
+	"fmt"
+	"testing"
+)
 
 type Person1 struct {
 	name   string
@@ -23,7 +26,7 @@ func (p1 *Person1) SetDreams1(dreams1 []string) {
 	p1.dreams = make([]string, len(dreams1))
 	copy(p1.dreams, dreams1)
 }
-func main() {
+func TestCollections(t *testing.T) {
 	p1 := Person1{name: "半颗糖", age: 18}
 	data := []string{"吃饭", "睡觉", "打豆豆"}
 	p1.SetDreams(data)
