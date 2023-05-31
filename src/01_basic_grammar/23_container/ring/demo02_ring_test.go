@@ -2,7 +2,7 @@
 // @Author : xiaoweiwei
 // @File : demo02_ring_test
 
-package main
+package ring
 
 import (
 	"container/ring"

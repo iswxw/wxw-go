@@ -2,7 +2,7 @@
 // @Author : xiaoweiwei
 // @File : demo01_list_test
 
-package main
+package list
 
 import (
 	"container/list"

@@ -1,8 +1,14 @@
-package main
+/*
+@Time : 2022/4/29 20:48
+@Author : weixiaowei
+@File : demo01_operator
+*/
+package demo_custom_function
 
 import (
 	"errors"
 	"fmt"
+	"testing"
 )
 
 // 自定义一个函数，包括 加减法
@@ -19,7 +25,7 @@ func calculate(x, y int, op operator) (int, error) {
 
 // 高阶函数
 // 1. 接受其他的函数作为参数传入
-func main() {
+func TestInputParam(t *testing.T) {
 
 	// 加法计算
 	op := func(x, y int) int {

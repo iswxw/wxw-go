@@ -1,8 +1,14 @@
-package main
+/*
+@Time : 2022/4/29 20:48
+@Author : weixiaowei
+@File : demo01_operator
+*/
+package demo_custom_function
 
 import (
 	"errors"
 	"fmt"
+	"testing"
 )
 
 type operate func(x, y int) int
@@ -20,7 +26,7 @@ func genCalculator(op operate) calculatorFunc {
 
 // 高阶函数
 // 1. 把其他的函数作为结果返回
-func main() {
+func TestReturnResult(t *testing.T) {
 
 	// 定义一个加法操作
 	op := func(x, y int) int {

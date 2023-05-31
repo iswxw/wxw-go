@@ -1,0 +1,7 @@
+
+[背景]
+关于高阶函数：高阶函数可以满足下面的两个条件： 1. 接受其他的函数作为参数传入；2. 把其他的函数作为结果返回。
+
+[相关材料]
+  1. 高阶函数：https://www.yuque.com/fcant/go/uxr354#il8w0
+  2. 学习材料：https://time.geekbang.org/column/article/1467
