@@ -7,6 +7,7 @@ package main
 
 import "fmt"
 
+// 断言
 func main() {
 	var container = []string{"zero", "one", "two"}
 	value, ok := interface{}(container).([]string)

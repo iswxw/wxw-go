@@ -13,4 +13,5 @@
   1. Go 1.18将移除用于泛型的constraints包：https://zhuanlan.zhihu.com/p/463910249
 
 [相关材料]
-  1. https://www.yuque.com/fcant/go/gfqchv
+  1. 泛型总结：https://www.yuque.com/fcant/go/gfqchv
+  2. 泛型的应用实践：https://blog.csdn.net/General_zy/article/details/128896777
