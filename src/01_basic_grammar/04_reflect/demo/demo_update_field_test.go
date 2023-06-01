@@ -3,7 +3,7 @@
 @Author : weixiaowei
 @File : demo_update_field
 */
-package main
+package demo
 
 import (
 	"encoding/json"
@@ -11,9 +11,10 @@ import (
 	"os"
 	"reflect"
 	"strings"
+	"testing"
 )
 
-func main() {
+func TestUpdateField(t *testing.T) {
 	config := Config{}
 	byteConfig01, err := json.Marshal(config)
 	if err != nil {
@@ -24,7 +25,7 @@ func main() {
 
 	os.Setenv("CONFIG_SERVER_NAME", "global_server")
 	os.Setenv("CONFIG_SERVER_IP", "10.0.0.1")
-	os.Setenv("CONFIG_SERVER_URL", "iswxw.gitee.io")
+	os.Setenv("CONFIG_SERVER_URL", "iswxw.github.io")
 
 	c := readConfig()
 	fmt.Printf("byteConfig = %#v \n", c)

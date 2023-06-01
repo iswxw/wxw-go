@@ -1,0 +1,16 @@
+
+
+[主题]：泛型
+
+[主要内容]
+  1. Go 1.18 版开始支持泛型。
+
+[学习地址]
+  1. 官方泛型在线学习地址：https://go.dev/tour/generics/1
+
+
+[注意事项]
+  1. Go 1.18将移除用于泛型的constraints包：https://zhuanlan.zhihu.com/p/463910249
+
+[相关材料]
+  1. https://www.yuque.com/fcant/go/gfqchv

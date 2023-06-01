@@ -19,8 +19,10 @@ func TestError(t *testing.T) {
 	fmt.Println(<-c)
 }
 
-// 输出结果
-//fatal error: all goroutines are asleep - deadlock!
-//
-//goroutine 1 [chan send]:
-//main.main()
+func TestRepeat(t *testing.T) {
+	c := make(chan int, 1)
+	c <- 1
+	close(c)
+	close(c)
+	fmt.Println("OK")
+}

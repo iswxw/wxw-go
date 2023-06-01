@@ -6,12 +6,13 @@
  * @Link: https://www.liwenzhou.com/posts/Go/13_reflect/
  * @Vlog: https://www.bilibili.com/video/BV1FV411r7m8?p=87
  */
-package main
+package demo
 
 import (
 	"encoding/json"
 	"fmt"
 	"reflect"
+	"testing"
 )
 
 // json
@@ -20,8 +21,8 @@ type person struct {
 	Age  int    `json:"age"`
 }
 
-func main() {
-	str := `{"name":"小伟","age":9000}`
+func TestJson(t *testing.T) {
+	str := `{"name":"试剑江湖","age":9000}`
 	var p person
 	json.Unmarshal([]byte(str), &p)
 	fmt.Println(p.Name, p.Age)
