@@ -4,7 +4,7 @@
 @File : 01_twoSum
 @Link : https://leetcode.cn/problems/two-sum/
 */
-package main
+package leetcode
 
 import (
 	"fmt"
