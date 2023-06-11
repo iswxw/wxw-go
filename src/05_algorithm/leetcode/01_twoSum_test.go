@@ -16,20 +16,31 @@ import (
 func TestTwoSum(t *testing.T) {
 	// 定义一个数组
 	nums := []int{1, 2, 3, 4}
-	arrayIndex := twoSum(nums, 4)
+	arrayIndex := twoSum02(nums, 4)
 	fmt.Println("arrayIndex = ", arrayIndex)
 }
 
 // 方法一：暴力遍历  O(n2)
 // 方法二：hash分析 O（n）
 
-func twoSum(nums []int, target int) []int {
+func twoSum02(nums []int, target int) []int {
 	hashMap := make(map[int]int, 0)
 	for i, num := range nums {
 		if v, ok := hashMap[target-num]; ok {
 			return []int{v, i}
 		}
 		hashMap[num] = i
+	}
+	return nil
+}
+
+func twoSum01(nums []int, target int) []int {
+	for i, v := range nums {
+		for j := i + 1; j < len(nums); j++ {
+			if v+nums[j] == target {
+				return []int{j, i}
+			}
+		}
 	}
 	return nil
 }
