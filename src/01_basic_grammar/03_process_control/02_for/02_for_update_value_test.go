@@ -3,7 +3,7 @@
 @Author : wxw
 @File : for_update_value
 */
-package main
+package _for
 
 import "fmt"
 

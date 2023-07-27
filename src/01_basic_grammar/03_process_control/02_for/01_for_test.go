@@ -4,13 +4,15 @@
 @File : 01_for
 @Software: GoLand
 */
-package main
+package _for
 
-import "fmt"
+import (
+	"fmt"
+	"testing"
+)
 
 // for 循环
-func main() {
-
+func TestHello(t *testing.T) {
 	// 基本表达式
 	for i := 0; i < 10; i++ {
 		fmt.Print(i, "、")
@@ -41,4 +43,10 @@ func main() {
 	for i, v := range s {
 		fmt.Printf("(%d,%c)\n", i, v)
 	}
+
+	s1 := []int{1, 2, 3, 4, 5}
+	for v := range s1 {
+		fmt.Print(v)
+	}
+	fmt.Println()
 }

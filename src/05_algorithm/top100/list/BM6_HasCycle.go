@@ -3,7 +3,7 @@
 @Author: wxw
 @File: BM6_HasCycle
 */
-package main
+package list
 
 /**
  * 判断链表是否有环

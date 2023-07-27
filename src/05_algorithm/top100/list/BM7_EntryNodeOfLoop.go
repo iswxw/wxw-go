@@ -3,7 +3,7 @@
 @Author: wxw
 @File: BM7_EntryNodeOfLoop
 */
-package main
+package list
 
 // 链表中环的入口节点
 func EntryNodeOfLoop(pHead *ListNode) *ListNode {
