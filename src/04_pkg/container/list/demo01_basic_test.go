@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-// list 结构基础测试
+// 01_list 结构基础测试
 func TestList(t *testing.T) {
 	list2 := list.New()
 

@@ -7,7 +7,7 @@ import (
 )
 
 func Test(t *testing.T) {
-	// Create a new list and put some numbers in it.
+	// Create a new 01_list and put some numbers in it.
 	l := list.New()
 	e4 := l.PushBack(4) // 插入链表最后
 	fmt.Println("4插入链表最后", e4.Value)
@@ -21,7 +21,7 @@ func Test(t *testing.T) {
 	e2 := l.InsertAfter(2, e1) // 插入指定元素 e1 之后
 	fmt.Println("2插入指定元素 e1 之后", e2.Value)
 
-	// Iterate through list and print its contents.
+	// Iterate through 01_list and print its contents.
 	for e := l.Front(); e != nil; e = e.Next() {
 		fmt.Printf("%d", e.Value)
 	}

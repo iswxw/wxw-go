@@ -2,7 +2,7 @@
 // @Author : xiaoweiwei
 // @File : BM1_reverse_list_test
 
-package list
+package _1_list
 
 import (
 	"fmt"

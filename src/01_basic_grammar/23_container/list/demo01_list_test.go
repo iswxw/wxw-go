@@ -10,9 +10,9 @@ import (
 	"testing"
 )
 
-// TestHelloWorld list 是一个链表结构
+// TestHelloWorld 01_list 是一个链表结构
 func TestListHelloWorld(t *testing.T) {
-	// Create a new list and put some numbers in it.
+	// Create a new 01_list and put some numbers in it.
 	l := list.New()
 	e4 := l.PushBack(4)
 	e1 := l.PushFront(1)
@@ -20,7 +20,7 @@ func TestListHelloWorld(t *testing.T) {
 	l.InsertBefore(3, e4)
 	l.InsertAfter(2, e1)
 
-	// Iterate through list and print its contents.
+	// Iterate through 01_list and print its contents.
 	for e := l.Front(); e != nil; e = e.Next() {
 		fmt.Println(e.Value)
 	}
