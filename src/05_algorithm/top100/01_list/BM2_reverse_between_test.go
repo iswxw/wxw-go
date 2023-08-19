@@ -30,7 +30,28 @@ func TestName2(t *testing.T) {
 func reverseBetween(head *ListNode2, m int, n int) *ListNode2 {
 	// write code here
 
-	return nil
+	// 边界处理
+	if head == nil || head.Next == nil {
+		return head
+	}
+
+	// 定义一个虚拟节点
+	dummyNode := &ListNode2{Next: head}
+	pre := dummyNode
+
+	// 走 left-1步，走到left节点
+	for i := 0; i < m-1; i++ {
+		pre = pre.Next
+	}
+
+	cur := pre.Next
+	for i := m; i < n; i++ {
+		temp := cur.Next
+		cur.Next = temp.Next
+		temp.Next = pre.Next
+		pre.Next = temp
+	}
+	return dummyNode.Next
 }
 
 // 初始化一个链表
