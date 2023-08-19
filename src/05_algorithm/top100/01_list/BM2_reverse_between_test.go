@@ -18,6 +18,9 @@ type ListNode2 struct {
 func TestName2(t *testing.T) {
 	head := initList2([]int{1, 2, 3, 4, 5})
 	fmt.Println(show2(head))
+
+	between := reverseBetween(head, 2, 4)
+	fmt.Println(show2(between))
 }
 
 /**
