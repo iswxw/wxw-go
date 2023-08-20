@@ -75,18 +75,21 @@ func reverse1(pHead *ListNode1) *ListNode1 {
 	return newHead
 }
 
-// 方式二：递归实现
+// 方式二：递归实现:1->2->3->4
+// 图解：http://data.biancheng.net/view/276.html
 func reverse2(pHead *ListNode1) *ListNode1 {
-	// 递归结束条件：只有一个节点（或者头结点为空，直接不进行递归直接返回）
+	// 1. 递归结束条件：只有一个节点（或者头结点为空，直接不进行递归直接返回）
 	if pHead == nil || pHead.Next == nil {
 		return pHead
 	}
 
+	// 2. 递归调用
 	newHead := reverse2(pHead.Next)
+
+	// 3.递推到当前层
 
 	// 让head的下一个节点反过来指向head
 	pHead.Next.Next = pHead
-
 	// 将head的next置空
 	pHead.Next = nil
 
