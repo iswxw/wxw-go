@@ -5,11 +5,32 @@
 */
 package _1_list
 
-import "src/com.wxw/project_actual/src/05_algorithm/dto"
+import (
+	dto2 "src/com.wxw/project_actual/src/05_algorithm/common/dto"
+)
 
-// 双指针法
-func removeNthFromEnd(head *dto.ListNode, n int) *dto.ListNode {
+// removeNthFromEnd 双指针法
+func removeNthFromEnd(head *dto2.ListNode, n int) *dto2.ListNode {
 	// write code here
 
-	return nil
+	// 标记一下头节点
+	dummy := &dto2.ListNode{}
+	dummy.Next = head
+
+	// 定义两个指针
+	p1, p2 := dummy, head
+
+	// 快指针先走n步
+	for i := 0; i < n; i++ {
+		p2 = p2.Next
+	}
+
+	for p2 != nil {
+		p1 = p1.Next
+		p2 = p2.Next
+	}
+
+	p1.Next = p1.Next.Next
+
+	return dummy.Next
 }

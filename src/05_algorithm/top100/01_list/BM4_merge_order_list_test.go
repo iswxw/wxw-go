@@ -7,7 +7,7 @@
 package _1_list
 
 import (
-	"src/com.wxw/project_actual/src/05_algorithm/dto"
+	dto2 "src/com.wxw/project_actual/src/05_algorithm/common/dto"
 	"testing"
 )
 
@@ -15,11 +15,11 @@ func TestBM4(t *testing.T) {
 
 }
 
-func Merge(pHead1 *dto.ListNode, pHead2 *dto.ListNode) *dto.ListNode {
+func Merge(pHead1 *dto2.ListNode, pHead2 *dto2.ListNode) *dto2.ListNode {
 	// write code here
 
 	// 有序合并
-	dummy := &dto.ListNode{}
+	dummy := &dto2.ListNode{}
 	cur := dummy
 
 	for pHead1 != nil && pHead2 != nil {

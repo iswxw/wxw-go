@@ -6,7 +6,7 @@
 package _1_list
 
 import (
-	"src/com.wxw/project_actual/src/05_algorithm/dto"
+	dto2 "src/com.wxw/project_actual/src/05_algorithm/common/dto"
 	"testing"
 )
 
@@ -15,7 +15,7 @@ func TestBM7(t *testing.T) {
 }
 
 // EntryNodeOfLoop 快慢指针法
-func EntryNodeOfLoop(pHead *dto.ListNode) *dto.ListNode {
+func EntryNodeOfLoop(pHead *dto2.ListNode) *dto2.ListNode {
 	if pHead == nil || pHead.Next == nil {
 		return nil
 	}

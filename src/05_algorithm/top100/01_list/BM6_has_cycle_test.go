@@ -6,7 +6,7 @@
 package _1_list
 
 import (
-	"src/com.wxw/project_actual/src/05_algorithm/dto"
+	dto2 "src/com.wxw/project_actual/src/05_algorithm/common/dto"
 	"testing"
 )
 
@@ -15,7 +15,7 @@ func TestBM6(t *testing.T) {
 }
 
 // 快慢指针法
-func hasCycle(head *dto.ListNode) bool {
+func hasCycle(head *dto2.ListNode) bool {
 	// write code here
 
 	// 边界处理
