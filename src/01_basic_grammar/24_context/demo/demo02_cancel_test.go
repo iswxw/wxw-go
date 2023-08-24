@@ -3,15 +3,16 @@
 @Author: wxw
 @File: demo02_cancel
 */
-package main
+package demo
 
 import (
 	"context"
 	"fmt"
+	"testing"
 	"time"
 )
 
-func main() {
+func Test02(t *testing.T) {
 	ctx, cancel := context.WithCancel(context.Background())
 	go HandelRequest(ctx)
 

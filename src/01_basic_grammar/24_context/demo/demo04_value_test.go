@@ -3,15 +3,16 @@
 @Author: wxw
 @File: demo04_value
 */
-package main
+package demo
 
 import (
 	"context"
 	"fmt"
+	"testing"
 	"time"
 )
 
-func main() {
+func Test04(t *testing.T) {
 	ctx := context.WithValue(context.Background(), "parameter", "1")
 	go HandelRequest04(ctx)
 

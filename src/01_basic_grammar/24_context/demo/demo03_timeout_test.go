@@ -3,16 +3,22 @@
 @Author: wxw
 @File: demo03_timeout
 */
-package main
+package demo
 
 import (
 	"context"
 	"fmt"
+	"testing"
 	"time"
 )
 
-func main() {
-	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
+// 相关材料
+// context 上下文：https://draveness.me/golang/docs/part3-runtime/ch06-concurrency/golang-context/
+
+func Test03(t *testing.T) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
 	go HandelRequest03(ctx)
 
 	time.Sleep(10 * time.Second)

@@ -2,15 +2,16 @@
 // @Author : xiaoweiwei
 // @File : demo01_Value
 
-package main
+package demo
 
 import (
 	"context"
 	"fmt"
+	"testing"
 )
 
 // 应用场景：设置上下文的信息
-func main() {
+func TestName(t *testing.T) {
 	ctx := context.Background()
 	process(ctx)
 
