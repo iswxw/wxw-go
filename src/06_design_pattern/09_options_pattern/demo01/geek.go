@@ -3,7 +3,7 @@
 @Author : weixiaowei
 @File : 09_options_pattern
 */
-package main
+package demo01
 
 import "time"
 

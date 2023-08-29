@@ -3,3 +3,5 @@
 相关资料
  1. 视频地址：https://www.bilibili.com/video/BV16S4y137pF
  2. https://lailin.xyz/post/go-design-pattern.html
+blog
+ - https://www.liwenzhou.com/posts/Go/golang-menu/
