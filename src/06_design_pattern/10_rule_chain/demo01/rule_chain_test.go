@@ -11,7 +11,7 @@ import (
 )
 
 // 主题：责任链模式
-// 相关资料：
+// 相关资料：https://mp.weixin.qq.com/s/JCxPUg1MHz7ITCxKyli-mw
 func TestDemo01(t *testing.T) {
 	checkAuthorizedRule := NewCheckAuthorizedStatus(nil)
 	checkAgeRule := NewCheckAgeRule(checkAuthorizedRule)
