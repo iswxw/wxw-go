@@ -65,6 +65,7 @@ func TestUnRecovery(t *testing.T) {
 
 // ================ 内部方法 ================
 
+// funcSyncUsedIllegal 同步锁使用不当(加锁和解锁数量不一致)等情况
 func funcSyncUsedIllegal() {
 	wg := sync.WaitGroup{}
 	wg.Add(5)
@@ -75,6 +76,7 @@ func funcSyncUsedIllegal() {
 	wg.Wait()
 }
 
+// funcNotUnlock 忘记解锁
 func funcNotUnlock() {
 	total := 0
 	defer func() {

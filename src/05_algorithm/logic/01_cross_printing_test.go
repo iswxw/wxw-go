@@ -21,7 +21,7 @@ func TestCrossPrinting(t *testing.T) {
 	go func() {
 		defer wg.Done()
 		for i := 'A'; i <= 'Z'; i++ {
-			letter <- string(i)
+			letter <- string(i) // 转换为字母
 		}
 		close(letter)
 	}()
@@ -30,7 +30,7 @@ func TestCrossPrinting(t *testing.T) {
 	go func() {
 		defer wg.Done()
 		for i := 1; i <= 26; i++ {
-			number <- i
+			number <- i // 直接打印数字
 		}
 		close(number)
 	}()
@@ -52,10 +52,10 @@ func TestCrossPrinting(t *testing.T) {
 // ASCII码 对照表：http://ascii.wjccx.com/
 // TestCharAndIntContact 字符与整型之间的关系
 func TestCharAndIntContact(t *testing.T) {
-	fmt.Println(fmt.Sprintf("%c", 'A'+0))
-	fmt.Println(fmt.Sprintf("%c", 'A'+1))
+	fmt.Println(fmt.Sprintf(" 打印字符：%c", 'A'+0))
+	fmt.Println(fmt.Sprintf("打印字符：%c", 'A'+1))
 	fmt.Println("—————————————————————————————")
-	fmt.Println('A', string('A'))
+	fmt.Println('A', string('A')) // 'A' 默认识别为数字，string('A')识别为字符
 	fmt.Println(rune('A'), int32('a'))
 	fmt.Println(rune('A' + 1))
 	fmt.Println(string(rune('A' + 1)))

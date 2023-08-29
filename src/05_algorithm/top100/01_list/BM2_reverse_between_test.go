@@ -24,11 +24,7 @@ func TestName2(t *testing.T) {
 }
 
 /**
- * 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
- * @param head ListNode类
- * @param m int整型
- * @param n int整型
- * @return ListNode类
+ *
  */
 func reverseBetween(head *ListNode2, m int, n int) *ListNode2 {
 	// write code here
@@ -42,8 +38,8 @@ func reverseBetween(head *ListNode2, m int, n int) *ListNode2 {
 	dummyNode := &ListNode2{Next: head}
 	pre := dummyNode
 
-	// 走 left-1步，走到left节点
-	for i := 0; i < m-1; i++ {
+	// 走 left-1步，走到left节点, 1,2,3,4
+	for i := 1; i < m; i++ {
 		pre = pre.Next
 	}
 

@@ -41,6 +41,6 @@ func (s Set) Contains(key string) bool {
 
 // 初始化
 func NewSet() Set {
-	s := make(Set)
+	s := make(Set, 0)
 	return s
 }

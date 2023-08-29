@@ -9,6 +9,7 @@ import (
 	"testing"
 )
 
+// 计算数字异常
 func TestName(t *testing.T) {
 	a := uint(1)
 	b := uint(2)

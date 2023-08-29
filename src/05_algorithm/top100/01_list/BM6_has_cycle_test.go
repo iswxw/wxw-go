@@ -14,7 +14,7 @@ func TestBM6(t *testing.T) {
 
 }
 
-// 快慢指针法
+// hasCycle 判断链表是否有环：快慢指针法
 func hasCycle(head *dto2.ListNode) bool {
 	// write code here
 
@@ -22,6 +22,7 @@ func hasCycle(head *dto2.ListNode) bool {
 	if head == nil || head.Next == nil {
 		return false
 	}
+
 	p1, p2 := head, head
 	for p2 != nil && p2.Next != nil {
 		p1 = p1.Next

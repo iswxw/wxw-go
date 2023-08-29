@@ -15,11 +15,12 @@ func TestBM4(t *testing.T) {
 
 }
 
+// Merge 合并两个有序链表
 func Merge(pHead1 *dto2.ListNode, pHead2 *dto2.ListNode) *dto2.ListNode {
 	// write code here
 
 	// 有序合并
-	dummy := &dto2.ListNode{}
+	dummy := &dto2.ListNode{} // 定义一个虚拟节点
 	cur := dummy
 
 	for pHead1 != nil && pHead2 != nil {

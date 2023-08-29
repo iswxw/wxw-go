@@ -9,7 +9,7 @@ import (
 	dto2 "src/com.wxw/project_actual/src/05_algorithm/common/dto"
 )
 
-// removeNthFromEnd 双指针法
+// removeNthFromEnd 已出链表倒数第N个节点： 双指针法
 func removeNthFromEnd(head *dto2.ListNode, n int) *dto2.ListNode {
 	// write code here
 
@@ -25,11 +25,13 @@ func removeNthFromEnd(head *dto2.ListNode, n int) *dto2.ListNode {
 		p2 = p2.Next
 	}
 
+	// 找到倒数第N个节点 p1
 	for p2 != nil {
 		p1 = p1.Next
 		p2 = p2.Next
 	}
 
+	// 删除节点
 	p1.Next = p1.Next.Next
 
 	return dummy.Next
