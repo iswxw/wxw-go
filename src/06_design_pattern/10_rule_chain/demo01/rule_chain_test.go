@@ -16,10 +16,10 @@ func TestDemo01(t *testing.T) {
 	checkAuthorizedRule := NewCheckAuthorizedStatus(nil)
 	checkAgeRule := NewCheckAgeRule(checkAuthorizedRule)
 	checkTokenRule := NewCheckTokenRule(checkAgeRule)
-
 	if err := checkTokenRule.Apply(context.Background(), map[string]interface{}{
-		"token": "myToken",
-		"age":   1,
+		"token":      "myToken",
+		"age":        19,
+		"authorized": true,
 	}); err != nil {
 		// 校验未通过，终止发奖流程
 		t.Error(err)
