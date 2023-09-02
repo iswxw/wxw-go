@@ -25,6 +25,9 @@ func TestBM12(t *testing.T) {
 	fmt.Println(bm12Show(sort12))
 
 	// 方法二：基于归并算法排序
+	bm122 := bm12Init([]int{7, 3, 1, 5, 8, 6})
+	sort := bm12Sort(bm122)
+	fmt.Println(bm12Show(sort))
 
 }
 
@@ -42,7 +45,7 @@ func TestBM121(t *testing.T) {
 func bm12Sort(head *dto.ListNode) *dto.ListNode {
 
 	// 判断边界
-	if head == nil {
+	if head == nil || head.Next == nil {
 		return head
 	}
 
@@ -59,20 +62,31 @@ func bm12Sort(head *dto.ListNode) *dto.ListNode {
 	// 递归左右两边进行排序
 	l := bm12Sort(head)
 	r := bm12Sort(temp)
+	return mergeBM12(l, r)
+}
 
-	var h, cur *dto.ListNode
+// // 合并两个有序链表
+func mergeBM12(l *dto.ListNode, r *dto.ListNode) *dto.ListNode {
+	dummy := &dto.ListNode{}
+	head := dummy
 	for l != nil && r != nil {
-		// left  right链表循环对比
 		if l.Val < r.Val {
-			h.Next = l
+			head.Next = l
 			l = l.Next
 		} else {
-			h.Next = r
+			head.Next = r
 			r = r.Next
 		}
-		h = h.Next
+		head = head.Next
 	}
-	return cur
+	if l != nil {
+		head.Next = l
+	}
+
+	if r != nil {
+		head.Next = r
+	}
+	return dummy.Next
 }
 
 // 方法一：数组辅助排序
