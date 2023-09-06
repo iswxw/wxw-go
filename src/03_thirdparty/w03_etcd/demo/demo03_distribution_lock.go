@@ -38,7 +38,7 @@ func main() {
 	lease := clientv3.NewLease(client)
 	leaseGrantResp, err := lease.Grant(context.TODO(), 5)
 	if err != nil {
-		panic(err)
+		panic(any(err))
 	}
 	leaseId := leaseGrantResp.ID
 
@@ -51,7 +51,7 @@ func main() {
 	defer lease.Revoke(context.TODO(), leaseId)
 	keepRespChan, err := lease.KeepAlive(ctx, leaseId)
 	if err != nil {
-		panic(err)
+		panic(any(err))
 	}
 	// 续约应答
 	go func() {
@@ -83,7 +83,7 @@ func main() {
 	// 提交事务
 	txnResp, err := txn.Commit()
 	if err != nil {
-		panic(err)
+		panic(any(err))
 	}
 
 	if !txnResp.Succeeded {

@@ -7,6 +7,7 @@ package init_redis
 
 import (
 	"context"
+	"github.com/go-redis/redis/v8"
 	"time"
 )
 

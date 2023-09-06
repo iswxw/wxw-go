@@ -7,8 +7,8 @@ package distribution_lock
 
 import (
 	"context"
-	"framework/w01_redis/init_redis"
 	"github.com/spf13/cast"
+	"src/com.wxw/project_actual/src/03_thirdparty/w01_redis/init_redis"
 	"time"
 )
 

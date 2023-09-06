@@ -7,7 +7,7 @@ package distribution_lock
 
 import (
 	"fmt"
-	"framework/w01_redis/init_redis"
+	"src/com.wxw/project_actual/src/03_thirdparty/w01_redis/init_redis"
 	"testing"
 )
 

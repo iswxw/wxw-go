@@ -8,9 +8,9 @@ package main
 import (
 	"context"
 	"fmt"
-	"framework/w03_etcd/etcds"
 	"go.etcd.io/etcd/api/v3/v3rpc/rpctypes"
 	"log"
+	"src/com.wxw/project_actual/src/03_thirdparty/w03_etcd/etcds"
 )
 
 func main() {
