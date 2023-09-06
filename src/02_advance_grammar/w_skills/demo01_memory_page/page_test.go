@@ -2,7 +2,7 @@
 // @Author : xiaoweiwei
 // @File : page_test
 
-package demo_memory_page
+package demo01_memory_page
 
 import (
 	"fmt"
