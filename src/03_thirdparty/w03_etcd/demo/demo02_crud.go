@@ -8,7 +8,7 @@ package main
 import (
 	"context"
 	"fmt"
-	"framework/w03_etcd/etcds"
+	"src/com.wxw/project_actual/src/03_thirdparty/w03_etcd/etcds"
 )
 
 func main() {

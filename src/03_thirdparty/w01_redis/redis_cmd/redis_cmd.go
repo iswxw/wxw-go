@@ -7,7 +7,7 @@ package redis_cmd
 
 import (
 	"context"
-	"framework/w01_redis/init_redis"
+	"src/com.wxw/project_actual/src/03_thirdparty/w01_redis/init_redis"
 )
 
 // 相关文档：https://pkg.go.dev/github.com/go-redis/redis
@@ -30,10 +30,10 @@ func DelKey(ctx context.Context, prefix string) {
 	for iter.Next(ctx) {
 		err := init_redis.RDB.Del(ctx, iter.Val()).Err()
 		if err != nil {
-			panic(err)
+			panic(any(err))
 		}
 	}
 	if err := iter.Err(); err != nil {
-		panic(err)
+		panic(any(err))
 	}
 }
