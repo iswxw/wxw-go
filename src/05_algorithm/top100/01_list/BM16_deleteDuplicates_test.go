@@ -25,6 +25,7 @@ func deleteDuplicate(head *dto.ListNode) *dto.ListNode {
 	if head == nil || head.Next == nil {
 		return head
 	}
+
 	if head.Val != head.Next.Val {
 		head.Next = deleteDuplicate(head.Next)
 		return head
@@ -38,17 +39,24 @@ func deleteDuplicate(head *dto.ListNode) *dto.ListNode {
 }
 
 // 方法二：遍历
+// 复杂度分析：时间复杂度：O(n) 、空间复杂度O(1)
 func deleteDuplicate01(head *dto.ListNode) *dto.ListNode {
 	if head == nil {
 		return head
 	}
 
+	// 开一个虚拟头结点
 	dummy := &dto.ListNode{}
 	dummy.Next = head
 	cur := dummy
+
 	for cur.Next != nil && cur.Next.Next != nil {
+
+		// 相邻两个节点值相同
 		if cur.Next.Val == cur.Next.Next.Val {
+
 			x := cur.Next.Val
+
 			for cur.Next != nil && cur.Next.Val == x {
 				cur.Next = cur.Next.Next
 			}
@@ -56,5 +64,43 @@ func deleteDuplicate01(head *dto.ListNode) *dto.ListNode {
 			cur = cur.Next
 		}
 	}
+	return dummy.Next
+}
+
+// 方法三：哈希法，对于无序的也可以使用
+func deleteDuplicate02(head *dto.ListNode) *dto.ListNode {
+
+	// 排除空链表
+	if head == nil {
+		return head
+	}
+
+	// 定义一个map记录值出现的次数
+	hashMap := make(map[int]int, 0)
+	cur := head
+	// 遍历统计每个节点值出现的次数
+	for cur != nil {
+		if _, ok := hashMap[cur.Val]; ok {
+			hashMap[cur.Val] = hashMap[cur.Val] + 1
+		} else {
+			hashMap[cur.Val] = 1
+		}
+		cur = cur.Next
+	}
+
+	// 开一个虚拟头结点
+	dummy := &dto.ListNode{}
+	dummy.Next = head
+	temp := dummy
+	for temp.Next != nil {
+		// 如果节点值计数不为1
+		if hashMap[temp.Next.Val] != 1 {
+			// 删去该节点
+			temp.Next = temp.Next.Next
+		} else {
+			temp = temp.Next
+		}
+	}
+	//去掉表头
 	return dummy.Next
 }
