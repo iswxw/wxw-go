@@ -3,13 +3,14 @@
 @Author: wxw
 @File: case
 */
-package main
+package _goroutine
 
 import (
 	"fmt"
+	"testing"
 )
 
-func main() {
+func TestHome(t *testing.T) {
 	for i := 1; i <= 10; i++ {
 		go Add(i, i)
 	}

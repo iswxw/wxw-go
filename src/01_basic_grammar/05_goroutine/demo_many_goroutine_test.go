@@ -1,4 +1,4 @@
-package main
+package _goroutine
 
 /**
  * @Description
@@ -10,20 +10,22 @@ package main
 import (
 	"fmt"
 	"sync"
+	"testing"
 )
 
 // 定义变量
-var wg sync.WaitGroup
+var wgS sync.WaitGroup
 
-func main() {
+func TestMany(t *testing.T) {
+
 	for i := 0; i < 10; i++ {
-		wg.Add(1) // 启动一个goroutine 就登记+1
+		wgS.Add(1) // 启动一个goroutine 就登记+1
 		go hello1(i)
 	}
-	wg.Wait() // 等待所有的登记都结束
+	wgS.Wait() // 等待所有的登记都结束
 }
 
 func hello1(i int) {
-	defer wg.Done() // goroutine 结束就登记-1
+	defer wgS.Done() // goroutine 结束就登记-1
 	fmt.Println("hello goroutine", i)
 }

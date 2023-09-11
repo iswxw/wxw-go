@@ -3,14 +3,15 @@
 @Author: wxw
 @File: demo_cpu
 */
-package main
+package _goroutine
 
 import (
 	"fmt"
 	"runtime"
+	"testing"
 )
 
-func main() {
+func TestCPU(t *testing.T) {
 	cpuNum := runtime.NumCPU()
 	fmt.Println("cpuNum = ", cpuNum)
 

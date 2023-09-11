@@ -17,6 +17,7 @@ func TestBM13(t *testing.T) {
 
 }
 
+// 基于双指针实现
 // 判断链表是否为回文结构
 func isPail(head *dto.ListNode) bool {
 	// write code here
@@ -24,8 +25,8 @@ func isPail(head *dto.ListNode) bool {
 	return true
 }
 
-// 判断链表是否为回文结构 :[1 2 3 4 5 6]
 // 基于数组实现
+// 判断链表是否为回文结构 :[1 2 3 4 5 6]
 func isPail01(head *dto.ListNode) bool {
 	// write code here
 	nums := make([]int, 0)
