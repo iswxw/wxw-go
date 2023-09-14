@@ -4,11 +4,14 @@
 @File : demo01_slice_array
 @数据和切片的陷阱问题：https://geektutu.com/post/hpg-gotchas-array-slice.html
 */
-package main
+package demo
 
-import "fmt"
+import (
+	"fmt"
+	"testing"
+)
 
-func main() {
+func TestSlice(t *testing.T) {
 	// 问题一：类型传递和值传递 修改是否生效
 	// funcValueAndTypeParams()
 

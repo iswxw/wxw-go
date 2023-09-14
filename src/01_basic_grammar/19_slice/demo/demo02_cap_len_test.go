@@ -3,11 +3,14 @@
 @Author : weixiaowei
 @File : demo02_cap_len
 */
-package main
+package demo
 
-import "fmt"
+import (
+	"fmt"
+	"testing"
+)
 
-func main() {
+func TestCapLen(t *testing.T) {
 	// 示例1。
 	s1 := make([]int, 5)
 	fmt.Printf("The length of s1: %d\n", len(s1))
