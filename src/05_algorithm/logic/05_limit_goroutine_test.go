@@ -26,7 +26,10 @@ func job(i int, limitChan chan struct{}) {
 		<-limitChan
 	}()
 
+	// 执行任务
 	time.Sleep(1 * time.Second)
+
+	// 统计
 	fmt.Printf("任务:%d已完成，当前协程数:%d\n", i, len(limitChan))
 }
 
