@@ -17,7 +17,7 @@ func TestCrossPrinting(t *testing.T) {
 	letter, number := make(chan string, 26), make(chan int, 27)
 	wg.Add(3)
 
-	// 记录字母
+	// 发记录字母
 	go func() {
 		defer wg.Done()
 		for i := 'A'; i <= 'Z'; i++ {
@@ -26,7 +26,7 @@ func TestCrossPrinting(t *testing.T) {
 		close(letter)
 	}()
 
-	// 记录数字
+	// 发记录数字
 	go func() {
 		defer wg.Done()
 		for i := 1; i <= 26; i++ {
