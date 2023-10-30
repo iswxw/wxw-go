@@ -10,6 +10,7 @@ import (
 	"testing"
 )
 
+// 删除给出链表中的重复元素（链表中元素从小到大有序）
 func TestBM15(t *testing.T) {
 
 }
@@ -22,6 +23,7 @@ func deleteDuplicates(head *dto.ListNode) *dto.ListNode {
 	if head == nil || head.Next == nil {
 		return head
 	}
+
 	p := head
 	for p.Next != nil {
 		if p.Val == p.Next.Val {

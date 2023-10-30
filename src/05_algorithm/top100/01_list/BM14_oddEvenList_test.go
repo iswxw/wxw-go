@@ -3,8 +3,6 @@
 @Author: wxw
 @File: BM14_oddEvenList_test
 */
-
-// 给定一个单链表，请设定一个函数，将链表的奇数位节点和偶数位节点分别放在一起，重排后输出。
 package _1_list
 
 import (
@@ -13,18 +11,18 @@ import (
 	"testing"
 )
 
+// 单链表重排-将链表的奇数位节点和偶数位节点分别放在一起，重排后输出。
 func TestBM14(t *testing.T) {
 	node := init14([]int{1, 2, 3, 4, 5})
 	fmt.Println(show14(node))
 
 	evenList := oddEvenList(node)
 	fmt.Println(show14(evenList))
-
 }
 
 // 复杂度分析
-//  - 时间复杂度：O(n)，其中 n 是链表的节点数。需要遍历链表中的每个节点，并更新指针。
-//  - 空间复杂度：O(1)。只需要维护有限的指针。
+//   - 时间复杂度：O(n)，其中 n 是链表的节点数。需要遍历链表中的每个节点，并更新指针。
+//   - 空间复杂度：O(1)。只需要维护有限的指针。
 func oddEvenList(head *dto.ListNode) *dto.ListNode {
 	// write code here
 	if head == nil {

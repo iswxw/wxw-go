@@ -65,7 +65,7 @@ func bm12Sort(head *dto.ListNode) *dto.ListNode {
 	return mergeBM12(l, r)
 }
 
-// // 合并两个有序链表
+// 拆解后，再实现合并两个有序链表
 func mergeBM12(l *dto.ListNode, r *dto.ListNode) *dto.ListNode {
 	dummy := &dto.ListNode{}
 	head := dummy
