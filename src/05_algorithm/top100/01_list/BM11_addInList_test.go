@@ -55,7 +55,7 @@ func addInList(head1 *dto.ListNode, head2 *dto.ListNode) *dto.ListNode {
 
 		// 求和取值
 		sum := v1 + v2 + bit
-		sum, bit = sum%10, sum/10 // 分别取相加后的 个位和进位
+		sum, bit = sum%10, sum/10 // 分别取相加后的 个位和进位（十位）
 
 		if head == nil {
 			head = &dto.ListNode{Val: sum}
