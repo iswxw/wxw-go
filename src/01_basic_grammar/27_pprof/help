@@ -1,0 +1,9 @@
+
+[生成性能分析文件的方式]
+  1. 通过命令行
+  2. 通过代码
+  3. 通过net/http/pprof包
+
+
+[27_pprof_by_cmd_test.go]
+  - go test -bench=. -cpuprofile=cpu.prof

@@ -1,0 +1,6 @@
+
+
+
+[conc]
+ - 库地址：https://github.com/sourcegraph/conc
+ - 作用：go优雅的并发，更难出现goroutine泄漏、优雅处理panic、使并发的代码更易读

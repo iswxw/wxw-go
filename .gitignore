@@ -9,6 +9,6 @@ Untitled*
 *.pdf
 
 # 指定特殊文件
-/src/com.wxw/03_thirdparty/w_excel/tmp/
+/src/03_thirdparty/w_excel/tmp/
 /cpu.pprof
-/src/com.wxw/03_thirdparty/w10_pdf/tmp/
+/src/03_thirdparty/w10_pdf/tmp/

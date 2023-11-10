@@ -1,0 +1,10 @@
+
+
+
+[项目参考]
+1. gin-example
+ - 官方仓库：https://gin-gonic.com/zh-cn/docs/
+ - git仓库：https://github.com/eddycjy/go-gin-example
+ - 编写Makefile：https://www.liwenzhou.com/posts/Go/makefile/
+ - 相关工具：
+   - sql转struct：https://www.printlove.cn/tools/sql2gorm
